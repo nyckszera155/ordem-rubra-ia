@@ -124,6 +124,49 @@ Percurso de Graduados:
 
 
 # ==============================
+# 📅 DADOS DA CAPACITAÇÃO DE PATENTE (fonte única de verdade)
+# ==============================
+# Estrutura: {grupo: [{"cargo": "...", "dias": "...", "detalhe": "..."}]}
+CAPACITACAO = {
+    "Graduados 「🎓」": [
+        {"cargo": "Subtenente", "dias": "6 dias", "detalhe": "22 relatórios de recrutamentos registrados"},
+        {"cargo": "Primeiro-Sargento", "dias": "5 dias", "detalhe": "18 relatórios de recrutamentos registrados"},
+        {"cargo": "Segundo-Sargento", "dias": "4 dias", "detalhe": "15 relatórios de recrutamentos registrados"},
+        {"cargo": "Terceiro-Sargento", "dias": "3 dias", "detalhe": "8 relatórios de recrutamentos registrados"},
+    ],
+    "Praças 「🇧🇷」": [
+        {"cargo": "Cabo", "dias": "2 dias", "detalhe": "5 relatórios de recrutamentos registrados + ESA"},
+        {"cargo": "Soldado", "dias": "1 dia", "detalhe": ""},
+        {"cargo": "Recruta", "dias": "N/A", "detalhe": ""},
+    ],
+}
+
+
+def formatar_linha_cp(item):
+    """Monta a linha de um cargo da capacitação (ex: 'Cabo = 2 dias (5 relatórios...)')."""
+    texto = f"▪️ **{item['cargo']}** = {item['dias']}"
+    if item["detalhe"]:
+        texto += f" ({item['detalhe']})"
+    return texto
+
+
+def montar_texto_cp():
+    """Gera o texto da capacitação para injetar no system prompt da IA."""
+    linhas = ["📅 CAPACITAÇÃO DE PATENTE (dias necessários e relatórios por patente):"]
+    for grupo, itens in CAPACITACAO.items():
+        linhas.append(f"\n{grupo}:")
+        for item in itens:
+            linha = f"- {item['cargo']}: {item['dias']}"
+            if item["detalhe"]:
+                linha += f" ({item['detalhe']})"
+            linhas.append(linha)
+    return "\n".join(linhas)
+
+
+DADOS_CP_TEXTO = montar_texto_cp()
+
+
+# ==============================
 # SISTEMA DE WARNINGS PERSISTENTE
 # ==============================
 def carregar_warnings():
@@ -152,9 +195,12 @@ def perguntar_ia(user_id, texto):
                     "útil e com personalidade marcante. Você também pode ajudar com "
                     "comandos de moderação quando solicitado.\n\n"
                     "⚠️ REGRA IMPORTANTE: Quando o assunto for tempos de percurso, "
-                    "balamentos, torre, torre 2.0 ou notas de aprovação, use "
+                    "balamentos, torre, torre 2.0, notas de aprovação ou capacitação "
+                    "de patente (dias e relatórios necessários), use "
                     "EXCLUSIVAMENTE os dados abaixo. Nunca invente ou estime valores.\n\n"
                     + DADOS_PERCURSOS_TEXTO
+                    + "\n"
+                    + DADOS_CP_TEXTO
                 )
             }
         ]
@@ -313,6 +359,29 @@ async def nota(interaction: discord.Interaction, cargo: app_commands.Choice[str]
         color=discord.Color.gold(),
         timestamp=datetime.datetime.utcnow()
     )
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+# ==============================
+# 📅 COMANDO /cp (CAPACITAÇÃO DE PATENTE)
+# ==============================
+@bot.tree.command(name="cp", description="Mostra a capacitação de patente de cada patente")
+async def cp(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="📅 Capacitação de Patente",
+        description="Abaixo estará listada a capacitação de cada patente, sendo elas:",
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+
+    for grupo, itens in CAPACITACAO.items():
+        embed.add_field(
+            name=f"| {grupo} |",
+            value="\n".join(formatar_linha_cp(item) for item in itens),
+            inline=False
+        )
+
+    embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
