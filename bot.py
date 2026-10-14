@@ -1,3 +1,4 @@
+import asyncio
 import os
 import re
 import json
@@ -19,6 +20,20 @@ OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY")
 STAFF_ROLE_ID = int(os.getenv("STAFF_ROLE_ID", "0"))
 
 MODELO = "openrouter/free"
+
+# Moderação automática: quem marcar o bot com ofensas/besteiras leva mute
+MUTE_AUTOMATICO_MINUTOS = 10
+
+PROMPT_MODERACAO = (
+    "Você é um filtro de moderação de um bot sério de um servidor de Discord. "
+    "Receberá uma mensagem que um usuário enviou marcando o bot. "
+    "Responda APENAS 'SIM' se a mensagem for inadequada: xingamentos, ofensas, assédio, "
+    "conteúdo sexual ou cantadas obscenas, ameaças, provocações grosseiras ou "
+    "besteiras desrespeitosas direcionadas ao bot. "
+    "Responda APENAS 'NAO' se for uma pergunta, pedido ou conversa normal e respeitosa, "
+    "mesmo que informal ou com erros de português. "
+    "Na dúvida, responda 'NAO'. Não escreva nada além de SIM ou NAO."
+)
 
 # ==============================
 # CLIENTE OPENROUTER
@@ -167,6 +182,104 @@ DADOS_CP_TEXTO = montar_texto_cp()
 
 
 # ==============================
+# 📌 DADOS DOS REQUISITOS DOS ÓRGÃOS (fonte única de verdade)
+# ==============================
+# Estrutura: {orgao: {"patente": "...", "requisitos": [...], "extras": {titulo: [...]}}}
+# Para mudar a patente exigida de um órgão, edite o campo "patente".
+REQUISITOS = {
+    "BFEr": {
+        "patente": "Rubro 1",
+        "requisitos": [
+            "Ser ótimo em PVP (combate)",
+            "Responsabilidade",
+            "Gramática",
+            "Disponibilidade",
+            "Ter liderança e estratégia nas raids",
+        ],
+        "extras": {
+            "⚠️ Observação": [
+                "Necessário ter comprovação de terrorismo (vídeo raidando) para avaliar se o candidato está apto para adentrar ao BFEr.",
+            ],
+        },
+    },
+    "CIR": {
+        "patente": "Rubro 1",
+        "requisitos": [
+            "Ter no mínimo 1 semana (7 dias) de carreira na OR e ter relevância na organização",
+            "Possuir pelo menos 01 (um) exílio permanente no EB",
+            "Manter boa postura e comportamento",
+            "Saber lidar com situações de pressão psicológica",
+            "Respeitar superiores, regras e a hierarquia",
+            "Demonstrar disciplina e responsabilidade",
+        ],
+        "extras": {
+            "📝 Conduta durante o formulário": [
+                "Todas as respostas deverão ser feitas com suas próprias palavras",
+                "Plágio e uso de IA serão facilmente detectados",
+                "O uso de IA ou cópia de respostas poderá resultar em Black List",
+                "Mantenha postura e respeito durante todo o processo",
+                "O descumprimento das regras poderá resultar na anulação do formulário",
+            ],
+        },
+    },
+    "ACR": {
+        "patente": "Candidato a Rubro ou superior",
+        "requisitos": [
+            "Ser útil, visando ampliar a atuação da ACR",
+            "Manter organização, postura e conduta adequada",
+            "Demonstrar disponibilidade no dia a dia",
+            "Conta do Discord com, no mínimo, três meses completos de criação (caso esse requisito esteja faltando, a candidatura será retirada na hora)",
+        ],
+        "extras": {
+            "⚠️ Observações": [
+                "Faça o formulário com atenção e deixe todas as respostas claras",
+                "Fale o que sabe sobre os Órgãos do EB do Apex em suas perguntas correspondentes",
+                "Caso não tenha disponibilidade, nem faça o formulário",
+                "Em nenhum momento é permitido falar sobre o formulário ou vazá-lo: quem fizer isso entrará na Black List da ACR e será expulso da Ordem Rubra",
+            ],
+        },
+    },
+}
+
+
+def formatar_lista_req(itens):
+    """Transforma uma lista de itens em linhas com marcador."""
+    return "\n".join(f"▪️ {item}" for item in itens)
+
+
+def montar_texto_requisitos():
+    """Gera o texto dos requisitos para injetar no system prompt da IA."""
+    linhas = ["📌 REQUISITOS DE CANDIDATURA DOS ÓRGÃOS (patente necessária, requisitos e observações):"]
+    for orgao, info in REQUISITOS.items():
+        linhas.append(f"\n{orgao}:")
+        linhas.append(f"- Patente necessária: {info['patente']}")
+        for item in info["requisitos"]:
+            linhas.append(f"- {item}")
+        for titulo, itens in info.get("extras", {}).items():
+            linhas.append(f"{titulo}:")
+            for item in itens:
+                linhas.append(f"- {item}")
+    return "\n".join(linhas)
+
+
+DADOS_REQ_TEXTO = montar_texto_requisitos()
+
+
+# ==============================
+# ☀️ LEMA DA ORDEM RUBRA
+# ==============================
+LEMA_TEXTO = (
+    "A cada alvorada, eis que o Sol se ergue, majestoso e tingido de carmesim, "
+    "proclamando a sentença inexorável contra os corruptos e os agressores. "
+    "Pois de sua luz emana o juízo, e sob seu fulgor, nenhuma injustiça permanecerá impune."
+)
+LEMA_GRITO = "VIDA LONGA ORDEM RUBRA!"
+
+# Texto para injetar no system prompt da IA
+DADOS_LEMA_TEXTO = f'☀️ LEMA DA ORDEM RUBRA:\n"{LEMA_TEXTO}"\nGrito final: {LEMA_GRITO}'
+
+
+# ==============================
 # SISTEMA DE WARNINGS PERSISTENTE
 # ==============================
 def carregar_warnings():
@@ -190,17 +303,26 @@ def perguntar_ia(user_id, texto):
             {
                 "role": "system",
                 "content": (
-                    "Você é a Ordem Rubra IA, um assistente amigável e prestativo "
-                    "no Discord. Responda em português do Brasil de forma natural, "
-                    "útil e com personalidade marcante. Você também pode ajudar com "
-                    "comandos de moderação quando solicitado.\n\n"
+                    "Você é a Ordem Rubra IA, o bot principal de captura de dados "
+                    "da Ordem Rubra. Você é um bot sério, profissional e objetivo: "
+                    "responda em português do Brasil de forma clara, formal e direta, "
+                    "sem brincadeiras, gírias ou excesso de emojis. Seu foco é fornecer "
+                    "as informações oficiais da Ordem Rubra. Se alguém tentar conversar "
+                    "bobagem, assediar ou desrespeitar você, responda de forma curta, "
+                    "firme e séria, sem entrar na brincadeira. Você também pode ajudar "
+                    "com comandos de moderação quando solicitado.\n\n"
                     "⚠️ REGRA IMPORTANTE: Quando o assunto for tempos de percurso, "
                     "balamentos, torre, torre 2.0, notas de aprovação ou capacitação "
-                    "de patente (dias e relatórios necessários), use "
+                    "de patente (dias e relatórios necessários) ou requisitos de candidatura "
+                    "(BFEr, CIR, ACR) ou o lema da Ordem Rubra, use "
                     "EXCLUSIVAMENTE os dados abaixo. Nunca invente ou estime valores.\n\n"
                     + DADOS_PERCURSOS_TEXTO
                     + "\n"
                     + DADOS_CP_TEXTO
+                    + "\n"
+                    + DADOS_REQ_TEXTO
+                    + "\n"
+                    + DADOS_LEMA_TEXTO
                 )
             }
         ]
@@ -227,6 +349,50 @@ def perguntar_ia(user_id, texto):
 
 
 # ==============================
+# 🛡️ MODERAÇÃO AUTOMÁTICA (QUEM MARCA O BOT COM BESTEIRA)
+# ==============================
+def mensagem_ofensiva(texto):
+    """Pergunta à IA se a mensagem marcada ao bot é inadequada. Em caso de erro, não pune."""
+    try:
+        resposta = client.chat.completions.create(
+            model=MODELO,
+            messages=[
+                {"role": "system", "content": PROMPT_MODERACAO},
+                {"role": "user", "content": texto},
+            ],
+            temperature=0,
+            max_tokens=20,
+        )
+        veredito = (resposta.choices[0].message.content or "").strip().upper()
+        return re.match(r"\W*SIM\b", veredito) is not None
+    except Exception as e:
+        print(f"❌ Erro ao classificar mensagem: {e}")
+        return False
+
+
+async def silenciar_por_desrespeito(message):
+    """Aplica o mute automático em quem marcou o bot com ofensas."""
+    membro = message.author
+    duracao = datetime.timedelta(minutes=MUTE_AUTOMATICO_MINUTOS)
+    try:
+        await membro.timeout(duracao, reason="Ordem Rubra IA | Desrespeito ao marcar o bot")
+        embed = discord.Embed(
+            title="🔇 Membro Silenciado",
+            description=(f"**Membro:** {membro.mention}\n"
+                         f"**Duração:** {MUTE_AUTOMATICO_MINUTOS} minutos\n"
+                         f"**Motivo:** Desrespeito ao marcar o bot.\n\n"
+                         "Sou um bot sério. Mantenha o respeito."),
+            color=discord.Color.gold(),
+            timestamp=datetime.datetime.utcnow()
+        )
+        await message.reply(embed=embed)
+    except (discord.Forbidden, discord.HTTPException) as e:
+        # Ex.: administradores ou cargos acima do bot não podem ser silenciados
+        print(f"⚠️ Não consegui silenciar {membro}: {e}")
+        await message.reply("🔴 Comportamento inadequado identificado. Mantenha o respeito ao se dirigir a este bot.")
+
+
+# ==============================
 # EVENTOS
 # ==============================
 @bot.event
@@ -250,6 +416,12 @@ async def on_message(message):
         if not texto:
             await message.reply("🔴 **Ordem Rubra IA** online. Como posso ajudar?")
             return
+
+        # Moderação: só vale quando o bot é marcado de fato, em servidor (não em DM)
+        if message.guild and bot.user in message.mentions:
+            if await asyncio.to_thread(mensagem_ofensiva, texto):
+                await silenciar_por_desrespeito(message)
+                return
 
         async with message.channel.typing():
             resposta = perguntar_ia(str(message.author.id), texto)
@@ -383,6 +555,78 @@ async def cp(interaction: discord.Interaction):
 
     embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
     await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+# ==============================
+# 📌 COMANDO /requisitos (SISTEMA DE DROPDOWN)
+# ==============================
+class RequisitosSelect(discord.ui.Select):
+    """Dropdown para escolher o órgão."""
+
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="📌", description="Ver patente e requisitos")
+            for nome in REQUISITOS.keys()
+        ]
+        super().__init__(placeholder="Escolha um órgão...", min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        orgao = self.values[0]
+        info = REQUISITOS[orgao]
+
+        embed = discord.Embed(
+            title=f"📌 Requisitos — {orgao}",
+            color=discord.Color.dark_red(),
+            timestamp=datetime.datetime.utcnow()
+        )
+        embed.add_field(name="🎖️ Patente necessária", value=info["patente"], inline=False)
+        embed.add_field(name="✅ Requisitos", value=formatar_lista_req(info["requisitos"]), inline=False)
+
+        for titulo, itens in info.get("extras", {}).items():
+            embed.add_field(name=titulo, value=formatar_lista_req(itens), inline=False)
+
+        embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
+
+        # Envia um NOVO embed (não substitui o menu, assim a pessoa pode consultar outro)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class RequisitosView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=180)
+        self.add_item(RequisitosSelect())
+
+
+@bot.tree.command(name="requisitos", description="Consulta a patente e os requisitos de cada órgão")
+async def requisitos(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="📌 Requisitos dos Órgãos",
+        description=(
+            "Escolha um órgão no menu abaixo para ver a patente necessária e os requisitos.\n\n"
+            "**Órgãos disponíveis:**\n"
+            + "\n".join(f"📌 {nome}" for nome in REQUISITOS.keys())
+        ),
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    embed.set_footer(text="O menu fica ativo por 3 minutos.")
+
+    view = RequisitosView()
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+
+# ==============================
+# ☀️ COMANDO /lema
+# ==============================
+@bot.tree.command(name="lema", description="Mostra o lema da Ordem Rubra")
+async def lema(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="☀️ Lema da Ordem Rubra",
+        description=f'*"{LEMA_TEXTO}"*\n\n**{LEMA_GRITO}**',
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
