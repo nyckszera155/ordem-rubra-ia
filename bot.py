@@ -45,6 +45,85 @@ ARQUIVO_WARN = "warnings.json"
 
 
 # ==============================
+# 📋 DADOS DOS PERCURSOS (fonte única de verdade)
+# ==============================
+# Estrutura: {percurso: {cargo: {"tempo": "...", "nota": "..."}}}
+PERCURSOS = {
+    "1º Percurso — Balamentos": {
+        "Praças": {"tempo": "45 segundos", "nota": "—"},
+        "Graduados": {"tempo": "40 segundos", "nota": "—"},
+    },
+    "2º Percurso — Torre": {
+        "Recruta": {"tempo": "25 segundos", "nota": "5,0 pontos"},
+        "Soldado": {"tempo": "20 segundos", "nota": "5,5 pontos"},
+        "Terceiro-Sargento": {"tempo": "16 segundos", "nota": "6,0 pontos"},
+        "Segundo-Sargento": {"tempo": "14 segundos", "nota": "6,5 pontos"},
+        "Primeiro-Sargento": {"tempo": "12 segundos", "nota": "6,5 pontos"},
+    },
+    "3º Percurso — Torre 2.0": {
+        "Recruta": {"tempo": "30 segundos", "nota": "5,0 pontos"},
+        "Soldado": {"tempo": "25 segundos", "nota": "5,5 pontos"},
+        "Terceiro-Sargento": {"tempo": "18 segundos", "nota": "6,0 pontos"},
+        "Segundo-Sargento": {"tempo": "16 segundos", "nota": "6,5 pontos"},
+        "Primeiro-Sargento": {"tempo": "14 segundos", "nota": "6,5 pontos"},
+    },
+    "4º Percurso": {
+        "Recruta": {"tempo": "35 segundos", "nota": "5,0 pontos"},
+        "Soldado": {"tempo": "30 segundos", "nota": "5,5 pontos"},
+    },
+    "Percurso de Graduados": {
+        "Graduados": {"tempo": "45 segundos", "nota": "—"},
+    },
+}
+
+# Tabela de notas de aprovação (geral, independente do percurso)
+NOTAS_APROVACAO = {
+    "Recruta": "5,0 pontos",
+    "Soldado": "5,5 pontos",
+    "Terceiro-Sargento": "6,0 pontos",
+    "Segundo-Sargento": "6,5 pontos",
+    "Primeiro-Sargento": "6,5 pontos",
+}
+
+# Texto formatado para injetar no system prompt da IA
+DADOS_PERCURSOS_TEXTO = """
+📋 PERCURSOS, TEMPOS E NOTAS DE APROVAÇÃO:
+
+1º Percurso (Balamentos):
+- Praças: 45 segundos
+- Graduados: 40 segundos
+
+2º Percurso (Torre):
+- Recruta: 25 segundos
+- Soldado: 20 segundos
+- Terceiro-Sargento: 16 segundos
+- Segundo-Sargento: 14 segundos
+- Primeiro-Sargento: 12 segundos
+
+3º Percurso (Torre 2.0):
+- Recruta: 30 segundos
+- Soldado: 25 segundos
+- Terceiro-Sargento: 18 segundos
+- Segundo-Sargento: 16 segundos
+- Primeiro-Sargento: 14 segundos
+
+4º Percurso:
+- Recruta: 35 segundos
+- Soldado: 30 segundos
+
+Percurso de Graduados:
+- Graduados: 45 segundos
+
+🎯 NOTA DE APROVAÇÃO (pontuação mínima):
+- Recruta: 5,0 pontos
+- Soldado: 5,5 pontos
+- Terceiro-Sargento: 6,0 pontos
+- Segundo-Sargento: 6,5 pontos
+- Primeiro-Sargento: 6,5 pontos
+"""
+
+
+# ==============================
 # SISTEMA DE WARNINGS PERSISTENTE
 # ==============================
 def carregar_warnings():
@@ -65,11 +144,19 @@ def salvar_warnings(dados):
 def perguntar_ia(user_id, texto):
     if user_id not in historico:
         historico[user_id] = [
-            {"role": "system",
-             "content": ("Você é a Ordem Rubra IA, um assistente amigável e prestativo "
-                         "no Discord. Responda em português do Brasil de forma natural, "
-                         "útil e com personalidade marcante. Você também pode ajudar com "
-                         "comandos de moderação quando solicitado.")}
+            {
+                "role": "system",
+                "content": (
+                    "Você é a Ordem Rubra IA, um assistente amigável e prestativo "
+                    "no Discord. Responda em português do Brasil de forma natural, "
+                    "útil e com personalidade marcante. Você também pode ajudar com "
+                    "comandos de moderação quando solicitado.\n\n"
+                    "⚠️ REGRA IMPORTANTE: Quando o assunto for tempos de percurso, "
+                    "balamentos, torre, torre 2.0 ou notas de aprovação, use "
+                    "EXCLUSIVAMENTE os dados abaixo. Nunca invente ou estime valores.\n\n"
+                    + DADOS_PERCURSOS_TEXTO
+                )
+            }
         ]
 
     historico[user_id].append({"role": "user", "content": texto})
@@ -81,7 +168,7 @@ def perguntar_ia(user_id, texto):
         resposta = client.chat.completions.create(
             model=MODELO,
             messages=historico[user_id],
-            temperature=0.7,
+            temperature=0.4,
             max_tokens=800,
         )
         texto_resposta = resposta.choices[0].message.content
@@ -143,6 +230,90 @@ def is_staff():
             return True
         return False
     return app_commands.check(predicate)
+
+
+# ==============================
+# 🏃 COMANDO /percurso (SISTEMA DE DROPDOWNS)
+# ==============================
+class PercursoSelect(discord.ui.Select):
+    """Dropdown para escolher o percurso."""
+
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="🏁", description="Ver cargos e tempos")
+            for nome in PERCURSOS.keys()
+        ]
+        super().__init__(placeholder="Escolha um percurso...", min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        percurso_escolhido = self.values[0]
+        cargos = PERCURSOS[percurso_escolhido]
+
+        # Monta embed com todos os cargos daquele percurso
+        embed = discord.Embed(
+            title=f"🏁 {percurso_escolhido}",
+            color=discord.Color.dark_red(),
+            timestamp=datetime.datetime.utcnow()
+        )
+
+        for cargo, info in cargos.items():
+            embed.add_field(
+                name=f"▪️ {cargo}",
+                value=f"⏱️ **Tempo:** {info['tempo']}\n🎯 **Nota mínima:** {info['nota']}",
+                inline=False
+            )
+
+        embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
+
+        # Envia um NOVO embed (não substitui o menu, assim a pessoa pode consultar outro)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class PercursoView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=180)
+        self.add_item(PercursoSelect())
+
+
+@bot.tree.command(name="percurso", description="Consulta tempos e notas mínimas dos percursos")
+async def percurso(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="📋 Tabela de Percursos",
+        description=(
+            "Escolha um percurso no menu abaixo para ver os tempos e notas mínimas.\n\n"
+            "**Percursos disponíveis:**\n"
+            + "\n".join(f"🏁 {nome}" for nome in PERCURSOS.keys())
+        ),
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    embed.set_footer(text="O menu fica ativo por 3 minutos.")
+
+    view = PercursoView()
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+
+# ==============================
+# 📊 COMANDO /nota (consulta rápida de nota por cargo)
+# ==============================
+@bot.tree.command(name="nota", description="Mostra a nota mínima de aprovação de um cargo")
+@app_commands.describe(cargo="Cargo para consultar a nota mínima")
+@app_commands.choices(cargo=[
+    app_commands.Choice(name="Recruta", value="Recruta"),
+    app_commands.Choice(name="Soldado", value="Soldado"),
+    app_commands.Choice(name="Terceiro-Sargento", value="Terceiro-Sargento"),
+    app_commands.Choice(name="Segundo-Sargento", value="Segundo-Sargento"),
+    app_commands.Choice(name="Primeiro-Sargento", value="Primeiro-Sargento"),
+])
+async def nota(interaction: discord.Interaction, cargo: app_commands.Choice[str]):
+    valor = NOTAS_APROVACAO.get(cargo.value, "—")
+    embed = discord.Embed(
+        title=f"🎯 Nota mínima — {cargo.value}",
+        description=f"**{cargo.value}** precisa de **{valor}** para aprovação.",
+        color=discord.Color.gold(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 # ==============================
