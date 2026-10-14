@@ -18,7 +18,7 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY")
 STAFF_ROLE_ID = int(os.getenv("STAFF_ROLE_ID", "0"))
 
-MODELO = "google/gemma-2-9b-it:free"
+MODELO = "openrouter/free"
 
 # ==============================
 # CLIENTE OPENROUTER
