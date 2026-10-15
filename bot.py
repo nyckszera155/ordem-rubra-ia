@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import asyncio
 import datetime
 import discord
 from discord.ext import commands
@@ -16,6 +17,8 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 STAFF_ROLE_ID = int(os.getenv("STAFF_ROLE_ID", "0"))
 
 ARQUIVO_WARN = "warnings.json"
+ARQUIVO_DROPDOWNS = "dropdowns.json"
+ARQUIVO_ENTRADA_SAIDA = "entrada_saida.json"
 
 # Rodapé global
 FOOTER = "Configurado por Baby (nyck)"
@@ -458,6 +461,115 @@ def salvar_warnings(dados):
 
 
 # ==============================
+# SISTEMA DE DROPDOWNS CUSTOMIZADOS
+# ==============================
+def carregar_dropdowns():
+    if os.path.exists(ARQUIVO_DROPDOWNS):
+        with open(ARQUIVO_DROPDOWNS, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+def salvar_dropdowns(dados):
+    with open(ARQUIVO_DROPDOWNS, "w", encoding="utf-8") as f:
+        json.dump(dados, f, indent=2, ensure_ascii=False)
+
+
+def gerar_id_dropdown():
+    return f"dd_{int(datetime.datetime.utcnow().timestamp() * 1000)}"
+
+
+# ==============================
+# SISTEMA DE ENTRADA / SAÍDA
+# ==============================
+def carregar_entrada_saida():
+    if os.path.exists(ARQUIVO_ENTRADA_SAIDA):
+        with open(ARQUIVO_ENTRADA_SAIDA, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+def salvar_entrada_saida(dados):
+    with open(ARQUIVO_ENTRADA_SAIDA, "w", encoding="utf-8") as f:
+        json.dump(dados, f, indent=2, ensure_ascii=False)
+
+
+class CustomDropdown(discord.ui.Select):
+    def __init__(self, custom_id: str, placeholder: str, opcoes: list):
+        self.custom_id_ = custom_id
+        options = []
+        for op in opcoes:
+            options.append(
+                discord.SelectOption(
+                    label=op["label"],
+                    value=op["value"],
+                    description=op.get("description") or None,
+                    emoji=op.get("emoji") or None,
+                )
+            )
+        super().__init__(
+            placeholder=placeholder,
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id=custom_id,
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        dados = carregar_dropdowns()
+        config = dados.get(self.custom_id)
+        if not config:
+            await interaction.response.send_message(
+                "❌ Este dropdown não está mais configurado.", ephemeral=True
+            )
+            return
+
+        escolha = self.values[0]
+        opcao = next((o for o in config["opcoes"] if o["value"] == escolha), None)
+        if not opcao:
+            await interaction.response.send_message(
+                "❌ Opção inválida.", ephemeral=True
+            )
+            return
+
+        cargos_ids = opcao.get("cargos", [])
+        cargos_dados = []
+        cargos_falha = []
+        for cid in cargos_ids:
+            role = interaction.guild.get_role(int(cid))
+            if role:
+                try:
+                    await interaction.user.add_roles(role, reason="Dropdown de verificação")
+                    cargos_dados.append(role.mention)
+                except discord.Forbidden:
+                    cargos_falha.append(role.name)
+            else:
+                cargos_falha.append(f"ID {cid}")
+
+        cor = discord.Color(int(config.get("cor", 0xB40000)))
+
+        embed = discord.Embed(
+            title=f"✅ {opcao['label']}",
+            description=(
+                f"Você escolheu **{opcao['label']}**.\n\n"
+                + (f"**Cargos recebidos:** {', '.join(cargos_dados)}" if cargos_dados else "")
+                + (f"\n**Falha ao dar:** {', '.join(cargos_falha)}" if cargos_falha else "")
+            ),
+            color=cor,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class CustomDropdownView(discord.ui.View):
+    def __init__(self, custom_id: str = None, placeholder: str = None, opcoes: list = None):
+        super().__init__(timeout=None)
+        if custom_id and opcoes is not None:
+            self.add_item(CustomDropdown(custom_id, placeholder, opcoes))
+
+
+# ==============================
 # CONFIGURAÇÃO DO BOT
 # ==============================
 intents = discord.Intents.default()
@@ -468,17 +580,104 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 # ==============================
+# SETUP HOOK (registra views persistentes)
+# ==============================
+@bot.event
+async def setup_hook():
+    """Roda antes do bot conectar — registra as views persistentes."""
+    bot.add_view(PercursoView())
+    bot.add_view(RegulamentacaoView())
+    bot.add_view(OrdemUnidaView())
+    bot.add_view(RequisitosView())
+
+    dados = carregar_dropdowns()
+    for cid, config in dados.items():
+        try:
+            view = discord.ui.View(timeout=None)
+            view.add_item(CustomDropdown(cid, config["placeholder"], config["opcoes"]))
+            bot.add_view(view)
+            print(f"✅ Dropdown persistente registrado: {cid}")
+        except Exception as e:
+            print(f"❌ Erro ao registrar dropdown {cid}: {e}")
+
+
+# ==============================
 # EVENTOS
 # ==============================
 @bot.event
 async def on_ready():
     print(f"🤖 Bot online como {bot.user}")
-    await bot.change_presence(activity=discord.Game(name="VIDA LONGA ORDEM RUBRA!"))
+    await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
     try:
         synced = await bot.tree.sync()
         print(f"✅ {len(synced)} comandos slash sincronizados.")
     except Exception as e:
         print(f"❌ Erro ao sincronizar slash commands: {e}")
+
+
+# ==============================
+# 🎉 EVENTOS AUTOMÁTICOS DE ENTRADA / SAÍDA
+# ==============================
+@bot.event
+async def on_member_join(member: discord.Member):
+    dados = carregar_entrada_saida()
+    guild_id = str(member.guild.id)
+    config = dados.get(guild_id, {})
+    canal_id = config.get("canal_entrada")
+
+    if not canal_id:
+        return
+
+    canal = member.guild.get_channel(canal_id)
+    if not canal:
+        return
+
+    embed = discord.Embed(
+        title="🎉 Bem-vindo(a)!",
+        description=f"Que bom te ver {member.mention}",
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.set_image(url=member.display_avatar.url)
+    embed.set_footer(text=FOOTER)
+
+    try:
+        await canal.send(embed=embed)
+    except discord.Forbidden:
+        pass
+    except Exception as e:
+        print(f"❌ Erro ao enviar boas-vindas: {e}")
+
+
+@bot.event
+async def on_member_remove(member: discord.Member):
+    dados = carregar_entrada_saida()
+    guild_id = str(member.guild.id)
+    config = dados.get(guild_id, {})
+    canal_id = config.get("canal_saida")
+
+    if not canal_id:
+        return
+
+    canal = member.guild.get_channel(canal_id)
+    if not canal:
+        return
+
+    embed = discord.Embed(
+        title="😡 Até nunca mais!",
+        description=f"Vai mas não volta {member.mention} 😡",
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.set_image(url=member.display_avatar.url)
+    embed.set_footer(text=FOOTER)
+
+    try:
+        await canal.send(embed=embed)
+    except discord.Forbidden:
+        pass
+    except Exception as e:
+        print(f"❌ Erro ao enviar despedida: {e}")
 
 
 # ==============================
@@ -504,7 +703,13 @@ class PercursoSelect(discord.ui.Select):
             discord.SelectOption(label=nome, emoji="🏁", description="Ver cargos e tempos")
             for nome in PERCURSOS.keys()
         ]
-        super().__init__(placeholder="Escolha um percurso...", min_values=1, max_values=1, options=options)
+        super().__init__(
+            placeholder="Escolha um percurso...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_percurso",
+        )
 
     async def callback(self, interaction: discord.Interaction):
         percurso_escolhido = self.values[0]
@@ -522,12 +727,12 @@ class PercursoSelect(discord.ui.Select):
                 inline=False,
             )
         embed.set_footer(text=FOOTER)
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 class PercursoView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=300)
+        super().__init__(timeout=None)
         self.add_item(PercursoSelect())
 
 
@@ -556,7 +761,13 @@ class RegulamentacaoSelect(discord.ui.Select):
             discord.SelectOption(label=nome, emoji="⚖️", description="Ver regulamentação e requisitos")
             for nome in REGULAMENTACAO_DADOS.keys()
         ]
-        super().__init__(placeholder="Escolha uma categoria...", min_values=1, max_values=1, options=options)
+        super().__init__(
+            placeholder="Escolha uma categoria...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_regulamentacao",
+        )
 
     async def callback(self, interaction: discord.Interaction):
         escolha = self.values[0]
@@ -568,12 +779,12 @@ class RegulamentacaoSelect(discord.ui.Select):
             timestamp=datetime.datetime.utcnow(),
         )
         embed.set_footer(text=FOOTER)
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 class RegulamentacaoView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=300)
+        super().__init__(timeout=None)
         self.add_item(RegulamentacaoSelect())
 
 
@@ -629,7 +840,13 @@ class OrdemUnidaSelect(discord.ui.Select):
             discord.SelectOption(label=nome, emoji="🪖", description="Ler esta parte do manual")
             for nome in ORDEM_UNIDA.keys()
         ]
-        super().__init__(placeholder="Escolha uma parte do manual...", min_values=1, max_values=1, options=options)
+        super().__init__(
+            placeholder="Escolha uma parte do manual...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_ordem_unida",
+        )
 
     async def callback(self, interaction: discord.Interaction):
         parte = self.values[0]
@@ -641,12 +858,12 @@ class OrdemUnidaSelect(discord.ui.Select):
             timestamp=datetime.datetime.utcnow(),
         )
         embed.set_footer(text=FOOTER)
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 class OrdemUnidaView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=300)
+        super().__init__(timeout=None)
         self.add_item(OrdemUnidaSelect())
 
 
@@ -883,7 +1100,13 @@ class RequisitosSelect(discord.ui.Select):
             discord.SelectOption(label=nome, emoji="📌", description="Ver patente e requisitos")
             for nome in REQUISITOS.keys()
         ]
-        super().__init__(placeholder="Escolha um órgão...", min_values=1, max_values=1, options=options)
+        super().__init__(
+            placeholder="Escolha um órgão...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_requisitos",
+        )
 
     async def callback(self, interaction: discord.Interaction):
         orgao = self.values[0]
@@ -898,12 +1121,12 @@ class RequisitosSelect(discord.ui.Select):
         for titulo, itens in info.get("extras", {}).items():
             embed.add_field(name=titulo, value=formatar_lista_req(itens), inline=False)
         embed.set_footer(text=FOOTER)
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 class RequisitosView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=300)
+        super().__init__(timeout=None)
         self.add_item(RequisitosSelect())
 
 
@@ -936,6 +1159,283 @@ async def lema(interaction: discord.Interaction):
     )
     embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
+
+
+# ==============================
+# 🚪 CONFIGURAÇÃO DE ENTRADA / SAÍDA
+# ==============================
+@bot.tree.command(name="entrar", description="Define o canal de boas-vindas automático")
+@is_staff()
+@app_commands.describe(canal="Canal que vai receber as mensagens de boas-vindas")
+async def entrar(interaction: discord.Interaction, canal: discord.TextChannel):
+    dados = carregar_entrada_saida()
+    guild_id = str(interaction.guild.id)
+
+    dados.setdefault(guild_id, {})
+    dados[guild_id]["canal_entrada"] = canal.id
+    salvar_entrada_saida(dados)
+
+    await interaction.response.send_message(
+        f"✅ **Sucesso!** Canal de entrada definido como {canal.mention}.\n"
+        f"_(esta mensagem será apagada em 30 segundos)_",
+        ephemeral=True,
+    )
+
+    async def apagar_depois():
+        await asyncio.sleep(30)
+        try:
+            await interaction.delete_original_response()
+        except Exception:
+            pass
+
+    asyncio.create_task(apagar_depois())
+
+
+@bot.tree.command(name="sair", description="Define o canal de despedida automático")
+@is_staff()
+@app_commands.describe(canal="Canal que vai receber as mensagens de saída")
+async def sair(interaction: discord.Interaction, canal: discord.TextChannel):
+    dados = carregar_entrada_saida()
+    guild_id = str(interaction.guild.id)
+
+    dados.setdefault(guild_id, {})
+    dados[guild_id]["canal_saida"] = canal.id
+    salvar_entrada_saida(dados)
+
+    await interaction.response.send_message(
+        f"✅ **Sucesso!** Canal de saída definido como {canal.mention}.\n"
+        f"_(esta mensagem será apagada em 30 segundos)_",
+        ephemeral=True,
+    )
+
+    async def apagar_depois():
+        await asyncio.sleep(30)
+        try:
+            await interaction.delete_original_response()
+        except Exception:
+            pass
+
+    asyncio.create_task(apagar_depois())
+
+
+# ==============================
+# 🎛️ SISTEMA DE DROPDOWNS CUSTOMIZADOS (COMANDOS)
+# ==============================
+dropdown = app_commands.Group(name="dropdown", description="Gerenciar dropdowns customizados")
+
+
+@dropdown.command(name="create", description="Cria um dropdown customizado com cargos")
+@is_staff()
+@app_commands.describe(
+    titulo="Título do embed do dropdown",
+    descricao="Descrição do embed",
+    placeholder="Texto que aparece no dropdown antes de escolher",
+    cor_hex="Cor em hexadecimal (ex: B40000)",
+    canal="Canal onde o dropdown será enviado",
+)
+async def dropdown_create(
+    interaction: discord.Interaction,
+    titulo: str,
+    descricao: str,
+    placeholder: str,
+    cor_hex: str,
+    canal: discord.TextChannel,
+):
+    try:
+        cor_int = int(cor_hex.replace("#", ""), 16)
+    except ValueError:
+        await interaction.response.send_message(
+            "❌ Cor inválida. Use hexadecimal, ex: `B40000`.", ephemeral=True
+        )
+        return
+
+    cid = gerar_id_dropdown()
+
+    dados = carregar_dropdowns()
+    dados[cid] = {
+        "titulo": titulo,
+        "descricao": descricao,
+        "placeholder": placeholder,
+        "cor": cor_int,
+        "canal_id": canal.id,
+        "opcoes": [],
+    }
+    salvar_dropdowns(dados)
+
+    embed = discord.Embed(
+        title="🎛️ Dropdown criado",
+        description=(
+            f"**ID:** `{cid}`\n"
+            f"**Título:** {titulo}\n"
+            f"**Canal:** {canal.mention}\n"
+            f"**Cor:** `#{cor_hex.replace('#', '').upper()}`\n\n"
+            f"Agora use `/dropdown edit` com este ID para adicionar as opções (label + cargos)."
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+@dropdown.command(name="edit", description="Edita um dropdown existente (cor, título, opções)")
+@is_staff()
+@app_commands.describe(
+    id_dropdown="ID do dropdown (veja em /dropdown list)",
+    titulo="Novo título (deixe vazio para manter)",
+    descricao="Nova descrição (deixe vazio para manter)",
+    cor_hex="Nova cor em hexadecimal (deixe vazio para manter)",
+    opcoes="Formato: Label|cargo_id1,cargo_id2;Label2|cargo_id3",
+)
+async def dropdown_edit(
+    interaction: discord.Interaction,
+    id_dropdown: str,
+    titulo: str = None,
+    descricao: str = None,
+    cor_hex: str = None,
+    opcoes: str = None,
+):
+    dados = carregar_dropdowns()
+    if id_dropdown not in dados:
+        await interaction.response.send_message(
+            f"❌ Nenhum dropdown com ID `{id_dropdown}`.", ephemeral=True
+        )
+        return
+
+    config = dados[id_dropdown]
+
+    if titulo:
+        config["titulo"] = titulo
+    if descricao:
+        config["descricao"] = descricao
+    if cor_hex:
+        try:
+            config["cor"] = int(cor_hex.replace("#", ""), 16)
+        except ValueError:
+            await interaction.response.send_message("❌ Cor inválida.", ephemeral=True)
+            return
+
+    if opcoes:
+        novas = []
+        try:
+            for bloco in opcoes.split(";"):
+                bloco = bloco.strip()
+                if not bloco:
+                    continue
+                label, cargos_str = bloco.split("|")
+                cargos = [c.strip() for c in cargos_str.split(",") if c.strip()]
+                novas.append({
+                    "label": label.strip(),
+                    "value": label.strip().lower().replace(" ", "_"),
+                    "cargos": cargos,
+                })
+            config["opcoes"] = novas
+        except Exception as e:
+            await interaction.response.send_message(
+                f"❌ Formato de opções inválido: {e}\n"
+                f"Use: `Label|cargo_id1,cargo_id2;Label2|cargo_id3`",
+                ephemeral=True,
+            )
+            return
+
+    salvar_dropdowns(dados)
+
+    embed = discord.Embed(
+        title="✅ Dropdown atualizado",
+        description=(
+            f"**ID:** `{id_dropdown}`\n"
+            f"**Título:** {config['titulo']}\n"
+            f"**Opções:** {len(config['opcoes'])}"
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+@dropdown.command(name="send", description="Envia o dropdown no canal configurado")
+@is_staff()
+@app_commands.describe(id_dropdown="ID do dropdown")
+async def dropdown_send(interaction: discord.Interaction, id_dropdown: str):
+    dados = carregar_dropdowns()
+    if id_dropdown not in dados:
+        await interaction.response.send_message(
+            f"❌ Nenhum dropdown com ID `{id_dropdown}`.", ephemeral=True
+        )
+        return
+
+    config = dados[id_dropdown]
+    if not config["opcoes"]:
+        await interaction.response.send_message(
+            "❌ Esse dropdown não tem opções ainda. Use `/dropdown edit`.", ephemeral=True
+        )
+        return
+
+    canal = interaction.guild.get_channel(config["canal_id"])
+    if not canal:
+        await interaction.response.send_message("❌ Canal não encontrado.", ephemeral=True)
+        return
+
+    embed = discord.Embed(
+        title=config["titulo"],
+        description=config["descricao"],
+        color=discord.Color(int(config["cor"])),
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.set_footer(text=FOOTER)
+
+    view = discord.ui.View(timeout=None)
+    view.add_item(CustomDropdown(id_dropdown, config["placeholder"], config["opcoes"]))
+
+    await canal.send(embed=embed, view=view)
+    await interaction.response.send_message(
+        f"✅ Dropdown enviado em {canal.mention}.", ephemeral=True
+    )
+
+
+@dropdown.command(name="list", description="Lista todos os dropdowns criados")
+@is_staff()
+async def dropdown_list(interaction: discord.Interaction):
+    dados = carregar_dropdowns()
+    if not dados:
+        await interaction.response.send_message("📭 Nenhum dropdown criado ainda.", ephemeral=True)
+        return
+
+    linhas = []
+    for cid, cfg in dados.items():
+        canal = interaction.guild.get_channel(cfg["canal_id"])
+        linhas.append(
+            f"**`{cid}`** — {cfg['titulo']} "
+            f"(#{canal.name if canal else '?'}) — {len(cfg['opcoes'])} opções"
+        )
+
+    embed = discord.Embed(
+        title="🎛️ Dropdowns criados",
+        description="\n".join(linhas),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+@dropdown.command(name="delete", description="Deleta um dropdown")
+@is_staff()
+@app_commands.describe(id_dropdown="ID do dropdown")
+async def dropdown_delete(interaction: discord.Interaction, id_dropdown: str):
+    dados = carregar_dropdowns()
+    if id_dropdown not in dados:
+        await interaction.response.send_message("❌ ID não encontrado.", ephemeral=True)
+        return
+    del dados[id_dropdown]
+    salvar_dropdowns(dados)
+    await interaction.response.send_message(
+        f"🗑️ Dropdown `{id_dropdown}` removido do banco.", ephemeral=True
+    )
+
+
+bot.tree.add_command(dropdown)
 
 
 # ==============================
