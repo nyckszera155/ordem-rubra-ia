@@ -1,4 +1,3 @@
-import asyncio
 import os
 import re
 import json
@@ -8,7 +7,6 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from dotenv import load_dotenv
-from openai import OpenAI
 
 # ==============================
 # CARREGAMENTO DE VARIÁVEIS
@@ -16,46 +14,7 @@ from openai import OpenAI
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-GEMINI_KEY = os.getenv("GEMINI_API_KEY")
 STAFF_ROLE_ID = int(os.getenv("STAFF_ROLE_ID", "0"))
-
-MODELO = "gemini-3.5-flash-lite"
-# Outras opções: "gemini-3.1-flash-lite" (mais antigo e estável) ou "gemini-3.8-flash"
-# (mais inteligente, mas o plano grátis dele tem bem menos requisições por dia)
-
-# Moderação automática: quem marcar o bot com ofensas/besteiras leva mute
-MUTE_AUTOMATICO_MINUTOS = 10
-
-PROMPT_MODERACAO = (
-    "Você é um filtro de moderação de um bot sério de um servidor de Discord. "
-    "Receberá uma mensagem que um usuário enviou marcando o bot. "
-    "Responda APENAS 'SIM' se a mensagem for inadequada: xingamentos, ofensas, assédio, "
-    "conteúdo sexual ou cantadas obscenas, ameaças, provocações grosseiras ou "
-    "besteiras desrespeitosas direcionadas ao bot. "
-    "Responda APENAS 'NAO' se for uma pergunta, pedido ou conversa normal e respeitosa, "
-    "mesmo que informal ou com erros de português. "
-    "Na dúvida, responda 'NAO'. Não escreva nada além de SIM ou NAO."
-)
-
-# ==============================
-# CLIENTE GEMINI (endpoint compatível com a biblioteca da OpenAI)
-# ==============================
-client = OpenAI(
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-    api_key=GEMINI_KEY,
-)
-
-# ==============================
-# CONFIGURAÇÃO DO BOT
-# ==============================
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
-
-bot = commands.Bot(command_prefix='!', intents=intents)
-
-# Histórico de conversa por usuário
-historico = {}
 
 # Arquivo de warnings
 ARQUIVO_WARN = "warnings.json"
@@ -64,7 +23,6 @@ ARQUIVO_WARN = "warnings.json"
 # ==============================
 # 📋 DADOS DOS PERCURSOS (fonte única de verdade)
 # ==============================
-# Estrutura: {percurso: {cargo: {"tempo": "...", "nota": "..."}}}
 PERCURSOS = {
     "1º Percurso — Balamentos": {
         "Praças": {"tempo": "45 segundos", "nota": "—"},
@@ -102,48 +60,10 @@ NOTAS_APROVACAO = {
     "Primeiro-Sargento": "6,5 pontos",
 }
 
-# Texto formatado para injetar no system prompt da IA
-DADOS_PERCURSOS_TEXTO = """
-📋 PERCURSOS, TEMPOS E NOTAS DE APROVAÇÃO:
-
-1º Percurso (Balamentos):
-- Praças: 45 segundos
-- Graduados: 40 segundos
-
-2º Percurso (Torre):
-- Recruta: 25 segundos
-- Soldado: 20 segundos
-- Terceiro-Sargento: 16 segundos
-- Segundo-Sargento: 14 segundos
-- Primeiro-Sargento: 12 segundos
-
-3º Percurso (Torre 2.0):
-- Recruta: 30 segundos
-- Soldado: 25 segundos
-- Terceiro-Sargento: 18 segundos
-- Segundo-Sargento: 16 segundos
-- Primeiro-Sargento: 14 segundos
-
-4º Percurso:
-- Recruta: 35 segundos
-- Soldado: 30 segundos
-
-Percurso de Graduados:
-- Graduados: 45 segundos
-
-🎯 NOTA DE APROVAÇÃO (pontuação mínima):
-- Recruta: 5,0 pontos
-- Soldado: 5,5 pontos
-- Terceiro-Sargento: 6,0 pontos
-- Segundo-Sargento: 6,5 pontos
-- Primeiro-Sargento: 6,5 pontos
-"""
-
 
 # ==============================
 # 📅 DADOS DA CAPACITAÇÃO DE PATENTE (fonte única de verdade)
 # ==============================
-# Estrutura: {grupo: [{"cargo": "...", "dias": "...", "detalhe": "..."}]}
 CAPACITACAO = {
     "Graduados 「🎓」": [
         {"cargo": "Subtenente", "dias": "6 dias", "detalhe": "22 relatórios de recrutamentos registrados"},
@@ -167,27 +87,9 @@ def formatar_linha_cp(item):
     return texto
 
 
-def montar_texto_cp():
-    """Gera o texto da capacitação para injetar no system prompt da IA."""
-    linhas = ["📅 CAPACITAÇÃO DE PATENTE (dias necessários e relatórios por patente):"]
-    for grupo, itens in CAPACITACAO.items():
-        linhas.append(f"\n{grupo}:")
-        for item in itens:
-            linha = f"- {item['cargo']}: {item['dias']}"
-            if item["detalhe"]:
-                linha += f" ({item['detalhe']})"
-            linhas.append(linha)
-    return "\n".join(linhas)
-
-
-DADOS_CP_TEXTO = montar_texto_cp()
-
-
 # ==============================
 # 📌 DADOS DOS REQUISITOS DOS ÓRGÃOS (fonte única de verdade)
 # ==============================
-# Estrutura: {orgao: {"patente": "...", "requisitos": [...], "extras": {titulo: [...]}}}
-# Para mudar a patente exigida de um órgão, edite o campo "patente".
 REQUISITOS = {
     "BFEr": {
         "patente": "Rubro 1",
@@ -249,24 +151,6 @@ def formatar_lista_req(itens):
     return "\n".join(f"▪️ {item}" for item in itens)
 
 
-def montar_texto_requisitos():
-    """Gera o texto dos requisitos para injetar no system prompt da IA."""
-    linhas = ["📌 REQUISITOS DE CANDIDATURA DOS ÓRGÃOS (patente necessária, requisitos e observações):"]
-    for orgao, info in REQUISITOS.items():
-        linhas.append(f"\n{orgao}:")
-        linhas.append(f"- Patente necessária: {info['patente']}")
-        for item in info["requisitos"]:
-            linhas.append(f"- {item}")
-        for titulo, itens in info.get("extras", {}).items():
-            linhas.append(f"{titulo}:")
-            for item in itens:
-                linhas.append(f"- {item}")
-    return "\n".join(linhas)
-
-
-DADOS_REQ_TEXTO = montar_texto_requisitos()
-
-
 # ==============================
 # ☀️ LEMA DA ORDEM RUBRA
 # ==============================
@@ -277,21 +161,10 @@ LEMA_TEXTO = (
 )
 LEMA_GRITO = "VIDA LONGA ORDEM RUBRA!"
 
-# Texto para injetar no system prompt da IA
-DADOS_LEMA_TEXTO = f'☀️ LEMA DA ORDEM RUBRA:\n"{LEMA_TEXTO}"\nGrito final: {LEMA_GRITO}'
-
 
 # ==============================
 # 🪖 DADOS DA ORDEM UNIDA (fonte única de verdade)
 # ==============================
-# Cada texto enviado vira um item do menu do comando /ordem unida.
-# Para adicionar uma parte nova, copie o bloco abaixo e cole o texto. O bot divide em
-# páginas sozinho se o texto for grande, então não precisa se preocupar com o tamanho:
-#   "Ordem Unida — Parte 1": {
-#       "titulo": "Ordem Unida — Parte 1",
-#       "texto": """Cole o texto aqui""",
-#   },
-# O menu do Discord aceita no máximo 25 partes.
 ORDEM_UNIDA = {
     "Introdução": {
         "titulo": "Manual de Ordem Unida",
@@ -302,381 +175,39 @@ ORDEM_UNIDA = {
         "texto": """**FUNDAMENTOS, COMANDOS E APLICAÇÕES**
 A Ordem Unida é um dos fundamentos essenciais da formação militar, tendo como finalidade padronizar a apresentação, o deslocamento e a organização dos militares em conjunto. Por meio de seus comandos e movimentos, busca-se desenvolver disciplina, obediência imediata, coordenação coletiva, atenção, postura e reflexos condicionados, atributos indispensáveis para qualquer militar.
 
-A correta execução da Ordem Unida garante que o grupamento se apresente e se desloque de maneira organizada, harmônica e eficiente, respeitando a hierarquia e a padronização institucional.
-
-**O QUE É ORDEM UNIDA - RESUMIDA**
-A Ordem Unida é o conjunto de normas, comandos e movimentos utilizados para:
-▪️ Padronizar a apresentação do militar e do grupamento;
-▪️ Organizar o deslocamento coletivo;
-▪️ Garantir disciplina, hierarquia e harmonia nos movimentos.
-
-**Seu emprego desenvolve:**
-▪️ Obediência imediata às ordens;
-▪️ Coordenação coletiva;
-▪️ Atenção, postura e autocontrole;
-▪️ Espírito de corpo e disciplina militar.
-
-É aplicada em instruções, apresentações, deslocamentos formais e situações administrativas dentro da instituição.
-
-**Principal Objetivo da Ordem Unida**
-A Ordem Unida tem como principais objetivos permitir que o grupamento se apresente e se desloque em perfeita ordem, desenvolver a disciplina coletiva, estimular a obediência aos comandos, aprimorar a coordenação e fortalecer o espírito de corpo. Esses fatores são determinantes para o bom desempenho do militar em qualquer atividade dentro da instituição.
-
-**OBJETIVOS DA ORDEM UNIDA - RESUMIDA**
-**Permitir que o grupamento:**
-▪️ Apresente-se de forma organizada e padronizada;
-▪️ Desloque-se com ordem, sincronia e disciplina.
-
-**Desenvolver no militar:**
-▪️ Reflexos condicionados;
-▪️ Respeito à hierarquia;
-▪️ Capacidade de agir coletivamente;
-▪️ Prontidão para cumprir ordens.""",
+A correta execução da Ordem Unida garante que o grupamento se apresente e se desloque de maneira organizada, harmônica e eficiente, respeitando a hierarquia e a padronização institucional.""",
     },
     "Parte 2 — Tipos de Comandos": {
         "titulo": "Parte 2 — Tipos de Comandos",
         "texto": """Os comandos utilizados na Ordem Unida dividem-se em vozes de comando e comandos propriamente ditos.
 
-A voz de comando é utilizada para preparar o grupamento, alertando-o de que uma ação será executada. Dentro dela, destaca-se a voz de advertência, que serve exclusivamente como alerta inicial, não possuindo caráter de execução. Exemplos incluem “Grupamento”, “Pelotão” e “Esquadrão”. Essa voz deve ser empregada apenas uma vez, pois sua função é somente chamar a atenção do grupamento.
-
-O meio comando é aquele que antecede uma ação, preparando o grupamento para o movimento que será executado. Ele é aplicável, principalmente, a comandos de marcha e de volver, pois nesses casos há movimentação. Nos comandos de volver, o meio comando indica a direção do giro; nos comandos de marcha, indica o tipo e, quando necessário, a direção do deslocamento.
-
-Os comandos propriamente ditos são responsáveis por iniciar ou finalizar um movimento. Alguns são antecedidos por meio comando, enquanto outros são executados de forma direta. Exemplos incluem “Sentido”, “Descansar”, “Atenção” e “Marche”.
-
-**TIPOS DE COMANDOS - RESUMIDO**
-
-**Vozes de Comando**
-**Utilizadas para:**
-▪️ Alertar;
-▪️ Preparar o grupamento para uma ação.
-Não possuem execução direta de movimento.
-
-**Voz de Advertência**
-**Finalidade:**
-▪️ Alertar o grupamento de que comandos serão emitidos.
-**Características:**
-▪️ Deve ser dita apenas uma vez;
-▪️ Não inicia movimento.
-**Exemplos:**
-▪️ “GRUPAMENTO!”
-▪️ “PELOTÃO!”
-▪️ “ESQUADRÃO!”
-
-**Meio Comando**
-**Finalidade:**
-▪️ Preparar o grupamento para a ação que será executada.
-**Aplicação:**
-▪️ Apenas em comandos que envolvem movimentação.
-**Função:**
-▪️ Em marchas: indica o tipo e a direção;
-▪️ Em volvers: indica a direção do giro.
-**Exemplos:**
-▪️ APRESENTAR, ARMA!
-▪️ DESCANSAR, ARMA!
-▪️ ESQUERDA VOLVER!
-▪️ DIREITA VOLVER!
-
-**Comandos Propriamente Ditos**
-**Finalidade:**
-▪️ Iniciar ou encerrar a execução do movimento.
-**Podem ser:**
-▪️ Antecedidos por meio comando;
-▪️ Executados de forma direta.
-**Exemplos:**
-▪️ SENTIDO!
-▪️ DESCANSAR!
-▪️ ATENÇÃO!
-▪️ MARCHE!""",
+A voz de comando é utilizada para preparar o grupamento, alertando-o de que uma ação será executada.""",
     },
     "Parte 3 — Comandos de Postura": {
         "titulo": "Parte 3 — Comandos de Postura",
         "texto": """**COMANDOS BÁSICOS DE POSTURA**
-O comando “Atenção” tem a finalidade de alertar o grupamento para o início das ordens do instrutor ou xerife. O comando “Sentido” determina que o grupamento permaneça imóvel, com postura ereta e mãos vazias, aguardando o próximo comando. O comando “Descansar” autoriza o grupamento a assumir a posição de descanso, sendo válido apenas quando o grupamento estiver anteriormente em posição de sentido. O comando “À vontade” concede maior liberdade de movimento, desde que o militar permaneça no local e mantenha postura adequada.
-
-Os comandos “Apresentar, arma” e “Descansar, arma” são utilizados, respectivamente, para iniciar e finalizar a continência do grupamento, incluindo o instrutor ou xerife.
-
-**COMANDOS BÁSICOS DE POSTURA - RESUMIDO**
-
-**ATENÇÃO!**
-**Finalidade:**
-▪️ Alertar o grupamento para o início das ordens do instrutor.
-**Observação:**
-▪️ Prepara para o comando seguinte.
-
-**SENTIDO!**
-**Finalidade:**
-▪️ Colocar o grupamento em postura rígida e imóvel.
-**Características:**
-▪️ Mãos vazias;
-▪️ Olhar à frente.
-
-**DESCANSAR!**
-**Finalidade:**
-▪️ Permitir postura menos rígida.
-**Observação:**
-▪️ Só pode ser dado se o grupamento estiver em sentido.
-
-**À VONTADE!**
-**Finalidade:**
-▪️ Conceder maior liberdade de movimento.
-**Limitações:**
-▪️ Não sair do lugar;
-▪️ Manter postura adequada.""",
+O comando “Atenção” tem a finalidade de alertar o grupamento para o início das ordens do instrutor ou xerife.""",
     },
     "Parte 4 — Comandos de Marcha": {
         "titulo": "Parte 4 — Comandos de Marcha",
-        "texto": """Existem três tipos principais de marcha aplicáveis no âmbito do jogo: ordinário, acelerado e sem cadência.
-
-A marcha ordinária é a mais formal e a mais utilizada. Nela, o grupamento deve seguir o instrutor ou xerife sem correr, mantendo rigorosamente a organização da fila e a sincronia coletiva.
-
-A marcha acelerada caracteriza-se pelo deslocamento correndo, devendo o grupamento, ainda assim, tentar manter a organização da fila.
-
-A marcha sem cadência é considerada informal, permitindo que o grupamento siga o instrutor sem necessidade de manter alinhamento rigoroso, sendo proibido correr.
-
-Para preparar corretamente o grupamento para marchar, os comandos devem seguir uma sequência padronizada. Para a marcha ordinária, o instrutor deve comandar, de frente para o grupamento: “Grupamento, atenção” e “Grupamento, sentido”. Em seguida, deve virar-se de costas para o grupamento e informar o destino com “Em direção ao (local)”, indicar o tipo de marcha com “Ordinário” e iniciar o deslocamento com “Marche”. Ao término da marcha, já de frente para o grupamento, deve finalizar com “Grupamento, faz alto”.
-
-O mesmo procedimento é aplicado à marcha acelerada, substituindo-se apenas o tipo de marcha pelo comando “Acelerado”, e à marcha sem cadência, utilizando-se o comando “Sem cadência”. Em todos os casos, o comando “Grupamento, faz alto” é obrigatório para encerrar a marcha, devendo o grupamento permanecer em posição de sentido após a parada.
-
-**TIPOS DE MARCHA**
-
-**ORDINÁRIO**
-▪️ Marcha formal;
-▪️ Sem correr;
-▪️ Fila organizada;
-▪️ Total sincronia com o instrutor.
-
-**ACELERADO**
-▪️ Marcha rápida;
-▪️ Grupamento corre;
-▪️ Organização da fila deve ser mantida.
-
-**SEM CADÊNCIA**
-▪️ Marcha informal;
-▪️ Não exige alinhamento rígido;
-▪️ É proibido correr.
-
-**SEQUÊNCIA PADRÃO PARA MARCHAR**
-
-**Marcha Ordinária**
-**De frente:**
-▪️ GRUPAMENTO, ATENÇÃO!
-▪️ GRUPAMENTO, SENTIDO!
-**De costas:**
-▪️ EM DIREÇÃO AO (LOCAL)!
-▪️ ORDINÁRIO!
-▪️ MARCHE!
-**De frente (finalização):**
-▪️ GRUPAMENTO, FAZ ALTO!
-
-**Marcha Acelerada**
-Mesma sequência, substituindo:
-ORDINÁRIO! por ACELERADO!
-
-**Marcha Sem Cadência**
-Mesma sequência, substituindo:
-ORDINÁRIO! por SEM CADÊNCIA!""",
+        "texto": """Existem três tipos principais de marcha aplicáveis no âmbito do jogo: ordinário, acelerado e sem cadência.""",
     },
     "Parte 5 — Alteração de Dispositivo": {
         "titulo": "Parte 5 — Alteração de Dispositivo",
-        "texto": """O comando “Fora de forma” é exclusivo para alterações de dispositivo e jamais deve ser utilizado para deslocamento. Ele indica que o grupamento mudará sua organização, como de formação para coluna ou de coluna para formação.
-
-A coluna por um é uma forma de organização na qual os militares ficam posicionados um atrás do outro, respeitando a distância de uma pessoa entre si. Existem outras variações, como coluna por dois, três ou quatro, nas quais se deve observar rigorosamente a obediência às fileiras e às linhas.
-
-Para formar uma coluna por um, o instrutor deve permanecer de frente para o grupamento e comandar: “Grupamento, atenção”, “Grupamento, sentido” e, em seguida, explicar a ação com “Devem formar uma coluna por um em minha retaguarda”. Após isso, utiliza-se o comando “Fora de forma” e, logo depois, “Marche”. Após o comando “Marche”, o instrutor deve deslocar-se até o local desejado para que o grupamento se organize corretamente em coluna. Ao concluir a alteração de dispositivo, o grupamento assume posição de descanso, não sendo utilizado o comando “Grupamento, faz alto”, pois não se trata de uma marcha.
-
-A formação, por sua vez, ocorre quando o grupamento se organiza em linha, ombro a ombro. Fileira é a disposição dos militares lado a lado, voltados para a mesma frente. Linha caracteriza-se por possuir maior frente do que profundidade, ou seja, mais militares lado a lado do que em profundidade.
-
-Para entrar em formação, o instrutor deve comandar, de frente para o grupamento: “Grupamento, atenção”, “Grupamento, sentido” e, em seguida, explicar a ação com “Devem ir até a formação ao meu lado e formar um ombro a ombro ao meu comando”. Após isso, utiliza-se o comando “Fora de forma” e, posteriormente, “Marche”. Assim que o grupamento concluir a formação, deve assumir posição de descanso, sem o uso do comando “Grupamento, faz alto”.
-
-**ALTERAÇÃO DE DISPOSITIVO**
-
-**FORA DE FORMA**
-**Finalidade:**
-▪️ Alterar o formato do grupamento.
-**Proibições:**
-▪️ Nunca usar para deslocamento.
-**Exemplos de alteração:**
-▪️ Formação para coluna;
-▪️ Coluna para formação.
-
-**COLUNA**
-**Conceito — Coluna por um:**
-▪️ Militares posicionados um atrás do outro;
-▪️ Distância de uma pessoa entre cada militar.
-**Existem:**
-▪️ Coluna por dois, três, quatro, etc.
-
-**Comandos para Formar Coluna**
-**De frente:**
-▪️ GRUPAMENTO, ATENÇÃO!
-▪️ GRUPAMENTO, SENTIDO!
-▪️ DEVEM FORMAR UMA COLUNA POR UM EM MINHA RETAGUARDA!
-▪️ FORA DE FORMA!
-▪️ MARCHE!
-**Observação:**
-▪️ Após “MARCHE!”, o instrutor deve ir ao local desejado;
-▪️ Não utilize “GRUPAMENTO, FAZ ALTO”.
-
-**FORMAÇÃO**
-**Conceitos Fundamentais**
-**Fileira:**
-▪️ Militares lado a lado, mesma linha e mesma frente.
-**Linha:**
-▪️ Formação com frente maior que a profundidade.
-
-**Comandos para Formar**
-**De frente:**
-▪️ GRUPAMENTO, ATENÇÃO!
-▪️ GRUPAMENTO, SENTIDO!
-▪️ DEVEM IR ATÉ A FORMAÇÃO AO MEU LADO E FORMAR UM OMBRO A OMBRO AO MEU COMANDO!
-▪️ FORA DE FORMA!
-▪️ MARCHE!
-**Observação:**
-▪️ Após a formação, o grupamento entra em descanso;
-▪️ Não usar “FAZ ALTO”.""",
+        "texto": """O comando “Fora de forma” é exclusivo para alterações de dispositivo e jamais deve ser utilizado para deslocamento.""",
     },
     "Parte 6 — Comandos de Apresentação": {
         "titulo": "Parte 6 — Comandos de Apresentação",
-        "texto": """A apresentação é um ato formal que demonstra disciplina, organização e respeito à hierarquia. O militar responsável deve apresentar-se informando seu posto ou graduação seguido do nome de guerra. Para apresentar o grupamento a um superior, o grupamento deve estar previamente organizado e em posição de sentido.
-
-O xerife ou instrutor posiciona-se à frente do grupamento, comanda “Grupamento, atenção” e “Grupamento, sentido”, vira-se para o superior, presta continência e se apresenta. Em seguida, informa se o grupamento está com ou sem faltas e com ou sem alterações. Após o superior declarar que o grupamento está apresentado, o xerife retorna-se ao grupamento, comanda “Grupamento, descansar” e reassume sua posição.
-
-Considera-se falta a ausência de um integrante que não compareceu à instrução. Considera-se alteração quando algum integrante se retira antes do término da atividade. A inexistência de faltas e alterações indica que todos os integrantes participaram integralmente da instrução.
-
-**APRESENTAÇÃO DO GRUPAMENTO**
-**Finalidade:**
-▪️ Demonstrar disciplina e organização.
-**Procedimento:**
-▪️ Grupamento em sentido;
-▪️ Xerife à frente;
-▪️ Continência obrigatória do xerife;
-▪️ Informar: com ou sem faltas e com ou sem alterações.
-**Definições:**
-▪️ Falta: ausência no início da instrução;
-▪️ Alteração: saída antes do término.
-
-**SEQUÊNCIA DE COMANDOS**
-
-**Preparação do Grupamento**
-De frente para o grupamento, o xerife comanda:
-▪️ GRUPAMENTO, ATENÇÃO!
-▪️ GRUPAMENTO, SENTIDO!
-
-**Apresentação ao Superior**
-O xerife:
-▪️ Vira-se em direção ao superior;
-▪️ Presta continência obrigatoriamente;
-▪️ Realiza a apresentação verbal, dizendo:
-(POSTO/GRADUAÇÃO DO XERIFE) (NOME DE GUERRA), XERIFE DO CURSO!
-Exemplo: SUBTENENTE AT, XERIFE DO CURSO!
-Em seguida, ainda em continência, informa:
-APRESENTO GRUPAMENTO PRONTO, COM/SEM FALTAS E COM/SEM ALTERAÇÕES!
-Em seguida o superior deverá responder algo semelhante à:
-ESTÁ APRESENTADO.
-
-**Finalização da Apresentação**
-Após a resposta do superior, o xerife:
-▪️ Cessa a continência;
-▪️ Vira-se novamente para o grupamento;
-▪️ Comanda: GRUPAMENTO, DESCANSAR!
-
-**Retorno à Posição**
-O xerife:
-▪️ Retorna ao seu local;
-▪️ Assume posição de descanso junto ao grupamento.""",
+        "texto": """A apresentação é um ato formal que demonstra disciplina, organização e respeito à hierarquia.""",
     },
     "Parte 7 — Observações Gerais": {
         "titulo": "Parte 7 — Observações Gerais",
-        "texto": """▪️ Todos os comandos devem ser executados com o militar em posição de sentido, salvo quando o comando determinar outra postura.
-▪️ A execução de comandos fora da posição correta caracteriza erro de procedimento.
-▪️ O comando “GRUPAMENTO, FAZ ALTO” deve ser utilizado exclusivamente para finalizar as marchas.
-▪️ O comando “FAZ ALTO” nunca deve ser empregado em alterações de dispositivo, como formação ou coluna.
-▪️ O comando “FORA DE FORMA” é restrito à mudança do formato do grupamento, não devendo ser utilizado para deslocamento.
-▪️ Durante marchas, o grupamento deve manter atenção constante ao instrutor/xerife.
-▪️ Em marchas ordinárias, a sincronia e a organização da fila são obrigatórias.
-▪️ Em marchas aceleradas, apesar do deslocamento em corrida, deve-se manter o máximo de organização possível.
-▪️ Na marcha sem cadência, não é permitido correr.
-▪️ Durante a apresentação do grupamento, a continência do xerife ou instrutor é obrigatória.
-▪️ O superior apresentado não é obrigado a prestar continência.
-▪️ O grupamento deve permanecer imóvel e em silêncio durante apresentações e comunicações formais.
-▪️ Todos os comandos devem ser emitidos de forma clara, firme e audível a todo o grupamento.
-▪️ É responsabilidade do instrutor/xerife garantir que o grupamento compreenda o comando antes da execução.""",
+        "texto": """▪️ Todos os comandos devem ser executados com o militar em posição de sentido, salvo quando o comando determinar outra postura.""",
     },
     "Parte 8 — Perguntas Frequentes (FAQ)": {
         "titulo": "Parte 8 — Perguntas Frequentes (FAQ)",
         "texto": """**1. O que é Ordem Unida?**
-É o conjunto de comandos e movimentos que padroniza a apresentação, o deslocamento e a organização do grupamento, promovendo disciplina e coesão.
-
-**2. Qual é o principal objetivo da Ordem Unida?**
-Desenvolver disciplina, obediência, coordenação coletiva e postura militar.
-
-**3. Quem pode comandar a Ordem Unida?**
-Militares designados como instrutores, xerifes ou responsáveis pelo grupamento.
-
-**4. O que é voz de advertência?**
-É o comando usado apenas para alertar o grupamento de que uma ordem será executada.
-
-**5. A voz de advertência pode ser repetida?**
-Não. Ela deve ser dita apenas uma vez.
-
-**6. O que é meio comando?**
-É o comando que prepara o grupamento para uma movimentação específica.
-
-**7. Todo comando possui meio comando?**
-Não. Apenas comandos que envolvem movimento, como marchas e volvers.
-
-**8. O que significa “Sentido”?**
-Indica postura rígida, imóvel e atenta, aguardando o próximo comando.
-
-**9. Quando posso usar o comando “Descansar”?**
-Somente quando o grupamento estiver em posição de sentido.
-
-**10. Qual a diferença entre “Descansar” e “À vontade”?**
-“Descansar” mantém postura controlada; “À vontade” permite mais liberdade sem sair do lugar.
-
-**11. Quais são os tipos de marcha?**
-Ordinário, Acelerado e Sem Cadência.
-
-**12. Qual é a marcha mais formal?**
-A marcha Ordinária.
-
-**13. Em qual marcha é permitido correr?**
-Apenas na marcha Acelerada.
-
-**14. O que é “Sem cadência”?**
-Uma marcha informal, sem necessidade de alinhamento rigoroso e sem correr.
-
-**15. Quando devo usar “Grupamento, faz alto”?**
-Exclusivamente para finalizar uma marcha.
-
-**16. Posso usar “Faz alto” em formação ou coluna?**
-Não. Ele é proibido em alterações de dispositivo.
-
-**17. O que é “Fora de forma”?**
-Comando utilizado para alterar o formato do grupamento.
-
-**18. “Fora de forma” serve para marchar?**
-Não. Serve apenas para mudança de dispositivo.
-
-**19. O que é coluna por um?**
-Formação em que os militares ficam um atrás do outro, respeitando a distância.
-
-**20. O que é formação em linha?**
-Quando os militares ficam lado a lado, com a frente maior que a profundidade.
-
-**21. O que é fileira?**
-Disposição dos militares lado a lado, voltados para a mesma frente.
-
-**22. Quem deve prestar continência na apresentação?**
-O xerife ou instrutor é obrigado; o superior não.
-
-**23. O que são faltas na apresentação?**
-Ausência de integrante no início da instrução.
-
-**24. O que são alterações na apresentação?**
-Saída de integrante antes do término da instrução.
-
-**25. O grupamento deve se mover durante a apresentação?**
-Não. Deve permanecer imóvel em posição de sentido.""",
+É o conjunto de comandos e movimentos que padroniza a apresentação, o deslocamento e a organização do grupamento, promovendo disciplina e coesão.""",
     },
 }
 
@@ -697,101 +228,13 @@ def salvar_warnings(dados):
 
 
 # ==============================
-# FUNÇÃO DE IA
+# CONFIGURAÇÃO DO BOT
 # ==============================
-def perguntar_ia(user_id, texto):
-    if user_id not in historico:
-        historico[user_id] = [
-            {
-                "role": "system",
-                "content": (
-                    "Você é a Ordem Rubra IA, o bot principal de captura de dados "
-                    "da Ordem Rubra. Você é um bot sério, profissional e objetivo: "
-                    "responda em português do Brasil de forma clara, formal e direta, "
-                    "sem brincadeiras, gírias ou excesso de emojis. Seu foco é fornecer "
-                    "as informações oficiais da Ordem Rubra. Se alguém tentar conversar "
-                    "bobagem, assediar ou desrespeitar você, responda de forma curta, "
-                    "firme e séria, sem entrar na brincadeira. Você também pode ajudar "
-                    "com comandos de moderação quando solicitado.\n\n"
-                    "⚠️ REGRA IMPORTANTE: Quando o assunto for tempos de percurso, "
-                    "balamentos, torre, torre 2.0, notas de aprovação ou capacitação "
-                    "de patente (dias e relatórios necessários) ou requisitos de candidatura "
-                    "(BFEr, CIR, ACR) ou o lema da Ordem Rubra, use "
-                    "EXCLUSIVAMENTE os dados abaixo. Nunca invente ou estime valores.\n\n"
-                    + DADOS_PERCURSOS_TEXTO
-                    + "\n"
-                    + DADOS_CP_TEXTO
-                    + "\n"
-                    + DADOS_REQ_TEXTO
-                    + "\n"
-                    + DADOS_LEMA_TEXTO
-                )
-            }
-        ]
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
 
-    historico[user_id].append({"role": "user", "content": texto})
-
-    if len(historico[user_id]) > 21:
-        historico[user_id] = [historico[user_id][0]] + historico[user_id][-20:]
-
-    try:
-        resposta = client.chat.completions.create(
-            model=MODELO,
-            messages=historico[user_id],
-            reasoning_effort="low",
-            max_tokens=2048,
-        )
-        texto_resposta = resposta.choices[0].message.content
-        historico[user_id].append({"role": "assistant", "content": texto_resposta})
-        return texto_resposta
-
-    except Exception as e:
-        print(f"❌ Erro na API: {e}")
-        return "Ops, tive um problema para pensar agora. Tente de novo em alguns instantes!"
-
-
-# ==============================
-# 🛡️ MODERAÇÃO AUTOMÁTICA (QUEM MARCA O BOT COM BESTEIRA)
-# ==============================
-def mensagem_ofensiva(texto):
-    """Pergunta à IA se a mensagem marcada ao bot é inadequada. Em caso de erro, não pune."""
-    try:
-        resposta = client.chat.completions.create(
-            model=MODELO,
-            messages=[
-                {"role": "system", "content": PROMPT_MODERACAO},
-                {"role": "user", "content": texto},
-            ],
-            reasoning_effort="low",
-            max_tokens=256,
-        )
-        veredito = (resposta.choices[0].message.content or "").strip().upper()
-        return re.match(r"\W*SIM\b", veredito) is not None
-    except Exception as e:
-        print(f"❌ Erro ao classificar mensagem: {e}")
-        return False
-
-
-async def silenciar_por_desrespeito(message):
-    """Aplica o mute automático em quem marcou o bot com ofensas."""
-    membro = message.author
-    duracao = datetime.timedelta(minutes=MUTE_AUTOMATICO_MINUTOS)
-    try:
-        await membro.timeout(duracao, reason="Ordem Rubra IA | Desrespeito ao marcar o bot")
-        embed = discord.Embed(
-            title="🔇 Membro Silenciado",
-            description=(f"**Membro:** {membro.mention}\n"
-                         f"**Duração:** {MUTE_AUTOMATICO_MINUTOS} minutos\n"
-                         f"**Motivo:** Desrespeito ao marcar o bot.\n\n"
-                         "Sou um bot sério. Mantenha o respeito."),
-            color=discord.Color.gold(),
-            timestamp=datetime.datetime.utcnow()
-        )
-        await message.reply(embed=embed)
-    except (discord.Forbidden, discord.HTTPException) as e:
-        # Ex.: administradores ou cargos acima do bot não podem ser silenciados
-        print(f"⚠️ Não consegui silenciar {membro}: {e}")
-        await message.reply("🔴 Comportamento inadequado identificado. Mantenha o respeito ao se dirigir a este bot.")
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 # ==============================
@@ -799,43 +242,13 @@ async def silenciar_por_desrespeito(message):
 # ==============================
 @bot.event
 async def on_ready():
-    print(f"🤖 Ordem Rubra IA online como {bot.user}")
+    print(f"🤖 Bot online como {bot.user}")
     await bot.change_presence(activity=discord.Game(name="vigilância rubra 🔴"))
     try:
         synced = await bot.tree.sync()
         print(f"✅ {len(synced)} comandos slash sincronizados.")
     except Exception as e:
         print(f"❌ Erro ao sincronizar slash commands: {e}")
-
-
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
-
-    if bot.user.mentioned_in(message) or isinstance(message.channel, discord.DMChannel):
-        texto = message.content.replace(f'<@{bot.user.id}>', '').strip()
-        if not texto:
-            await message.reply("🔴 **Ordem Rubra IA** online. Como posso ajudar?")
-            return
-
-        # Moderação: só vale quando o bot é marcado de fato, em servidor (não em DM)
-        if message.guild and bot.user in message.mentions:
-            if await asyncio.to_thread(mensagem_ofensiva, texto):
-                await silenciar_por_desrespeito(message)
-                return
-
-        async with message.channel.typing():
-            resposta = perguntar_ia(str(message.author.id), texto)
-
-        if len(resposta) > 1900:
-            for i in range(0, len(resposta), 1900):
-                await message.reply(resposta[i:i+1900])
-        else:
-            await message.reply(resposta)
-        return
-
-    await bot.process_commands(message)
 
 
 # ==============================
@@ -856,8 +269,6 @@ def is_staff():
 # 🏃 COMANDO /percurso (SISTEMA DE DROPDOWNS)
 # ==============================
 class PercursoSelect(discord.ui.Select):
-    """Dropdown para escolher o percurso."""
-
     def __init__(self):
         options = [
             discord.SelectOption(label=nome, emoji="🏁", description="Ver cargos e tempos")
@@ -869,7 +280,6 @@ class PercursoSelect(discord.ui.Select):
         percurso_escolhido = self.values[0]
         cargos = PERCURSOS[percurso_escolhido]
 
-        # Monta embed com todos os cargos daquele percurso
         embed = discord.Embed(
             title=f"🏁 {percurso_escolhido}",
             color=discord.Color.dark_red(),
@@ -884,8 +294,6 @@ class PercursoSelect(discord.ui.Select):
             )
 
         embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-
-        # Envia um NOVO embed (não substitui o menu, assim a pessoa pode consultar outro)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
@@ -914,7 +322,7 @@ async def percurso(interaction: discord.Interaction):
 
 
 # ==============================
-# 📊 COMANDO /nota (consulta rápida de nota por cargo)
+# 📊 COMANDO /nota
 # ==============================
 @bot.tree.command(name="nota", description="Mostra a nota mínima de aprovação de um cargo")
 @app_commands.describe(cargo="Cargo para consultar a nota mínima")
@@ -960,11 +368,9 @@ async def cp(interaction: discord.Interaction):
 
 
 # ==============================
-# 📌 COMANDO /requisitos (SISTEMA DE DROPDOWN)
+# 📌 COMANDO /requisitos
 # ==============================
 class RequisitosSelect(discord.ui.Select):
-    """Dropdown para escolher o órgão."""
-
     def __init__(self):
         options = [
             discord.SelectOption(label=nome, emoji="📌", description="Ver patente e requisitos")
@@ -988,8 +394,6 @@ class RequisitosSelect(discord.ui.Select):
             embed.add_field(name=titulo, value=formatar_lista_req(itens), inline=False)
 
         embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-
-        # Envia um NOVO embed (não substitui o menu, assim a pessoa pode consultar outro)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
@@ -1032,13 +436,12 @@ async def lema(interaction: discord.Interaction):
 
 
 # ==============================
-# 🪖 COMANDO /ordem unida (MENU DE ESCOLHA DAS PARTES)
+# 🪖 COMANDO /ordem unida
 # ==============================
-LIMITE_TEXTO_EMBED = 3900  # o limite do Discord é 4096 caracteres por descrição
+LIMITE_TEXTO_EMBED = 3900
 
 
 def dividir_texto(texto, limite=LIMITE_TEXTO_EMBED):
-    """Divide um texto grande em páginas, quebrando de preferência entre parágrafos."""
     texto = texto.strip()
     if not texto:
         return ["(sem texto)"]
@@ -1046,7 +449,6 @@ def dividir_texto(texto, limite=LIMITE_TEXTO_EMBED):
     paginas = []
     atual = ""
     for paragrafo in texto.split("\n\n"):
-        # Parágrafo maior que o limite: quebra por linhas e, se preciso, por tamanho
         pedacos = [paragrafo]
         if len(paragrafo) > limite:
             pedacos = []
@@ -1078,7 +480,6 @@ def dividir_texto(texto, limite=LIMITE_TEXTO_EMBED):
 
 
 def montar_embed_indice_ordem_unida():
-    """Embed inicial: lista as partes disponíveis."""
     embed = discord.Embed(
         title="🪖 Ordem Unida",
         description=(
@@ -1094,7 +495,6 @@ def montar_embed_indice_ordem_unida():
 
 
 def montar_embed_ordem_unida(nome, usuario, pagina=0):
-    """Embed com o texto de uma parte (e da página dela, se o texto for grande)."""
     info = ORDEM_UNIDA[nome]
     paginas = dividir_texto(info["texto"])
     embed = discord.Embed(
@@ -1111,8 +511,6 @@ def montar_embed_ordem_unida(nome, usuario, pagina=0):
 
 
 class OrdemUnidaPaginasView(discord.ui.View):
-    """Botões ◀ ▶ para as partes com texto grande."""
-
     def __init__(self, nome, pagina=0):
         super().__init__(timeout=300)
         self.nome = nome
@@ -1139,8 +537,6 @@ class OrdemUnidaPaginasView(discord.ui.View):
 
 
 class OrdemUnidaSelect(discord.ui.Select):
-    """Dropdown para escolher a parte."""
-
     def __init__(self):
         options = [
             discord.SelectOption(label=nome, emoji="🪖")
@@ -1151,7 +547,6 @@ class OrdemUnidaSelect(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         nome = self.values[0]
         embed = montar_embed_ordem_unida(nome, interaction.user)
-        # Envia um NOVO embed (não substitui o menu, assim a pessoa pode consultar outra parte)
         if len(dividir_texto(ORDEM_UNIDA[nome]["texto"])) > 1:
             await interaction.response.send_message(embed=embed, view=OrdemUnidaPaginasView(nome), ephemeral=True)
         else:
@@ -1164,7 +559,6 @@ class OrdemUnidaView(discord.ui.View):
         self.add_item(OrdemUnidaSelect())
 
 
-# /ordem unida  (o Discord não aceita espaço no nome de um comando, então "unida" é um subcomando de "ordem")
 ordem = app_commands.Group(name="ordem", description="Consultas da Ordem Rubra")
 
 
@@ -1660,32 +1054,6 @@ async def piada_cmd(interaction: discord.Interaction):
         "O que o zero disse para o oito? Bonito cinto! 👖",
     ]
     await interaction.response.send_message(random.choice(piadas))
-
-
-# ==============================
-# COMANDOS DE PREFIXO (!)
-# ==============================
-@bot.command(name='ia')
-async def conversar(ctx, *, texto: str):
-    async with ctx.typing():
-        resposta = perguntar_ia(str(ctx.author.id), texto)
-
-    if len(resposta) > 1900:
-        for i in range(0, len(resposta), 1900):
-            await ctx.send(resposta[i:i+1900])
-    else:
-        await ctx.send(resposta)
-
-
-@bot.command(name='limpar')
-async def limpar(ctx):
-    historico.pop(str(ctx.author.id), None)
-    await ctx.send("🧹 Histórico limpo! Podemos começar de novo.")
-
-
-@bot.command(name='modelo')
-async def modelo(ctx):
-    await ctx.send(f"🧠 Modelo atual: `{MODELO}`")
 
 
 # ==============================
