@@ -88,6 +88,50 @@ def formatar_linha_cp(item):
 
 
 # ==============================
+# 🪖 HIERARQUIA DO EXÉRCITO (fonte única de verdade)
+# ==============================
+HIERARQUIA = {
+    "[GOV] Governo Federal「🔰」": [
+        "[Pres] Presidente",
+        "[V-Pres] Vice-Presidente",
+    ],
+    "[ACE] Alto Comando do Exército「💫」": [
+        "[Cmt] Comandante",
+        "[SCmt] Subcomandante",
+    ],
+    "[OFGE] Oficiais Generais「✨」": [
+        "[Gen Ex] General-de-Exército",
+        "[Gen Div] General-de-Divisão",
+        "[Gen Bda] General-de-Brigada",
+    ],
+    "[OFSP] Oficiais Superiores「⚔️」": [
+        "[Cel] Coronel",
+        "[TenCel] Tenente-Coronel",
+        "[Maj] Major",
+    ],
+    "[OFIT] Oficiais Intermediários「🛡️」": [
+        "[Cap] Capitão",
+    ],
+    "[OFSB] Oficiais Subalternos「🗡️」": [
+        "[1º Ten] Primeiro-Tenente",
+        "[2º Ten] Segundo-Tenente",
+        "[Asp] Aspirante-a-Oficial",
+    ],
+    "[GD] Graduados「🎓」": [
+        "[ST] Subtenente",
+        "[1º Sgt] Primeiro-Sargento",
+        "[2º Sgt] Segundo-Sargento",
+        "[3º Sgt] Terceiro-Sargento",
+    ],
+    "[PR] Praças「🇧🇷」": [
+        "[Cb] Cabo",
+        "[Sd] Soldado",
+        "[Rcr] Recruta",
+    ],
+}
+
+
+# ==============================
 # 📌 DADOS DOS REQUISITOS DOS ÓRGÃOS (fonte única de verdade)
 # ==============================
 REQUISITOS = {
@@ -426,7 +470,7 @@ Comandos para Formar
 De frente:
 GRUPAMENTO, ATENÇÃO!
 GRUPAMENTO, SENTIDO!
-DEVEM IR ATÉ A FORMAÇÃO AO MEU LADO E FORMAR UM OMBRO A OMBRO AO MEU COMANDO!
+DEVEM IR ATÉ A FORMACÃO AO MEU LADO E FORMAR UM OMBRO A OMBRO AO MEU COMANDO!
 FORA DE FORMA!
 MARCHE!
 
@@ -724,7 +768,7 @@ async def regulamentacao(interaction: discord.Interaction):
 
 
 # ==============================
-# 📋 COMANDO /tarefas (CORRIGIDO)
+# 📋 COMANDO /tarefas
 # ==============================
 @bot.tree.command(name="tarefas", description="Exibe o link das Tarefas, Funções e Explicações")
 async def tarefas(interaction: discord.Interaction):
@@ -733,6 +777,25 @@ async def tarefas(interaction: discord.Interaction):
         description=(
             "Acesse o documento completo contendo as tarefas, funções e explicações de cada Divisão, Subdivisão, Instância e Grupo de Tarefa.\n\n"
             "🔗 **[CLIQUE AQUI PARA ABRIR O DOCUMENTO](https://docs.google.com/document/d/1mMtO0yBMCptw9jW4A7OucT737izGAL73A5oo3_jmf0I/edit?usp=sharing)**"
+        ),
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+# ==============================
+# 🎓 COMANDO /cfap
+# ==============================
+@bot.tree.command(name="cfap", description="Exibe os links das aulas do CFAP")
+async def cfap(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="🎓 Aulas do CFAP",
+        description=(
+            "Acesse o conteúdo da aula do CFAP abaixo:\n\n"
+            "▪️ **CFAP Aula 1:**\n"
+            "🔗 **[CLIQUE AQUI PARA ACESSAR](https://view.genially.com/6871cc992634eb8684507438/presentation-cfap-1degreeaula)**"
         ),
         color=discord.Color.dark_red(),
         timestamp=datetime.datetime.utcnow()
@@ -835,6 +898,30 @@ async def cp(interaction: discord.Interaction):
         embed.add_field(
             name=f"| {grupo} |",
             value="\n".join(formatar_linha_cp(item) for item in itens),
+            inline=False
+        )
+
+    embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+# ==============================
+# 🪖 COMANDO /hierarquia
+# ==============================
+@bot.tree.command(name="hierarquia", description="Mostra a hierarquia completa do Exército")
+async def hierarquia(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="🪖 Hierarquia do Exército",
+        description="Estrutura hierárquica completa da Ordem Rubra:",
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+
+    for grupo, cargos in HIERARQUIA.items():
+        valor = "\n".join(f"▪️ {cargo}" for cargo in cargos)
+        embed.add_field(
+            name=f"**{grupo}**",
+            value=valor,
             inline=False
         )
 
