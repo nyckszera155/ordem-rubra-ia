@@ -163,6 +163,37 @@ LEMA_GRITO = "VIDA LONGA ORDEM RUBRA!"
 
 
 # ==============================
+# ⚖️ DADOS DE REGULAMENTAÇÃO (ELEGIBILIDADE)
+# ==============================
+REGULAMENTACAO_DADOS = {
+    "Geral e Introdução": {
+        "titulo": "⚖️ Regulamentação — Diretrizes Gerais",
+        "texto": """O Tribunal Superior Eleitoral, na sua atribuição de estabelecer as condições de elegibilidade para os cargos de Presidente e Vice-Presidente da República, regula essas prerrogativas através da meticulosa observância e aderência aos requisitos consignados na legislação eleitoral vigente. Esses critérios, por sua vez, constituem uma compilação de exigências cuidadosamente delineadas para assegurar a indispensável aptidão dos postulantes aos mais elevados cargos executivos do Exército Brasileiro.
+
+Ressalta-se que mesmo no caso de revogação de relatórios referentes a exílios, punições ou rebaixamentos, isso não exime os postulantes do escrutínio do histórico eleitoral. A análise e avaliação desses aspectos continuam pautadas na integridade e idoneidade dos candidatos, essenciais para desempenhar funções de destaque no cenário político militar do Exército Brasileiro."""
+    },
+    "Presidente": {
+        "titulo": "🎖️ Requisitos — Presidente",
+        "texto": """Nesse contexto, é imprescindível destacar que, para se candidatar à presidência, o postulante deve:
+▪️ Possuir a graduação de **Subtenente**.
+▪️ Mínimo de **dois meses** de efetivo exercício no posto.
+▪️ Apresentar uma ficha funcional desprovida de quaisquer antecedentes vinculados a rebaixamentos, exílios ou punições no âmbito do Batalhão de Polícia do Exército.
+▪️ Possuir **ficha limpa**.
+▪️ Demonstrar disponibilidade para demonstrar sua voz e participar ativamente dos debates presidenciais.
+▪️ Tempo mínimo de **oito meses** desde o seu primeiro recrutamento no Exército Brasileiro."""
+    },
+    "Vice-Presidente": {
+        "titulo": "🎖️ Requisitos — Vice-Presidente",
+        "texto": """Para o cargo de Vice-Presidente, as exigências estabelecem que o postulante deve:
+▪️ Possuir, no mínimo, a patente de **Cabo**.
+▪️ Apresentar uma ficha funcional limpa e isenta de qualquer histórico de rebaixamentos, exílios ou punições.
+▪️ Demonstrar disponibilidade para utilizar a voz e participar ativamente dos debates presidenciais.
+▪️ Possuir tempo mínimo de **quatro meses** desde o seu primeiro recrutamento no Exército Brasileiro."""
+    }
+}
+
+
+# ==============================
 # 🪖 DADOS DA ORDEM UNIDA (FONTE ÚNICA DE VERDADE)
 # ==============================
 ORDEM_UNIDA = {
@@ -644,7 +675,74 @@ async def percurso(interaction: discord.Interaction):
 
 
 # ==============================
-# 🪖 COMANDO /ordem unida (SISTEMA DE DROPDOWNS - IDÊNTICO AO /percurso)
+# ⚖️ COMANDO /regulamentacao
+# ==============================
+class RegulamentacaoSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="⚖️", description="Ver regulamentação e requisitos")
+            for nome in REGULAMENTACAO_DADOS.keys()
+        ]
+        super().__init__(placeholder="Escolha uma categoria...", min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        escolha = self.values[0]
+        info = REGULAMENTACAO_DADOS[escolha]
+
+        embed = discord.Embed(
+            title=info["titulo"],
+            description=info["texto"],
+            color=discord.Color.dark_red(),
+            timestamp=datetime.datetime.utcnow()
+        )
+        embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class RegulamentacaoView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=180)
+        self.add_item(RegulamentacaoSelect())
+
+
+@bot.tree.command(name="regulamentacao", description="Consulta as regras de elegibilidade para Presidente e Vice")
+async def regulamentacao(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="⚖️ Regulamentação de Elegibilidade",
+        description=(
+            "Escolha uma categoria no menu abaixo para ver os critérios e requisitos:\n\n"
+            "**Opções disponíveis:**\n"
+            + "\n".join(f"⚖️ {nome}" for nome in REGULAMENTACAO_DADOS.keys())
+        ),
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    embed.set_footer(text="O menu fica ativo por 3 minutos.")
+
+    view = RegulamentacaoView()
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+
+# ==============================
+# 📋 COMANDO /tarefas (TAREFAS, FUNÇÕES E EXPLICAÇÕES)
+# ==============================
+@bot.tree.command(name="tarefas-funcoes-explicações-div-subdiv", description="Exibe o link das Tarefas, Funções e Explicações")
+async def tarefas(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="➣ 5.2 - Tarefas, Funções e Explicações",
+        description=(
+            "Acesse o documento completo contendo as tarefas, funções e explicações de cada Divisão, Subdivisão, Instância e Grupo de Tarefa.\n\n"
+            "🔗 **[CLIQUE AQUI PARA ABRIR O DOCUMENTO](https://docs.google.com/document/d/1mMtO0yBMCptw9jW4A7OucT737izGAL73A5oo3_jmf0I/edit?usp=sharing)**"
+        ),
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+# ==============================
+# 🪖 COMANDO /ordem unida
 # ==============================
 class OrdemUnidaSelect(discord.ui.Select):
     def __init__(self):
