@@ -15,12 +15,17 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 STAFF_ROLE_ID = int(os.getenv("STAFF_ROLE_ID", "0"))
 
-# Arquivo de warnings
 ARQUIVO_WARN = "warnings.json"
+
+# Rodapé global
+FOOTER = "Configurado por Baby (nyck)"
+
+# 🩸 Vermelho sangue puro (padrão de TODOS os embeds)
+COR_SANGUE = discord.Color.from_rgb(180, 0, 0)
 
 
 # ==============================
-# 📋 DADOS DOS PERCURSOS (fonte única de verdade)
+# 📋 DADOS DOS PERCURSOS
 # ==============================
 PERCURSOS = {
     "1º Percurso — Balamentos": {
@@ -50,7 +55,6 @@ PERCURSOS = {
     },
 }
 
-# Tabela de notas de aprovação (geral, independente do percurso)
 NOTAS_APROVACAO = {
     "Recruta": "5,0 pontos",
     "Soldado": "5,5 pontos",
@@ -61,7 +65,7 @@ NOTAS_APROVACAO = {
 
 
 # ==============================
-# 📅 DADOS DA CAPACITAÇÃO DE PATENTE (fonte única de verdade)
+# 📅 CAPACITAÇÃO DE PATENTE
 # ==============================
 CAPACITACAO = {
     "Graduados 「🎓」": [
@@ -79,7 +83,6 @@ CAPACITACAO = {
 
 
 def formatar_linha_cp(item):
-    """Monta a linha de um cargo da capacitação (ex: 'Cabo = 2 dias (5 relatórios...)')."""
     texto = f"▪️ **{item['cargo']}** = {item['dias']}"
     if item["detalhe"]:
         texto += f" ({item['detalhe']})"
@@ -87,30 +90,18 @@ def formatar_linha_cp(item):
 
 
 # ==============================
-# 🪖 HIERARQUIA DO EXÉRCITO (fonte única de verdade)
+# 🪖 HIERARQUIA
 # ==============================
 HIERARQUIA = {
-    "[GOV] Governo Federal「🔰」": [
-        "[Pres] Presidente",
-        "[V-Pres] Vice-Presidente",
-    ],
-    "[ACE] Alto Comando do Exército「💫」": [
-        "[Cmt] Comandante",
-        "[SCmt] Subcomandante",
-    ],
+    "[GOV] Governo Federal「🔰」": ["[Pres] Presidente", "[V-Pres] Vice-Presidente"],
+    "[ACE] Alto Comando do Exército「💫」": ["[Cmt] Comandante", "[SCmt] Subcomandante"],
     "[OFGE] Oficiais Generais「✨」": [
         "[Gen Ex] General-de-Exército",
         "[Gen Div] General-de-Divisão",
         "[Gen Bda] General-de-Brigada",
     ],
-    "[OFSP] Oficiais Superiores「⚔️」": [
-        "[Cel] Coronel",
-        "[TenCel] Tenente-Coronel",
-        "[Maj] Major",
-    ],
-    "[OFIT] Oficiais Intermediários「🛡️」": [
-        "[Cap] Capitão",
-    ],
+    "[OFSP] Oficiais Superiores「⚔️」": ["[Cel] Coronel", "[TenCel] Tenente-Coronel", "[Maj] Major"],
+    "[OFIT] Oficiais Intermediários「🛡️」": ["[Cap] Capitão"],
     "[OFSB] Oficiais Subalternos「🗡️」": [
         "[1º Ten] Primeiro-Tenente",
         "[2º Ten] Segundo-Tenente",
@@ -122,16 +113,11 @@ HIERARQUIA = {
         "[2º Sgt] Segundo-Sargento",
         "[3º Sgt] Terceiro-Sargento",
     ],
-    "[PR] Praças「🇧🇷」": [
-        "[Cb] Cabo",
-        "[Sd] Soldado",
-        "[Rcr] Recruta",
-    ],
+    "[PR] Praças「🇧🇷」": ["[Cb] Cabo", "[Sd] Soldado", "[Rcr] Recruta"],
 }
 
 
 def montar_texto_hierarquia():
-    """Monta o texto da hierarquia no formato dos informativos do servidor."""
     blocos = []
     for grupo, cargos in HIERARQUIA.items():
         blocos.append(f"**| {grupo} |**\n" + "\n".join(cargos))
@@ -139,7 +125,7 @@ def montar_texto_hierarquia():
 
 
 # ==============================
-# 📌 DADOS DOS REQUISITOS DOS ÓRGÃOS (fonte única de verdade)
+# 📌 REQUISITOS DOS ÓRGÃOS
 # ==============================
 REQUISITOS = {
     "BFEr": {
@@ -198,12 +184,11 @@ REQUISITOS = {
 
 
 def formatar_lista_req(itens):
-    """Transforma uma lista de itens em linhas com marcador."""
     return "\n".join(f"▪️ {item}" for item in itens)
 
 
 # ==============================
-# ☀️ LEMA DA ORDEM RUBRA
+# ☀️ LEMA
 # ==============================
 LEMA_TEXTO = (
     "A cada alvorada, eis que o Sol se ergue, majestoso e tingido de carmesim, "
@@ -214,14 +199,14 @@ LEMA_GRITO = "VIDA LONGA ORDEM RUBRA!"
 
 
 # ==============================
-# ⚖️ DADOS DE REGULAMENTAÇÃO (ELEGIBILIDADE)
+# ⚖️ REGULAMENTAÇÃO
 # ==============================
 REGULAMENTACAO_DADOS = {
     "Geral e Introdução": {
         "titulo": "⚖️ Regulamentação — Diretrizes Gerais",
         "texto": """O Tribunal Superior Eleitoral, na sua atribuição de estabelecer as condições de elegibilidade para os cargos de Presidente e Vice-Presidente da República, regula essas prerrogativas através da meticulosa observância e aderência aos requisitos consignados na legislação eleitoral vigente. Esses critérios, por sua vez, constituem uma compilação de exigências cuidadosamente delineadas para assegurar a indispensável aptidão dos postulantes aos mais elevados cargos executivos do Exército Brasileiro.
 
-Ressalta-se que mesmo no caso de revogação de relatórios referentes a exílios, punições ou rebaixamentos, isso não exime os postulantes do escrutínio do histórico eleitoral. A análise e avaliação desses aspectos continuam pautadas na integridade e idoneidade dos candidatos, essenciais para desempenhar funções de destaque no cenário político militar do Exército Brasileiro."""
+Ressalta-se que mesmo no caso de revogação de relatórios referentes a exílios, punições ou rebaixamentos, isso não exime os postulantes do escrutínio do histórico eleitoral. A análise e avaliação desses aspectos continuam pautadas na integridade e idoneidade dos candidatos, essenciais para desempenhar funções de destaque no cenário político militar do Exército Brasileiro.""",
     },
     "Presidente": {
         "titulo": "🎖️ Requisitos — Presidente",
@@ -231,7 +216,7 @@ Ressalta-se que mesmo no caso de revogação de relatórios referentes a exílio
 ▪️ Apresentar uma ficha funcional desprovida de quaisquer antecedentes vinculados a rebaixamentos, exílios ou punições no âmbito do Batalhão de Polícia do Exército.
 ▪️ Possuir **ficha limpa**.
 ▪️ Demonstrar disponibilidade para demonstrar sua voz e participar ativamente dos debates presidenciais.
-▪️ Tempo mínimo de **oito meses** desde o seu primeiro recrutamento no Exército Brasileiro."""
+▪️ Tempo mínimo de **oito meses** desde o seu primeiro recrutamento no Exército Brasileiro.""",
     },
     "Vice-Presidente": {
         "titulo": "🎖️ Requisitos — Vice-Presidente",
@@ -239,13 +224,13 @@ Ressalta-se que mesmo no caso de revogação de relatórios referentes a exílio
 ▪️ Possuir, no mínimo, a patente de **Cabo**.
 ▪️ Apresentar uma ficha funcional limpa e isenta de qualquer histórico de rebaixamentos, exílios ou punições.
 ▪️ Demonstrar disponibilidade para utilizar a voz e participar ativamente dos debates presidenciais.
-▪️ Possuir tempo mínimo de **quatro meses** desde o seu primeiro recrutamento no Exército Brasileiro."""
-    }
+▪️ Possuir tempo mínimo de **quatro meses** desde o seu primeiro recrutamento no Exército Brasileiro.""",
+    },
 }
 
 
 # ==============================
-# 🪖 DADOS DA ORDEM UNIDA (FONTE ÚNICA DE VERDADE)
+# 🪖 ORDEM UNIDA
 # ==============================
 ORDEM_UNIDA = {
     "Introdução": {
@@ -255,419 +240,210 @@ ORDEM_UNIDA = {
     "Parte 1 — Objetivo da Ordem Unida": {
         "titulo": "Parte 1 — Objetivo da Ordem Unida",
         "texto": """**FUNDAMENTOS, COMANDOS E APLICAÇÕES**
-A Ordem Unida é um dos fundamentos essenciais da formação militar, tendo como finalidade padronizar a apresentação, o deslocamento e a organização dos militares em conjunto. Por meio de seus comandos e movimentos, busca-se desenvolver disciplina, obediência imediata, coordenação coletiva, atenção, postura e reflexos condicionados, atributos indispensáveis para qualquer militar. 
+A Ordem Unida é um dos fundamentos essenciais da formação militar, tendo como finalidade padronizar a apresentação, o deslocamento e a organização dos militares em conjunto. Por meio de seus comandos e movimentos, busca-se desenvolver disciplina, obediência imediata, coordenação coletiva, atenção, postura e reflexos condicionados, atributos indispensáveis para qualquer militar.
+
 A correta execução da Ordem Unida garante que o grupamento se apresente e se desloque de maneira organizada, harmônica e eficiente, respeitando a hierarquia e a padronização institucional.
 
-O QUE É ORDEM UNIDA - RESUMIDA
+**O QUE É ORDEM UNIDA - RESUMIDA**
 A Ordem Unida é o conjunto de normas, comandos e movimentos utilizados para:
-Padronizar a apresentação do militar e do grupamento;
-Organizar o deslocamento coletivo;
-Garantir disciplina, hierarquia e harmonia nos movimentos.
+• Padronizar a apresentação do militar e do grupamento;
+• Organizar o deslocamento coletivo;
+• Garantir disciplina, hierarquia e harmonia nos movimentos.
 
 Seu emprego desenvolve:
-Obediência imediata às ordens;
-Coordenação coletiva;
-Atenção, postura e autocontrole;
-Espírito de corpo e disciplina militar.
+• Obediência imediata às ordens;
+• Coordenação coletiva;
+• Atenção, postura e autocontrole;
+• Espírito de corpo e disciplina militar.
 
-É aplicada em instruções, apresentações, deslocamentos formais e situações administrativas dentro da instituição.
-
-Principal Objetivo da Ordem Unida
-A Ordem Unida tem como principais objetivos permitir que o grupamento se apresente e se desloque em perfeita ordem, desenvolver a disciplina coletiva, estimular a obediência aos comandos, aprimorar a coordenação e fortalecer o espírito de corpo. Esses fatores são determinantes para o bom desempenho do militar em qualquer atividade dentro da instituição.
-
-OBJETIVOS DA ORDEM UNIDA - RESUMIDA
-Permitir que o grupamento:
-Apresente-se de forma organizada e padronizada;
-Desloque-se com ordem, sincronia e disciplina.
-
-Desenvolver no militar:
-Reflexos condicionados;
-Respeito à hierarquia;
-Capacidade de agir coletivamente;
-Prontidão para cumprir ordens.""",
+É aplicada em instruções, apresentações, deslocamentos formais e situações administrativas dentro da instituição.""",
     },
     "Parte 2 — Tipos de Comandos": {
         "titulo": "Parte 2 — Tipos de Comandos",
         "texto": """Os comandos utilizados na Ordem Unida dividem-se em vozes de comando e comandos propriamente ditos.
-A voz de comando é utilizada para preparar o grupamento, alertando-o de que uma ação será executada. Dentro dela, destaca-se a voz de advertência, que serve exclusivamente como alerta inicial, não possuindo caráter de execução. Exemplos incluem “Grupamento”, “Pelotão” e “Esquadrão”. Essa voz deve ser empregada apenas uma vez, pois sua função é somente chamar a atenção do grupamento.
-O meio comando é aquele que antecede uma ação, preparando o grupamento para o movimento que será executado. Ele é aplicável, principalmente, a comandos de marcha e de volver, pois nesses casos há movimentação. Nos comandos de volver, o meio comando indica a direção do giro; nos comandos de marcha, indica o tipo e, quando necessário, a direção do deslocamento.
-Os comandos propriamente ditos são responsáveis por iniciar ou finalizar um movimento. Alguns são antecedidos por meio comando, enquanto outros são executados de forma direta. Exemplos incluem “Sentido”, “Descansar”, “Atenção” e “Marche”.
 
-TIPOS DE COMANDOS - RESUMIDO
-Vozes de Comando
-Utilizadas para:
-Alertar;
-Preparar o grupamento para uma ação.
+A **voz de comando** é utilizada para preparar o grupamento, alertando-o de que uma ação será executada. Dentro dela, destaca-se a **voz de advertência**, que serve exclusivamente como alerta inicial, não possuindo caráter de execução. Exemplos: "Grupamento", "Pelotão" e "Esquadrão". Essa voz deve ser empregada apenas uma vez.
 
-Não possuem execução direta de movimento.
-Voz de Advertência
-Finalidade:
-Alertar o grupamento de que comandos serão emitidos.
+O **meio comando** é aquele que antecede uma ação, preparando o grupamento para o movimento que será executado. É aplicável principalmente a comandos de marcha e de volver.
 
-Características:
-Deve ser dita apenas uma vez;
-Não inicia movimento.
-
-Exemplos:
-“GRUPAMENTO!”
-“PELOTÃO!”
-“ESQUADRÃO!”
-
-Meio Comando
-Finalidade:
-Preparar o grupamento para a ação que será executada.
-
-Aplicação:
-Apenas em comandos que envolvem movimentação.
-
-Função:
-Em marchas: indica o tipo e a direção;
-Em volvers: indica a direção do giro.
-
-Exemplos:
-APRESENTAR, ARMA!
-DESCANSAR, ARMA!
-ESQUERDA VOLVER!
-DIREITA VOLVER!
-
-Comandos Propriamente Ditos
-Finalidade:
-Iniciar ou encerrar a execução do movimento.
-Podem ser:
-Antecedidos por meio comando;
-Executados de forma direta.
-
-Exemplos:
-SENTIDO!
-DESCANSAR!
-ATENÇÃO!
-MARCHE!""",
+Os **comandos propriamente ditos** são responsáveis por iniciar ou finalizar um movimento. Exemplos: "Sentido", "Descansar", "Atenção" e "Marche".""",
     },
     "Parte 3 — Comandos de Postura": {
         "titulo": "Parte 3 — Comandos de Postura",
-        "texto": """COMANDOS BÁSICOS DE POSTURA
-O comando “Atenção” tem a finalidade de alertar o grupamento para o início das ordens do instrutor ou xerife. O comando “Sentido” determina que o grupamento permaneça imóvel, com postura ereta e mãos vazias, aguardando o próximo comando. O comando “Descansar” autoriza o grupamento a assumir a posição de descanso, sendo válido apenas quando o grupamento estiver anteriormente em posição de sentido. O comando “À vontade” concede maior liberdade de movimento, desde que o militar permaneça no local e mantenha postura adequada.
-Os comandos “Apresentar, arma” e “Descansar, arma” são utilizados, respectivamente, para iniciar e finalizar a continência do grupamento, incluindo o instrutor ou xerife.
-
-COMANDOS BÁSICOS DE POSTURA - RESUMIDO
-ATENÇÃO!
-Finalidade:
-Alertar o grupamento para o início das ordens do instrutor.
-
-Observação:
-Prepara para o comando seguinte.
-
-SENTIDO!
-Finalidade:
-Colocar o grupamento em postura rígida e imóvel.
-
-Características:
-Mãos vazias;
-Olhar à frente.
-
-DESCANSAR!
-Finalidade:
-Permitir postura menos rígida.
-
-Observação:
-Só pode ser dado se o grupamento estiver em sentido.
-
-À VONTADE!
-Finalidade:
-Conceder maior liberdade de movimento.
-
-Limitações:
-Não sair do lugar;
-Manter postura adequada.""",
+        "texto": """**COMANDOS BÁSICOS DE POSTURA**
+O comando **"Atenção"** tem a finalidade de alertar o grupamento para o início das ordens do instrutor.
+O comando **"Sentido"** determina que o grupamento permaneça imóvel, com postura ereta e mãos vazias.
+O comando **"Descansar"** autoriza o grupamento a assumir a posição de descanso (válido apenas quando estiver em sentido).
+O comando **"À vontade"** concede maior liberdade de movimento, desde que o militar permaneça no local.
+Os comandos **"Apresentar, arma"** e **"Descansar, arma"** iniciam e finalizam a continência do grupamento.""",
     },
     "Parte 4 — Comandos de Marcha": {
         "titulo": "Parte 4 — Comandos de Marcha",
-        "texto": """Existem três tipos principais de marcha aplicáveis no âmbito do jogo: ordinário, acelerado e sem cadência.
-A marcha ordinária é a mais formal e a mais utilizada. Nela, o grupamento deve seguir o instrutor ou xerife sem correr, mantendo rigorosamente a organização da fila e a sincronia coletiva. 
-A marcha acelerada caracteriza-se pelo deslocamento correndo, devendo o grupamento, ainda assim, tentar manter a organização da fila. 
-A marcha sem cadência é considerada informal, permitindo que o grupamento siga o instrutor sem necessidade de manter alinhamento rigoroso, sendo proibido correr.
-Para preparar corretamente o grupamento para marchar, os comandos devem seguir uma sequência padronizada. Para a marcha ordinária, o instrutor deve comandar, de frente para o grupamento: “Grupamento, atenção” e “Grupamento, sentido”. Em seguida, deve virar-se de costas para o grupamento e informar o destino com “Em direção ao (local)”, indicar o tipo de marcha com “Ordinário” e iniciar o deslocamento com “Marche”. Ao término da marcha, já de frente para o grupamento, deve finalizar com “Grupamento, faz alto”.
-O mesmo procedimento é aplicado à marcha acelerada, substituindo-se apenas o tipo de marcha pelo comando “Acelerado”, e à marcha sem cadência, utilizando-se o comando “Sem cadência”. Em todos os casos, o comando “Grupamento, faz alto” é obrigatório para encerrar a marcha, devendo o grupamento permanecer em posição de sentido após a parada.
+        "texto": """Existem três tipos principais de marcha: **ordinário**, **acelerado** e **sem cadência**.
 
-Tipos de Marcha
-ORDINÁRIO
-Marcha formal;
-Sem correr;
-Fila organizada;
-Total sincronia com o instrutor.
-ACELERADO
-Marcha rápida;
-Grupamento corre;
-Organização da fila deve ser mantida.
+• **Marcha ordinária:** a mais formal e utilizada, sem correr, com fila organizada.
+• **Marcha acelerada:** deslocamento correndo, mantendo ao máximo a organização.
+• **Marcha sem cadência:** informal, proibido correr.
 
-SEM CADÊNCIA
-Marcha informal;
-Não exige alinhamento rígido;
-É proibido correr.
-
-SEQUÊNCIA PADRÃO PARA MARCHAR
-Marcha Ordinária
+**Sequência padrão (Marcha Ordinária):**
 De frente:
-GRUPAMENTO, ATENÇÃO!
-GRUPAMENTO, SENTIDO!
+`GRUPAMENTO, ATENÇÃO!`
+`GRUPAMENTO, SENTIDO!`
 
 De costas:
-EM DIREÇÃO AO (LOCAL)!
-ORDINÁRIO!
-MARCHE!
+`EM DIREÇÃO AO (LOCAL)!`
+`ORDINÁRIO!`
+`MARCHE!`
 
-De frente (finalização):
-GRUPAMENTO, FAZ ALTO!
+Finalização (de frente):
+`GRUPAMENTO, FAZ ALTO!`
 
-Marcha Acelerada
-Mesma sequência, substituindo:
-ORDINÁRIO! por ACELERADO!
-
-Marcha Sem Cadência
-Mesma sequência, substituindo:
-ORDINÁRIO! por SEM CADÊNCIA!""",
+Para marcha acelerada, substituir `ORDINÁRIO!` por `ACELERADO!`.
+Para marcha sem cadência, substituir por `SEM CADÊNCIA!`.""",
     },
     "Parte 5 — Alteração de Dispositivo": {
         "titulo": "Parte 5 — Alteração de Dispositivo",
-        "texto": """O comando “Fora de forma” é exclusivo para alterações de dispositivo e jamais deve ser utilizado para deslocamento. Ele indica que o grupamento mudará sua organização, como de formação para coluna ou de coluna para formação.
-A coluna por um é uma forma de organização na qual os militares ficam posicionados um atrás do outro, respeitando a distância de uma pessoa entre si. Existem outras variações, como coluna por dois, três ou quatro, nas quais se deve observar rigorosamente a obediência às fileiras e às linhas.
-Para formar uma coluna por um, o instrutor deve permanecer de frente para o grupamento e comandar: “Grupamento, atenção”, “Grupamento, sentido” e, em seguida, explicar a ação com “Devem formar uma coluna por um em minha retaguarda”. Após isso, utiliza-se o comando “Fora de forma” e, logo depois, “Marche”. Após o comando “Marche”, o instrutor deve deslocar-se até o local desejado para que o grupamento se organize corretamente em coluna. Ao concluir a alteração de dispositivo, o grupamento assume posição de descanso, não sendo utilizado o comando “Grupamento, faz alto”, pois não se trata de uma marcha.
-A formação, por sua vez, ocorre quando o grupamento se organiza em linha, ombro a ombro. Fileira é a disposição dos militares lado a lado, voltados para a mesma frente. Linha caracteriza-se por possuir maior frente do que profundidade, ou seja, mais militares lado a lado do que em profundidade.
-Para entrar em formação, o instrutor deve comandar, de frente para o grupamento: “Grupamento, atenção”, “Grupamento, sentido” e, em seguida, explicar a ação com “Devem ir até a formação ao meu lado e formar um ombro a ombro ao meu comando”. Após isso, utiliza-se o comando “Fora de forma” e, posteriormente, “Marche”. Assim que o grupamento concluir a formação, deve assumir posição de descanso, sem o uso do comando “Grupamento, faz alto”.
+        "texto": """O comando **"Fora de forma"** é exclusivo para alterações de dispositivo e **jamais** deve ser utilizado para deslocamento.
 
-ALTERAÇÃO DE DISPOSITIVO
-FORA DE FORMA
-Finalidade:
-Alterar o formato do grupamento.
+**Coluna por um:** militares um atrás do outro, distância de uma pessoa entre si.
 
-Proibições:
-Nunca usar para deslocamento.
+**Comandos para formar coluna:**
+`GRUPAMENTO, ATENÇÃO!`
+`GRUPAMENTO, SENTIDO!`
+`DEVEM FORMAR UMA COLUNA POR UM EM MINHA RETAGUARDA!`
+`FORA DE FORMA!`
+`MARCHE!`
 
-Exemplos de alteração:
-Formação para coluna;
-Coluna para formação.
-COLUNA
-Conceito
-Coluna por um:
-Militares posicionados um atrás do outro;
-Distância de uma pessoa entre cada militar.
+**Formação (ombro a ombro):**
+`GRUPAMENTO, ATENÇÃO!`
+`GRUPAMENTO, SENTIDO!`
+`DEVEM IR ATÉ A FORMAÇÃO AO MEU LADO E FORMAR UM OMBRO A OMBRO AO MEU COMANDO!`
+`FORA DE FORMA!`
+`MARCHE!`
 
-Existem:
-Coluna por dois, três, quatro, etc.
-
-Comandos para Formar Coluna
-De frente:
-GRUPAMENTO, ATENÇÃO!
-GRUPAMENTO, SENTIDO!
-DEVEM FORMAR UMA COLUNA POR UM EM MINHA RETAGUARDA!
-FORA DE FORMA!
-MARCHE!
-Observação:
-Após “MARCHE!”, o instrutor deve ir ao local desejado;
-Não utilize “GRUPAMENTO, FAZ ALTO”.
-FORMAÇÃO
-Conceitos Fundamentais
-Fileira:
-Militares lado a lado, mesma linha e mesma frente.
-
-Linha:
-Formação com frente maior que a profundidade.
-
-Comandos para Formar
-De frente:
-GRUPAMENTO, ATENÇÃO!
-GRUPAMENTO, SENTIDO!
-DEVEM IR ATÉ A FORMACÃO AO MEU LADO E FORMAR UM OMBRO A OMBRO AO MEU COMANDO!
-FORA DE FORMA!
-MARCHE!
-
-Observação:
-Após a formação, o grupamento entra em descanso;
-Não usar “FAZ ALTO”.""",
+Após a formação, o grupamento entra em descanso — **não** se usa `FAZ ALTO`.""",
     },
     "Parte 6 — Comandos de Apresentação": {
         "titulo": "Parte 6 — Comandos de Apresentação",
-        "texto": """A apresentação é um ato formal que demonstra disciplina, organização e respeito à hierarquia. O militar responsável deve apresentar-se informando seu posto ou graduação seguido do nome de guerra. Para apresentar o grupamento a um superior, o grupamento deve estar previamente organizado e em posição de sentido.
-O xerife ou instrutor posiciona-se à frente do grupamento, comanda “Grupamento, atenção” e “Grupamento, sentido”, vira-se para o superior, presta continência e se apresenta. Em seguida, informa se o grupamento está com ou sem faltas e com ou sem alterações. Após o superior declarar que o grupamento está apresentado, o xerife retorna-se ao grupamento, comanda “Grupamento, descansar” e reassume sua posição.
-Considera-se falta a ausência de um integrante que não compareceu à instrução. Considera-se alteração quando algum integrante se retira antes do término da atividade. A inexistência de faltas e alterações indica que todos os integrantes participaram integralmente da instrução.
+        "texto": """**Sequência de Apresentação:**
 
-APRESENTAÇÃO DO GRUPAMENTO
-Finalidade:
-Demonstrar disciplina e organização.
+1. Xerife (de frente para o grupamento):
+`GRUPAMENTO, ATENÇÃO!`
+`GRUPAMENTO, SENTIDO!`
 
-Procedimento:
-Grupamento em sentido;
-Xerife à frente;
-Continência obrigatória do xerife;
-Informar:
-Com ou sem faltas;
-Com ou sem alterações.
+2. Xerife vira para o superior, presta continência e diz:
+`(POSTO/GRADUAÇÃO) (NOME DE GUERRA), XERIFE DO CURSO!`
+`APRESENTO GRUPAMENTO PRONTO, COM/SEM FALTAS E COM/SEM ALTERAÇÕES!`
 
-Definições:
-Falta: ausência no início da instrução;
-Alteração: saída antes do término.
+3. Superior responde:
+`ESTÁ APRESENTADO.`
 
-Sequência de Comandos
-Preparação do Grupamento
-De frente para o grupamento, o xerife comanda:
-GRUPAMENTO, ATENÇÃO!
-GRUPAMENTO, SENTIDO!
+4. Xerife cessa continência, vira para o grupamento e comanda:
+`GRUPAMENTO, DESCANSAR!`
 
-Apresentação ao Superior
-O xerife:
-Vira-se em direção ao superior;
-Presta continência obrigatoriamente;
-Realiza a apresentação verbal, dizendo:
-(POSTO/GRADUAÇÃO DO XERIFE) (NOME DE GUERRA), XERIFE DO CURSO!
-Exemplo: SUBTENENTE AT, XERIFE DO CURSO!
-Em seguida, ainda em continência, informa:
-APRESENTO GRUPAMENTO PRONTO, COM/SEM FALTAS E COM/SEM ALTERAÇÕES!
-
-Em seguida o superior deverá responder algo semelhante à:
-ESTÁ APRESENTADO.
-
-Finalização da Apresentação
-Após a resposta do superior, o xerife:
-Cessa a continência;
-Vira-se novamente para o grupamento;
-Comanda:
-GRUPAMENTO, DESCANSAR!
-
-Retorno à Posição
-O xerife:
-Retorna ao seu local;
-Assume posição de descanso junto ao grupamento.""",
+• **Falta:** ausência de integrante no início.
+• **Alteração:** saída antes do término.""",
     },
     "Parte 7 — Observações Gerais": {
         "titulo": "Parte 7 — Observações Gerais",
-        "texto": """OBSERVAÇÕES GERAIS
-Todos os comandos devem ser executados com o militar em posição de sentido, salvo quando o comando determinar outra postura.
-A execução de comandos fora da posição correta caracteriza erro de procedimento.
-O comando “GRUPAMENTO, FAZ ALTO” deve ser utilizado exclusivamente para finalizar as marchas.
-O comando “FAZ ALTO” nunca deve ser empregado em alterações de dispositivo, como formação ou coluna.
-O comando “FORA DE FORMA” é restrito à mudança do formato do grupamento, não devendo ser utilizado para deslocamento.
-Durante marchas, o grupamento deve manter atenção constante ao instrutor/xerife.
-Em marchas ordinárias, a sincronia e a organização da fila são obrigatórias.
-Em marchas aceleradas, apesar do deslocamento em corrida, deve-se manter o máximo de organização possível.
-Na marcha sem cadência, não é permitido correr.
-Durante a apresentação do grupamento, a continência do xerife ou instrutor é obrigatória.
-O superior apresentado não é obrigado a prestar continência.
-O grupamento deve permanecer imóvel e em silêncio durante apresentações e comunicações formais.
-Todos os comandos devem ser emitidos de forma:
-Clara;
-Firme;
-Audível a todo o grupamento.
-
-É responsabilidade do instrutor/xerife garantir que o grupamento compreenda o comando antes da execução.""",
+        "texto": """• Todos os comandos devem ser executados com o militar em posição de sentido, salvo quando o comando determinar outra postura.
+• O comando `GRUPAMENTO, FAZ ALTO` é exclusivo para finalizar marchas.
+• `FAZ ALTO` nunca deve ser usado em formação ou coluna.
+• `FORA DE FORMA` é restrito à mudança de dispositivo.
+• Na marcha sem cadência, não é permitido correr.
+• A continência do xerife/instrutor é obrigatória na apresentação.
+• O grupamento deve permanecer imóvel e em silêncio durante apresentações.
+• Todos os comandos devem ser: **claros**, **firmes** e **audíveis**.""",
     },
     "Parte 8 — Perguntas Frequentes (FAQ)": {
         "titulo": "Parte 8 — Perguntas Frequentes (FAQ)",
-        "texto": """1. O que é Ordem Unida?
- É o conjunto de comandos e movimentos que padroniza a apresentação, o deslocamento e a organização do grupamento, promovendo disciplina e coesão.
-2. Qual é o principal objetivo da Ordem Unida?
- Desenvolver disciplina, obediência, coordenação coletiva e postura militar.
-3. Quem pode comandar a Ordem Unida?
- Militares designados como instrutores, xerifes ou responsáveis pelo grupamento.
-4. O que é voz de advertência?
- É o comando usado apenas para alertar o grupamento de que uma ordem será executada.
-5. A voz de advertência pode ser repetida?
- Não. Essa voz deve ser dita apenas uma vez.
-6. O que é meio comando?
- É o comando que prepara o grupamento para uma movimentação específica.
-7. Todo comando possui meio comando?
- Não. Apenas comandos que envolvem movimento, como marchas e volvers.
-8. O que significa “Sentido”?
- Indica postura rígida, imóvel e atenta, aguardando o próximo comando.
-9. Quando posso usar o comando “Descansar”?
- Somente quando o grupamento estiver em posição de sentido.
-10. Qual a diferença entre “Descansar” e “À vontade”?
- “Descansar” mantém postura controlada; “À vontade” permite mais liberdade sem sair do lugar.
-11. Quais são os tipos de marcha?
- Ordinário, Acelerado e Sem Cadência.
-12. Qual é a marcha mais formal?
- A marcha Ordinária.
-13. Em qual marcha é permitido correr?
- Apenas na marcha Acelerada.
-14. O que é “Sem cadência”?
- Uma marcha informal, sem necessidade de alinhamento rigoroso e sem correr.
-15. Quando devo usar “Grupamento, faz alto”?
- Exclusivamente para finalizar uma marcha.
-16. Posso usar “Faz alto” em formação ou coluna?
- Não. Ele é proibido em alterações de dispositivo.
-17. O que é “Fora de forma”?
- Comando utilizado para alterar o formato do grupamento.
-18. “Fora de forma” serve para marchar?
- Não. Serve apenas para mudança de dispositivo.
-19. O que é coluna por um?
- Formação em que os militares ficam um atrás do outro, respeitando a distância.
-20. O que é formação em linha?
- Quando os militares ficam lado a lado, com a frente maior que a profundidade.
-21. O que é fileira?
- Disposição dos militares lado a lado, voltados para a mesma frente.
-22. Quem deve prestar continência na apresentação?
- O xerife ou instrutor é obrigado; o superior não.
-23. O que são faltas na apresentação?
- Ausência de integrante no início da instrução.
-24. O que são alterações na apresentação?
- Saída de integrante antes do término da instrução.
-25. O grupamento deve se mover durante a apresentação?
- Não. Deve permanecer imóvel em posição de sentido.""",
+        "texto": """**1.** O que é Ordem Unida? → Conjunto de comandos que padroniza apresentação, deslocamento e organização.
+**2.** Qual o principal objetivo? → Desenvolver disciplina, obediência e coordenação.
+**3.** Quem pode comandar? → Instrutores, xerifes ou responsáveis designados.
+**4.** O que é voz de advertência? → Alerta de que uma ordem será executada.
+**5.** Pode repetir voz de advertência? → Não, apenas uma vez.
+**6.** O que é meio comando? → Prepara o grupamento para uma movimentação.
+**7.** Todo comando tem meio comando? → Não, apenas os que envolvem movimento.
+**8.** O que significa "Sentido"? → Postura rígida e imóvel.
+**9.** Quando usar "Descansar"? → Somente se estiver em sentido.
+**10.** Diferença "Descansar" x "À vontade"? → "À vontade" permite mais liberdade.
+**11.** Tipos de marcha? → Ordinário, Acelerado e Sem Cadência.
+**12.** Marcha mais formal? → Ordinária.
+**13.** Onde pode correr? → Apenas na Acelerada.
+**14.** O que é "Sem cadência"? → Marcha informal sem correr.
+**15.** Quando usar "Faz alto"? → Exclusivamente para finalizar marcha.
+**16.** Pode usar em formação/coluna? → Não.
+**17.** O que é "Fora de forma"? → Alteração de formato do grupamento.
+**18.** Serve para marchar? → Não, apenas mudança de dispositivo.
+**19.** Coluna por um? → Militares um atrás do outro.
+**20.** Formação em linha? → Lado a lado, frente maior que profundidade.
+**21.** O que é fileira? → Lado a lado, voltados para mesma frente.
+**22.** Quem presta continência? → O xerife; o superior não é obrigado.
+**23.** O que são faltas? → Ausência no início.
+**24.** O que são alterações? → Saída antes do término.
+**25.** Grupamento se move na apresentação? → Não, permanece imóvel.""",
     },
 }
 
 
 # ==============================
-# 📚 TEXTOS DOS COMANDOS INFORMATIVOS (fonte única de verdade)
-# Enviados como mensagem normal (não embed) para manter a formatação original.
+# 📚 TEXTOS INFORMATIVOS
 # ==============================
 TEXTO_HISTORICO_PRESIDENCIAL = """**Neste documento estará listado todos os Presidentes e Vice-Presidentes da República eleitos oficialmente de forma democrática:**
 https://docs.google.com/document/d/1lCagVTXlaxZX7lal80h0y7rjfCVOe4g-E6B_xi-fZs4/edit?usp=sharing"""
 
-TEXTO_PROCESSOS = """** ➣ 1.1 - Processos Seletivos do Exército Brasileiro & Suas Designações**
+TEXTO_PROCESSOS = """**➣ 1.1 - Processos Seletivos do Exército Brasileiro & Suas Designações**
 -# Designações - Processos Seletivos:
 > ⤷  **Cursos:** EsPCEx, ESA, ERP, CIOU e CFAP.
 > ⤷  **Subdivisões:** STM e SGEx.
 > ⤷  **Divisões:** BPE, BFE e BAC.
-> ⤷  **Unidade: **CIE (contabiliza como divisão também).
+> ⤷  **Unidade:** CIE (contabiliza como divisão também).
 > ⤷  **Especialização:** COpEsp.
 > ⤷  **Setores:** Investidores e SCI.
 
 -# Legislação vigente: cada militar poderá participar de apenas dois cursos e prestar no máximo quatro funções dentro da instituição: (divisão, subdivisão, curso e oficialato)"""
 
-TEXTO_PRONOMES = """** Segue o link de pronomes do EB do Apex **
+TEXTO_PRONOMES = """**Segue o link de pronomes do EB do Apex**
 
 ```II - PRONOMES.```
-> ** ➣ Aqui ao lado os - Pronomes Vigentes do Exército Brasileiro.**
+> **➣ Aqui ao lado os - Pronomes Vigentes do Exército Brasileiro.**
 >
 >  **[CLIQUE AQUI!](https://docs.google.com/document/d/1hdTXemfHoTXCG8i1xZcXFo06ntZCnSrtvpm6nsqaC8A/edit?usp=sharing)**"""
 
-TEXTO_NORMAS = """> ** ➣ Segue as - Normas e Procedimentos de Arquivamentos Administrativos.**
+TEXTO_NORMAS = """> **➣ Segue as - Normas e Procedimentos de Arquivamentos Administrativos.**
 >
 >  **[CLIQUE AQUI!](https://docs.google.com/document/d/1H0QCw8CjO22AXeTrfsU__P1TngkmJ7x40gOBlxTxs4w/edit?usp=sharing)**"""
 
 TEXTO_ADMINISTRADOR = """**Segue o link do que os administrador/moderadores fazem no EB Do Apex**
 **[CLIQUE AQUI!](https://docs.google.com/document/d/1Od0rpORegpcvtwATTwaSYbvERpjib5pA4V_xyaDV5EE/edit?usp=sharing)**"""
 
-TEXTO_VEDACAO = """> ** ➣ Segue o link da - Vedação de Acessos / Exilados Permanentes - IN GAME.**
+TEXTO_VEDACAO = """> **➣ Segue o link da - Vedação de Acessos / Exilados Permanentes - IN GAME.**
 >
 > **[CLIQUE AQUI!](https://docs.google.com/document/d/13bpYEqPcT4EMISNtPQI4uodiA1frsBJ9u1r0TdXQNNY/edit?usp=sharing)**"""
 
-TEXTO_MANUAL_RECRUTA = """> ** ➣ Segue o link do - Manual do Recruta.**
+TEXTO_MANUAL_RECRUTA = """> **➣ Segue o link do - Manual do Recruta.**
 >
 > **[CLIQUE AQUI!](https://docs.google.com/document/d/100aK96ecdRIHDpPaq0VEFVMnLHRMBrrHXPwM1-kEhRI/edit?usp=sharing)**"""
 
-TEXTO_MANUAL_CABO = """> ** ➣ Segue o link do - Manual do Cabo.**
+TEXTO_MANUAL_CABO = """> **➣ Segue o link do - Manual do Cabo.**
 >
 > **[CLIQUE AQUI!](https://drive.google.com/file/d/1CErMt2Q24Qbun44diCsnyx0hhVl9nX49/view)**"""
 
 
-async def enviar_texto(interaction: discord.Interaction, texto: str):
-    """Envia um texto informativo só para quem usou o comando."""
-    await interaction.response.send_message(texto, ephemeral=True)
+def embed_info(titulo: str, descricao: str, cor: discord.Color = COR_SANGUE):
+    """Cria um embed padrão com o rodapé fixo."""
+    embed = discord.Embed(
+        title=titulo,
+        description=descricao,
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.set_footer(text=FOOTER)
+    return embed
 
 
 # ==============================
-# SISTEMA DE WARNINGS PERSISTENTE
+# SISTEMA DE WARNINGS
 # ==============================
 def carregar_warnings():
     if os.path.exists(ARQUIVO_WARN):
@@ -720,7 +496,7 @@ def is_staff():
 
 
 # ==============================
-# 🏃 COMANDO /percurso (SISTEMA DE DROPDOWNS)
+# 🏃 /percurso
 # ==============================
 class PercursoSelect(discord.ui.Select):
     def __init__(self):
@@ -736,24 +512,22 @@ class PercursoSelect(discord.ui.Select):
 
         embed = discord.Embed(
             title=f"🏁 {percurso_escolhido}",
-            color=discord.Color.dark_red(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
-
         for cargo, info in cargos.items():
             embed.add_field(
                 name=f"▪️ {cargo}",
                 value=f"⏱️ **Tempo:** {info['tempo']}\n🎯 **Nota mínima:** {info['nota']}",
-                inline=False
+                inline=False,
             )
-
-        embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
 
 
 class PercursoView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=180)
+        super().__init__(timeout=300)
         self.add_item(PercursoSelect())
 
 
@@ -766,17 +540,15 @@ async def percurso(interaction: discord.Interaction):
             "**Percursos disponíveis:**\n"
             + "\n".join(f"🏁 {nome}" for nome in PERCURSOS.keys())
         ),
-        color=discord.Color.dark_red(),
-        timestamp=datetime.datetime.utcnow()
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    embed.set_footer(text="O menu fica ativo por 3 minutos.")
-
-    view = PercursoView()
-    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=PercursoView())
 
 
 # ==============================
-# ⚖️ COMANDO /regulamentacao
+# ⚖️ /regulamentacao
 # ==============================
 class RegulamentacaoSelect(discord.ui.Select):
     def __init__(self):
@@ -789,20 +561,19 @@ class RegulamentacaoSelect(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         escolha = self.values[0]
         info = REGULAMENTACAO_DADOS[escolha]
-
         embed = discord.Embed(
             title=info["titulo"],
             description=info["texto"],
-            color=discord.Color.dark_red(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
-        embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
 
 
 class RegulamentacaoView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=180)
+        super().__init__(timeout=300)
         self.add_item(RegulamentacaoSelect())
 
 
@@ -815,54 +586,42 @@ async def regulamentacao(interaction: discord.Interaction):
             "**Opções disponíveis:**\n"
             + "\n".join(f"⚖️ {nome}" for nome in REGULAMENTACAO_DADOS.keys())
         ),
-        color=discord.Color.dark_red(),
-        timestamp=datetime.datetime.utcnow()
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    embed.set_footer(text="O menu fica ativo por 3 minutos.")
-
-    view = RegulamentacaoView()
-    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=RegulamentacaoView())
 
 
 # ==============================
-# 📋 COMANDO /tarefas
+# 📋 /tarefas
 # ==============================
 @bot.tree.command(name="tarefas", description="Exibe o link das Tarefas, Funções e Explicações")
 async def tarefas(interaction: discord.Interaction):
-    embed = discord.Embed(
-        title="➣ 5.2 - Tarefas, Funções e Explicações",
-        description=(
-            "Acesse o documento completo contendo as tarefas, funções e explicações de cada Divisão, Subdivisão, Instância e Grupo de Tarefa.\n\n"
-            "🔗 **[CLIQUE AQUI PARA ABRIR O DOCUMENTO](https://docs.google.com/document/d/1mMtO0yBMCptw9jW4A7OucT737izGAL73A5oo3_jmf0I/edit?usp=sharing)**"
-        ),
-        color=discord.Color.dark_red(),
-        timestamp=datetime.datetime.utcnow()
+    embed = embed_info(
+        "➣ 5.2 - Tarefas, Funções e Explicações",
+        "Acesse o documento completo contendo as tarefas, funções e explicações de cada Divisão, Subdivisão, Instância e Grupo de Tarefa.\n\n"
+        "🔗 **[CLIQUE AQUI PARA ABRIR O DOCUMENTO](https://docs.google.com/document/d/1mMtO0yBMCptw9jW4A7OucT737izGAL73A5oo3_jmf0I/edit?usp=sharing)**",
     )
-    embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🎓 COMANDO /cfap
+# 🎓 /cfap
 # ==============================
 @bot.tree.command(name="cfap", description="Exibe os links das aulas do CFAP")
 async def cfap(interaction: discord.Interaction):
-    embed = discord.Embed(
-        title="🎓 Aulas do CFAP",
-        description=(
-            "Acesse o conteúdo da aula do CFAP abaixo:\n\n"
-            "▪️ **CFAP Aula 1:**\n"
-            "🔗 **[CLIQUE AQUI PARA ACESSAR](https://view.genially.com/6871cc992634eb8684507438/presentation-cfap-1degreeaula)**"
-        ),
-        color=discord.Color.dark_red(),
-        timestamp=datetime.datetime.utcnow()
+    embed = embed_info(
+        "🎓 Aulas do CFAP",
+        "Acesse o conteúdo da aula do CFAP abaixo:\n\n"
+        "▪️ **CFAP Aula 1:**\n"
+        "🔗 **[CLIQUE AQUI PARA ACESSAR](https://view.genially.com/6871cc992634eb8684507438/presentation-cfap-1degreeaula)**",
     )
-    embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🪖 COMANDO /ordem unida
+# 🪖 /ordem unida
 # ==============================
 class OrdemUnidaSelect(discord.ui.Select):
     def __init__(self):
@@ -873,22 +632,21 @@ class OrdemUnidaSelect(discord.ui.Select):
         super().__init__(placeholder="Escolha uma parte do manual...", min_values=1, max_values=1, options=options)
 
     async def callback(self, interaction: discord.Interaction):
-        parte_escolhida = self.values[0]
-        info = ORDEM_UNIDA[parte_escolhida]
-
+        parte = self.values[0]
+        info = ORDEM_UNIDA[parte]
         embed = discord.Embed(
-            title=f"🪖 {parte_escolhida}",
+            title=f"🪖 {parte}",
             description=info["texto"],
-            color=discord.Color.dark_red(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
-        embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
 
 
 class OrdemUnidaView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=180)
+        super().__init__(timeout=300)
         self.add_item(OrdemUnidaSelect())
 
 
@@ -904,20 +662,18 @@ async def ordem_unida(interaction: discord.Interaction):
             "**Partes disponíveis:**\n"
             + "\n".join(f"🪖 {nome}" for nome in ORDEM_UNIDA.keys())
         ),
-        color=discord.Color.dark_red(),
-        timestamp=datetime.datetime.utcnow()
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    embed.set_footer(text="O menu fica ativo por 3 minutos.")
-
-    view = OrdemUnidaView()
-    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=OrdemUnidaView())
 
 
 bot.tree.add_command(ordem)
 
 
 # ==============================
-# 📊 COMANDO /nota
+# 📊 /nota
 # ==============================
 @bot.tree.command(name="nota", description="Mostra a nota mínima de aprovação de um cargo")
 @app_commands.describe(cargo="Cargo para consultar a nota mínima")
@@ -933,118 +689,193 @@ async def nota(interaction: discord.Interaction, cargo: app_commands.Choice[str]
     embed = discord.Embed(
         title=f"🎯 Nota mínima — {cargo.value}",
         description=f"**{cargo.value}** precisa de **{valor}** para aprovação.",
-        color=discord.Color.gold(),
-        timestamp=datetime.datetime.utcnow()
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 📅 COMANDO /cp (CAPACITAÇÃO DE PATENTE)
+# 📅 /cp
 # ==============================
 @bot.tree.command(name="cp", description="Mostra a capacitação de patente de cada patente")
 async def cp(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📅 Capacitação de Patente",
         description="Abaixo estará listada a capacitação de cada patente, sendo elas:",
-        color=discord.Color.dark_red(),
-        timestamp=datetime.datetime.utcnow()
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-
     for grupo, itens in CAPACITACAO.items():
         embed.add_field(
             name=f"| {grupo} |",
             value="\n".join(formatar_linha_cp(item) for item in itens),
-            inline=False
+            inline=False,
         )
-
-    embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🪖 COMANDO /hierarquia
+# 🪖 /hierarquia
 # ==============================
 @bot.tree.command(name="hierarquia", description="Mostra a hierarquia completa do Exército")
 async def hierarquia(interaction: discord.Interaction):
-    await enviar_texto(interaction, montar_texto_hierarquia())
+    texto = montar_texto_hierarquia()
+    blocos = []
+    buffer = ""
+    for linha in texto.split("\n"):
+        if len(buffer) + len(linha) + 1 > 3800:
+            blocos.append(buffer)
+            buffer = linha
+        else:
+            buffer += ("\n" if buffer else "") + linha
+    if buffer:
+        blocos.append(buffer)
+
+    embed = discord.Embed(
+        title="🪖 Hierarquia do Exército",
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.add_field(name="Categorias", value=blocos[0] if blocos else "—", inline=False)
+    embed.set_footer(text=FOOTER)
+
+    if len(blocos) > 1:
+        await interaction.response.send_message(embed=embed)
+        for bloco in blocos[1:]:
+            extra = discord.Embed(color=COR_SANGUE)
+            extra.add_field(name="Continuação", value=bloco, inline=False)
+            extra.set_footer(text=FOOTER)
+            await interaction.followup.send(embed=extra)
+    else:
+        await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🗳️ COMANDO /historico presidencial
+# 🗳️ /historico presidencial
 # ==============================
 historico = app_commands.Group(name="historico", description="Consultas do histórico do Exército")
 
 
 @historico.command(name="presidencial", description="Histórico de Presidentes e Vice-Presidentes eleitos")
 async def historico_presidencial(interaction: discord.Interaction):
-    await enviar_texto(interaction, TEXTO_HISTORICO_PRESIDENCIAL)
+    embed = embed_info(
+        "🗳️ Histórico Presidencial",
+        "**Neste documento estará listado todos os Presidentes e Vice-Presidentes da República eleitos oficialmente de forma democrática:**\n\n"
+        "🔗 **[CLIQUE AQUI PARA ABRIR O DOCUMENTO](https://docs.google.com/document/d/1lCagVTXlaxZX7lal80h0y7rjfCVOe4g-E6B_xi-fZs4/edit?usp=sharing)**",
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 bot.tree.add_command(historico)
 
 
 # ==============================
-# 📑 COMANDO /processos
+# 📑 /processos
 # ==============================
 @bot.tree.command(name="processos", description="Processos seletivos do Exército Brasileiro e suas designações")
 async def processos(interaction: discord.Interaction):
-    await enviar_texto(interaction, TEXTO_PROCESSOS)
+    embed = embed_info(
+        "📑 Processos Seletivos & Designações",
+        "**➣ 1.1 - Processos Seletivos do Exército Brasileiro & Suas Designações**\n\n"
+        "**Designações - Processos Seletivos:**\n"
+        "> ⤷ **Cursos:** EsPCEx, ESA, ERP, CIOU e CFAP.\n"
+        "> ⤷ **Subdivisões:** STM e SGEx.\n"
+        "> ⤷ **Divisões:** BPE, BFE e BAC.\n"
+        "> ⤷ **Unidade:** CIE (contabiliza como divisão também).\n"
+        "> ⤷ **Especialização:** COpEsp.\n"
+        "> ⤷ **Setores:** Investidores e SCI.\n\n"
+        "**Legislação vigente:** cada militar poderá participar de apenas dois cursos e prestar no máximo quatro funções dentro da instituição (divisão, subdivisão, curso e oficialato).",
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🏷️ COMANDO /pronomes
+# 🏷️ /pronomes
 # ==============================
 @bot.tree.command(name="pronomes", description="Link dos pronomes vigentes do Exército Brasileiro")
 async def pronomes(interaction: discord.Interaction):
-    await enviar_texto(interaction, TEXTO_PRONOMES)
+    embed = embed_info(
+        "🏷️ Pronomes Vigentes — EB do Apex",
+        "**II - PRONOMES**\n"
+        "> ➣ Aqui ao lado os **Pronomes Vigentes do Exército Brasileiro**.\n\n"
+        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/1hdTXemfHoTXCG8i1xZcXFo06ntZCnSrtvpm6nsqaC8A/edit?usp=sharing)**",
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🗂️ COMANDO /normas
+# 🗂️ /normas
 # ==============================
 @bot.tree.command(name="normas", description="Normas e procedimentos de arquivamentos administrativos")
 async def normas(interaction: discord.Interaction):
-    await enviar_texto(interaction, TEXTO_NORMAS)
+    embed = embed_info(
+        "🗂️ Normas e Procedimentos",
+        "> ➣ Segue as **Normas e Procedimentos de Arquivamentos Administrativos**.\n\n"
+        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/1H0QCw8CjO22AXeTrfsU__P1TngkmJ7x40gOBlxTxs4w/edit?usp=sharing)**",
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🛠️ COMANDO /administrador
+# 🛠️ /administrador
 # ==============================
 @bot.tree.command(name="administrador", description="O que os administradores/moderadores fazem no EB do Apex")
 async def administrador(interaction: discord.Interaction):
-    await enviar_texto(interaction, TEXTO_ADMINISTRADOR)
+    embed = embed_info(
+        "🛠️ Administradores / Moderadores",
+        "Segue o link do que os **administradores/moderadores** fazem no EB do Apex:\n\n"
+        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/1Od0rpORegpcvtwATTwaSYbvERpjib5pA4V_xyaDV5EE/edit?usp=sharing)**",
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🚫 COMANDO /vedacao
+# 🚫 /vedacao
 # ==============================
 @bot.tree.command(name="vedacao", description="Vedação de acessos e exilados permanentes (in game)")
 async def vedacao(interaction: discord.Interaction):
-    await enviar_texto(interaction, TEXTO_VEDACAO)
+    embed = embed_info(
+        "🚫 Vedação de Acessos",
+        "> ➣ Segue o link da **Vedação de Acessos / Exilados Permanentes - IN GAME**.\n\n"
+        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/13bpYEqPcT4EMISNtPQI4uodiA1frsBJ9u1r0TdXQNNY/edit?usp=sharing)**",
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 📘 COMANDOS /manual recruta e /manual cabo
+# 📘 /manual recruta e cabo
 # ==============================
 manual = app_commands.Group(name="manual", description="Manuais do Exército Brasileiro")
 
 
 @manual.command(name="recruta", description="Link do Manual do Recruta")
 async def manual_recruta(interaction: discord.Interaction):
-    await enviar_texto(interaction, TEXTO_MANUAL_RECRUTA)
+    embed = embed_info(
+        "📘 Manual do Recruta",
+        "> ➣ Segue o link do **Manual do Recruta**.\n\n"
+        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/100aK96ecdRIHDpPaq0VEFVMnLHRMBrrHXPwM1-kEhRI/edit?usp=sharing)**",
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 @manual.command(name="cabo", description="Link do Manual do Cabo")
 async def manual_cabo(interaction: discord.Interaction):
-    await enviar_texto(interaction, TEXTO_MANUAL_CABO)
+    embed = embed_info(
+        "📘 Manual do Cabo",
+        "> ➣ Segue o link do **Manual do Cabo**.\n\n"
+        "🔗 **[CLIQUE AQUI!](https://drive.google.com/file/d/1CErMt2Q24Qbun44diCsnyx0hhVl9nX49/view)**",
+    )
+    await interaction.response.send_message(embed=embed)
 
 
 bot.tree.add_command(manual)
 
 
 # ==============================
-# 📌 COMANDO /requisitos
+# 📌 /requisitos
 # ==============================
 class RequisitosSelect(discord.ui.Select):
     def __init__(self):
@@ -1057,25 +888,22 @@ class RequisitosSelect(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         orgao = self.values[0]
         info = REQUISITOS[orgao]
-
         embed = discord.Embed(
             title=f"📌 Requisitos — {orgao}",
-            color=discord.Color.dark_red(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
         embed.add_field(name="🎖️ Patente necessária", value=info["patente"], inline=False)
         embed.add_field(name="✅ Requisitos", value=formatar_lista_req(info["requisitos"]), inline=False)
-
         for titulo, itens in info.get("extras", {}).items():
             embed.add_field(name=titulo, value=formatar_lista_req(itens), inline=False)
-
-        embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
 
 
 class RequisitosView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=180)
+        super().__init__(timeout=300)
         self.add_item(RequisitosSelect())
 
 
@@ -1088,50 +916,50 @@ async def requisitos(interaction: discord.Interaction):
             "**Órgãos disponíveis:**\n"
             + "\n".join(f"📌 {nome}" for nome in REQUISITOS.keys())
         ),
-        color=discord.Color.dark_red(),
-        timestamp=datetime.datetime.utcnow()
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    embed.set_footer(text="O menu fica ativo por 3 minutos.")
-
-    view = RequisitosView()
-    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=RequisitosView())
 
 
 # ==============================
-# ☀️ COMANDO /lema
+# ☀️ /lema
 # ==============================
 @bot.tree.command(name="lema", description="Mostra o lema da Ordem Rubra")
 async def lema(interaction: discord.Interaction):
     embed = discord.Embed(
         title="☀️ Lema da Ordem Rubra",
         description=f'*"{LEMA_TEXTO}"*\n\n**{LEMA_GRITO}**',
-        color=discord.Color.dark_red(),
-        timestamp=datetime.datetime.utcnow()
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
+    embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
 
 
 # ==============================
-# 🛡️ COMANDOS DE MODERAÇÃO
+# 🛡️ MODERAÇÃO
 # ==============================
 @bot.tree.command(name="ban", description="Bane um membro do servidor")
 @is_staff()
 @app_commands.describe(membro="Membro a ser banido", motivo="Motivo do banimento")
 async def ban(interaction: discord.Interaction, membro: discord.Member, motivo: str = "Não especificado"):
     if membro.top_role >= interaction.guild.me.top_role:
-        await interaction.response.send_message("❌ Não posso banir este membro (cargo maior ou igual ao meu).", ephemeral=True)
+        await interaction.response.send_message("❌ Não posso banir este membro (cargo maior ou igual ao meu).")
         return
     try:
         await membro.ban(reason=f"{interaction.user} | {motivo}")
         embed = discord.Embed(
             title="🔴 Banimento Executado",
             description=f"**Membro:** {membro.mention}\n**Motivo:** {motivo}\n**Moderador:** {interaction.user.mention}",
-            color=discord.Color.dark_red(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
+        embed.set_footer(text=FOOTER)
         await interaction.response.send_message(embed=embed)
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro ao banir: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro ao banir: {e}")
 
 
 @bot.tree.command(name="kick", description="Expulsa um membro do servidor")
@@ -1139,19 +967,20 @@ async def ban(interaction: discord.Interaction, membro: discord.Member, motivo: 
 @app_commands.describe(membro="Membro a ser expulso", motivo="Motivo da expulsão")
 async def kick(interaction: discord.Interaction, membro: discord.Member, motivo: str = "Não especificado"):
     if membro.top_role >= interaction.guild.me.top_role:
-        await interaction.response.send_message("❌ Não posso expulsar este membro.", ephemeral=True)
+        await interaction.response.send_message("❌ Não posso expulsar este membro.")
         return
     try:
         await membro.kick(reason=f"{interaction.user} | {motivo}")
         embed = discord.Embed(
             title="🟠 Expulsão Executada",
             description=f"**Membro:** {membro.mention}\n**Motivo:** {motivo}\n**Moderador:** {interaction.user.mention}",
-            color=discord.Color.orange(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
+        embed.set_footer(text=FOOTER)
         await interaction.response.send_message(embed=embed)
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro ao expulsar: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro ao expulsar: {e}")
 
 
 @bot.tree.command(name="mute", description="Silencia um membro temporariamente (timeout)")
@@ -1161,7 +990,7 @@ async def mute(interaction: discord.Interaction, membro: discord.Member, duracao
     padrao = re.compile(r"(\d+)([smhd])")
     matches = list(padrao.finditer(duracao.lower()))
     if not matches:
-        await interaction.response.send_message("❌ Formato inválido. Use: `10m`, `1h`, `2d`.", ephemeral=True)
+        await interaction.response.send_message("❌ Formato inválido. Use: `10m`, `1h`, `2d`.")
         return
 
     total = datetime.timedelta()
@@ -1178,7 +1007,7 @@ async def mute(interaction: discord.Interaction, membro: discord.Member, duracao
             total += datetime.timedelta(days=valor)
 
     if total > datetime.timedelta(days=28):
-        await interaction.response.send_message("❌ Duração máxima: 28 dias.", ephemeral=True)
+        await interaction.response.send_message("❌ Duração máxima: 28 dias.")
         return
 
     try:
@@ -1189,12 +1018,13 @@ async def mute(interaction: discord.Interaction, membro: discord.Member, duracao
                          f"**Duração:** {duracao}\n"
                          f"**Motivo:** {motivo}\n"
                          f"**Moderador:** {interaction.user.mention}"),
-            color=discord.Color.gold(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
+        embed.set_footer(text=FOOTER)
         await interaction.response.send_message(embed=embed)
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro ao silenciar: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro ao silenciar: {e}")
 
 
 @bot.tree.command(name="unmute", description="Remove o silenciamento de um membro")
@@ -1206,12 +1036,13 @@ async def unmute(interaction: discord.Interaction, membro: discord.Member):
         embed = discord.Embed(
             title="🔊 Membro Dessilenciado",
             description=f"**Membro:** {membro.mention}\n**Moderador:** {interaction.user.mention}",
-            color=discord.Color.green(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
+        embed.set_footer(text=FOOTER)
         await interaction.response.send_message(embed=embed)
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro: {e}")
 
 
 @bot.tree.command(name="unban", description="Remove o banimento de um usuário pelo ID")
@@ -1224,14 +1055,15 @@ async def unban(interaction: discord.Interaction, user_id: str, motivo: str = "N
         embed = discord.Embed(
             title="🟢 Banimento Removido",
             description=f"**Usuário:** {user.mention} (`{user.id}`)\n**Motivo:** {motivo}\n**Moderador:** {interaction.user.mention}",
-            color=discord.Color.green(),
-            timestamp=datetime.datetime.utcnow()
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
         )
+        embed.set_footer(text=FOOTER)
         await interaction.response.send_message(embed=embed)
     except discord.NotFound:
-        await interaction.response.send_message("❌ Usuário não encontrado ou não está banido.", ephemeral=True)
+        await interaction.response.send_message("❌ Usuário não encontrado ou não está banido.")
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro: {e}")
 
 
 @bot.tree.command(name="warning", description="Aplica uma advertência a um membro")
@@ -1258,9 +1090,10 @@ async def warning(interaction: discord.Interaction, membro: discord.Member, moti
                      f"**Motivo:** {motivo}\n"
                      f"**Moderador:** {interaction.user.mention}\n"
                      f"**Total de advertências:** {total}"),
-        color=discord.Color.red(),
-        timestamp=datetime.datetime.utcnow()
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
+    embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
     try:
         await membro.send(f"⚠️ Você recebeu uma advertência no servidor **{interaction.guild.name}**.\n**Motivo:** {motivo}\n**Total:** {total}")
@@ -1279,20 +1112,21 @@ async def warnings(interaction: discord.Interaction, membro: discord.Member):
     lista = dados.get(guild_id, {}).get(user_id, [])
 
     if not lista:
-        await interaction.response.send_message(f"✅ {membro.mention} não tem advertências.", ephemeral=True)
+        await interaction.response.send_message(f"✅ {membro.mention} não tem advertências.")
         return
 
     embed = discord.Embed(
         title=f"⚠️ Advertências de {membro.display_name}",
-        color=discord.Color.orange()
+        color=COR_SANGUE,
     )
     for i, w in enumerate(lista, 1):
         embed.add_field(
             name=f"#{i} — {w['data'][:10]}",
             value=f"**Motivo:** {w['motivo']}\n**Por:** {w['moderador']}",
-            inline=False
+            inline=False,
         )
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed)
 
 
 @bot.tree.command(name="clearwarnings", description="Remove todas as advertências de um membro")
@@ -1308,7 +1142,7 @@ async def clearwarnings(interaction: discord.Interaction, membro: discord.Member
         salvar_warnings(dados)
         await interaction.response.send_message(f"🧹 Advertências de {membro.mention} limpas.")
     else:
-        await interaction.response.send_message(f"✅ {membro.mention} já não tinha advertências.", ephemeral=True)
+        await interaction.response.send_message(f"✅ {membro.mention} já não tinha advertências.")
 
 
 @bot.tree.command(name="clear", description="Apaga uma quantidade de mensagens do canal")
@@ -1316,11 +1150,11 @@ async def clearwarnings(interaction: discord.Interaction, membro: discord.Member
 @app_commands.describe(quantidade="Quantas mensagens apagar (1-100)")
 async def clear(interaction: discord.Interaction, quantidade: int):
     if quantidade < 1 or quantidade > 100:
-        await interaction.response.send_message("❌ Use um valor entre 1 e 100.", ephemeral=True)
+        await interaction.response.send_message("❌ Use um valor entre 1 e 100.")
         return
-    await interaction.response.defer(ephemeral=True)
+    await interaction.response.defer()
     deletadas = await interaction.channel.purge(limit=quantidade)
-    await interaction.followup.send(f"🧹 **{len(deletadas)}** mensagens apagadas.", ephemeral=True)
+    await interaction.followup.send(f"🧹 **{len(deletadas)}** mensagens apagadas.")
 
 
 @bot.tree.command(name="slowmode", description="Define o modo lento do canal em segundos")
@@ -1328,7 +1162,7 @@ async def clear(interaction: discord.Interaction, quantidade: int):
 @app_commands.describe(segundos="Segundos entre mensagens (0 desativa)")
 async def slowmode(interaction: discord.Interaction, segundos: int):
     if segundos < 0 or segundos > 21600:
-        await interaction.response.send_message("❌ Use entre 0 e 21600 segundos (6 horas).", ephemeral=True)
+        await interaction.response.send_message("❌ Use entre 0 e 21600 segundos (6 horas).")
         return
     await interaction.channel.edit(slowmode_delay=segundos)
     if segundos == 0:
@@ -1356,13 +1190,13 @@ async def unlock(interaction: discord.Interaction):
 
 
 # ==============================
-# 🔎 COMANDOS UTILITÁRIOS
+# 🔎 UTILITÁRIOS
 # ==============================
 @bot.tree.command(name="userinfo", description="Mostra informações de um usuário")
 @app_commands.describe(membro="Membro para consultar (opcional)")
 async def userinfo(interaction: discord.Interaction, membro: discord.Member = None):
     membro = membro or interaction.user
-    embed = discord.Embed(title=f"👤 {membro}", color=membro.color or discord.Color.blue())
+    embed = discord.Embed(title=f"👤 {membro}", color=COR_SANGUE)
     embed.set_thumbnail(url=membro.display_avatar.url)
     embed.add_field(name="ID", value=membro.id, inline=True)
     embed.add_field(name="Apelido", value=membro.nick or "Nenhum", inline=True)
@@ -1370,13 +1204,14 @@ async def userinfo(interaction: discord.Interaction, membro: discord.Member = No
     embed.add_field(name="Conta criada", value=membro.created_at.strftime("%d/%m/%Y"), inline=True)
     embed.add_field(name="Entrou em", value=membro.joined_at.strftime("%d/%m/%Y") if membro.joined_at else "?", inline=True)
     embed.add_field(name="Cargo mais alto", value=membro.top_role.mention, inline=True)
+    embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
 
 
 @bot.tree.command(name="serverinfo", description="Mostra informações do servidor")
 async def serverinfo(interaction: discord.Interaction):
     g = interaction.guild
-    embed = discord.Embed(title=f"🏰 {g.name}", color=discord.Color.dark_red())
+    embed = discord.Embed(title=f"🏰 {g.name}", color=COR_SANGUE)
     if g.icon:
         embed.set_thumbnail(url=g.icon.url)
     embed.add_field(name="ID", value=g.id, inline=True)
@@ -1385,6 +1220,7 @@ async def serverinfo(interaction: discord.Interaction):
     embed.add_field(name="Canais", value=len(g.channels), inline=True)
     embed.add_field(name="Cargos", value=len(g.roles), inline=True)
     embed.add_field(name="Criado em", value=g.created_at.strftime("%d/%m/%Y"), inline=True)
+    embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
 
 
@@ -1392,8 +1228,9 @@ async def serverinfo(interaction: discord.Interaction):
 @app_commands.describe(membro="Membro (opcional)")
 async def avatar(interaction: discord.Interaction, membro: discord.Member = None):
     membro = membro or interaction.user
-    embed = discord.Embed(title=f"🖼️ Avatar de {membro.display_name}", color=membro.color or discord.Color.blue())
+    embed = discord.Embed(title=f"🖼️ Avatar de {membro.display_name}", color=COR_SANGUE)
     embed.set_image(url=membro.display_avatar.url)
+    embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
 
 
@@ -1404,9 +1241,9 @@ async def enquete(interaction: discord.Interaction, pergunta: str):
     embed = discord.Embed(
         title="📊 Enquete",
         description=pergunta,
-        color=discord.Color.blue()
+        color=COR_SANGUE,
     )
-    embed.set_footer(text=f"Criada por {interaction.user}")
+    embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
     msg = await interaction.original_response()
     await msg.add_reaction("👍")
@@ -1415,14 +1252,20 @@ async def enquete(interaction: discord.Interaction, pergunta: str):
 
 
 # ==============================
-# ERROS DE PERMISSÃO
+# ERROS
 # ==============================
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error):
     if isinstance(error, app_commands.CheckFailure):
-        await interaction.response.send_message("❌ Você não tem permissão para usar este comando.", ephemeral=True)
+        try:
+            await interaction.response.send_message("❌ Você não tem permissão para usar este comando.")
+        except discord.InteractionResponded:
+            await interaction.followup.send("❌ Você não tem permissão para usar este comando.")
     else:
-        await interaction.response.send_message(f"❌ Erro: {error}", ephemeral=True)
+        try:
+            await interaction.response.send_message(f"❌ Erro: {error}")
+        except discord.InteractionResponded:
+            await interaction.followup.send(f"❌ Erro: {error}")
 
 
 # ==============================
