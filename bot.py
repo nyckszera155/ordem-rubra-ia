@@ -724,9 +724,9 @@ async def regulamentacao(interaction: discord.Interaction):
 
 
 # ==============================
-# 📋 COMANDO /tarefas (TAREFAS, FUNÇÕES E EXPLICAÇÕES)
+# 📋 COMANDO /tarefas (CORRIGIDO)
 # ==============================
-@bot.tree.command(name="tarefas-funcoes-explicações-div-subdiv", description="Exibe o link das Tarefas, Funções e Explicações")
+@bot.tree.command(name="tarefas", description="Exibe o link das Tarefas, Funções e Explicações")
 async def tarefas(interaction: discord.Interaction):
     embed = discord.Embed(
         title="➣ 5.2 - Tarefas, Funções e Explicações",
