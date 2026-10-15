@@ -1234,23 +1234,6 @@ async def avatar(interaction: discord.Interaction, membro: discord.Member = None
     await interaction.response.send_message(embed=embed)
 
 
-@bot.tree.command(name="enquete", description="Cria uma enquete simples")
-@is_staff()
-@app_commands.describe(pergunta="A pergunta da enquete")
-async def enquete(interaction: discord.Interaction, pergunta: str):
-    embed = discord.Embed(
-        title="📊 Enquete",
-        description=pergunta,
-        color=COR_SANGUE,
-    )
-    embed.set_footer(text=FOOTER)
-    await interaction.response.send_message(embed=embed)
-    msg = await interaction.original_response()
-    await msg.add_reaction("👍")
-    await msg.add_reaction("👎")
-    await msg.add_reaction("🤷")
-
-
 # ==============================
 # ERROS
 # ==============================
