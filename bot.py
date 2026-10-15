@@ -473,7 +473,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 @bot.event
 async def on_ready():
     print(f"🤖 Bot online como {bot.user}")
-    await bot.change_presence(activity=discord.Game(name="vigilância rubra 🔴"))
+    await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
     try:
         synced = await bot.tree.sync()
         print(f"✅ {len(synced)} comandos slash sincronizados.")
