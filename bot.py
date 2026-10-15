@@ -163,397 +163,375 @@ LEMA_GRITO = "VIDA LONGA ORDEM RUBRA!"
 
 
 # ==============================
-# 🪖 DADOS DA ORDEM UNIDA (Textos Divididos em Lista de Embeds)
+# 🪖 DADOS DA ORDEM UNIDA (FONTE ÚNICA DE VERDADE)
 # ==============================
-LISTA_ORDEM_UNIDA = [
-    {
-        "titulo": "🪖 Manual de Ordem Unida — Introdução",
-        "texto": """O objetivo deste documento é instruir, orientar e padronizar a execução da ordem unida, assegurando disciplina, coesão, postura militar e correta aplicação dos movimentos e comandos conforme as normas estabelecidas pela instituição."""
+ORDEM_UNIDA = {
+    "Introdução": {
+        "titulo": "Manual de Ordem Unida",
+        "texto": """O objetivo deste documento é instruir, orientar e padronizar a execução da ordem unida, assegurando disciplina, coesão, postura militar e correta aplicação dos movimentos e comandos conforme as normas estabelecidas pela instituição.""",
     },
-    {
-        "titulo": "🪖 Parte 1 — Objetivo da Ordem Unida",
+    "Parte 1 — Objetivo da Ordem Unida": {
+        "titulo": "Parte 1 — Objetivo da Ordem Unida",
         "texto": """**FUNDAMENTOS, COMANDOS E APLICAÇÕES**
 A Ordem Unida é um dos fundamentos essenciais da formação militar, tendo como finalidade padronizar a apresentação, o deslocamento e a organização dos militares em conjunto. Por meio de seus comandos e movimentos, busca-se desenvolver disciplina, obediência imediata, coordenação coletiva, atenção, postura e reflexos condicionados, atributos indispensáveis para qualquer militar. 
-
 A correta execução da Ordem Unida garante que o grupamento se apresente e se desloque de maneira organizada, harmônica e eficiente, respeitando a hierarquia e a padronização institucional.
 
-**O QUE É ORDEM UNIDA - RESUMIDA**
+O QUE É ORDEM UNIDA - RESUMIDA
 A Ordem Unida é o conjunto de normas, comandos e movimentos utilizados para:
-▪️ Padronizar a apresentação do militar e do grupamento;
-▪️ Organizar o deslocamento coletivo;
-▪️ Garantir disciplina, hierarquia e harmonia nos movimentos.
+Padronizar a apresentação do militar e do grupamento;
+Organizar o deslocamento coletivo;
+Garantir disciplina, hierarquia e harmonia nos movimentos.
 
-**Seu emprego desenvolve:**
-▪️ Obediência imediata às ordens;
-▪️ Coordenação coletiva;
-▪️ Atenção, postura e autocontrole;
-▪️ Espírito de corpo e disciplina militar.
+Seu emprego desenvolve:
+Obediência imediata às ordens;
+Coordenação coletiva;
+Atenção, postura e autocontrole;
+Espírito de corpo e disciplina militar.
 
-É applied em instruções, apresentações, deslocamentos formais e situações administrativas dentro da instituição.
+É aplicada em instruções, apresentações, deslocamentos formais e situações administrativas dentro da instituição.
 
-**Principal Objetivo da Ordem Unida**
+Principal Objetivo da Ordem Unida
 A Ordem Unida tem como principais objetivos permitir que o grupamento se apresente e se desloque em perfeita ordem, desenvolver a disciplina coletiva, estimular a obediência aos comandos, aprimorar a coordenação e fortalecer o espírito de corpo. Esses fatores são determinantes para o bom desempenho do militar em qualquer atividade dentro da instituição.
 
-**OBJETIVOS DA ORDEM UNIDA - RESUMIDA**
-**Permitir que o grupamento:**
-▪️ Apresente-se de forma organizada e padronizada;
-▪️ Desloque-se com ordem, sincronia e disciplina.
+OBJETIVOS DA ORDEM UNIDA - RESUMIDA
+Permitir que o grupamento:
+Apresente-se de forma organizada e padronizada;
+Desloque-se com ordem, sincronia e disciplina.
 
-**Desenvolver no militar:**
-▪️ Reflexos condicionados;
-▪️ Respeito à hierarquia;
-▪️ Capacidade de agir coletivamente;
-▪️ Prontidão para cumprir ordens."""
+Desenvolver no militar:
+Reflexos condicionados;
+Respeito à hierarquia;
+Capacidade de agir coletivamente;
+Prontidão para cumprir ordens.""",
     },
-    {
-        "titulo": "🪖 Parte 2 — Tipos de Comandos",
+    "Parte 2 — Tipos de Comandos": {
+        "titulo": "Parte 2 — Tipos de Comandos",
         "texto": """Os comandos utilizados na Ordem Unida dividem-se em vozes de comando e comandos propriamente ditos.
-
 A voz de comando é utilizada para preparar o grupamento, alertando-o de que uma ação será executada. Dentro dela, destaca-se a voz de advertência, que serve exclusivamente como alerta inicial, não possuindo caráter de execução. Exemplos incluem “Grupamento”, “Pelotão” e “Esquadrão”. Essa voz deve ser empregada apenas uma vez, pois sua função é somente chamar a atenção do grupamento.
-
 O meio comando é aquele que antecede uma ação, preparando o grupamento para o movimento que será executado. Ele é aplicável, principalmente, a comandos de marcha e de volver, pois nesses casos há movimentação. Nos comandos de volver, o meio comando indica a direção do giro; nos comandos de marcha, indica o tipo e, quando necessário, a direção do deslocamento.
-
 Os comandos propriamente ditos são responsáveis por iniciar ou finalizar um movimento. Alguns são antecedidos por meio comando, enquanto outros são executados de forma direta. Exemplos incluem “Sentido”, “Descansar”, “Atenção” e “Marche”.
 
-**TIPOS DE COMANDOS - RESUMIDO**
+TIPOS DE COMANDOS - RESUMIDO
+Vozes de Comando
+Utilizadas para:
+Alertar;
+Preparar o grupamento para uma ação.
 
-**Vozes de Comando**
-**Utilizadas para:**
-▪️ Alertar;
-▪️ Preparar o grupamento para uma ação.
 Não possuem execução direta de movimento.
+Voz de Advertência
+Finalidade:
+Alertar o grupamento de que comandos serão emitidos.
 
-**Voz de Advertência**
-**Finalidade:**
-▪️ Alertar o grupamento de que comandos serão emitidos.
-**Características:**
-▪️ Deve ser dita apenas uma vez;
-▪️ Não inicia movimento.
-**Exemplos:**
-▪️ “GRUPAMENTO!”
-▪️ “PELOTÃO!”
-▪️ “ESQUADRÃO!”
+Características:
+Deve ser dita apenas uma vez;
+Não inicia movimento.
 
-**Meio Comando**
-**Finalidade:**
-▪️ Preparar o grupamento para a ação que será executada.
-**Aplicação:**
-▪️ Apenas em comandos que envolvem movimentação.
-**Função:**
-▪️ Em marchas: indica o tipo e a direção;
-▪️ Em volvers: indica a direção do giro.
-**Exemplos:**
-▪️ APRESENTAR, ARMA!
-▪️ DESCANSAR, ARMA!
-▪️ ESQUERDA VOLVER!
-▪️ DIREITA VOLVER!
+Exemplos:
+“GRUPAMENTO!”
+“PELOTÃO!”
+“ESQUADRÃO!”
 
-**Comandos Propriamente Ditos**
-**Finalidade:**
-▪️ Iniciar ou encerrar a execução do movimento.
-**Podem ser:**
-▪️ Antecedidos por meio comando;
-▪️ Executados de forma direta.
-**Exemplos:**
-▪️ SENTIDO!
-▪️ DESCANSAR!
-▪️ ATENÇÃO!
-▪️ MARCHE!"""
+Meio Comando
+Finalidade:
+Preparar o grupamento para a ação que será executada.
+
+Aplicação:
+Apenas em comandos que envolvem movimentação.
+
+Função:
+Em marchas: indica o tipo e a direção;
+Em volvers: indica a direção do giro.
+
+Exemplos:
+APRESENTAR, ARMA!
+DESCANSAR, ARMA!
+ESQUERDA VOLVER!
+DIREITA VOLVER!
+
+Comandos Propriamente Ditos
+Finalidade:
+Iniciar ou encerrar a execução do movimento.
+Podem ser:
+Antecedidos por meio comando;
+Executados de forma direta.
+
+Exemplos:
+SENTIDO!
+DESCANSAR!
+ATENÇÃO!
+MARCHE!""",
     },
-    {
-        "titulo": "🪖 Parte 3 — Comandos de Postura",
-        "texto": """**COMANDOS BÁSICOS DE POSTURA**
+    "Parte 3 — Comandos de Postura": {
+        "titulo": "Parte 3 — Comandos de Postura",
+        "texto": """COMANDOS BÁSICOS DE POSTURA
 O comando “Atenção” tem a finalidade de alertar o grupamento para o início das ordens do instrutor ou xerife. O comando “Sentido” determina que o grupamento permaneça imóvel, com postura ereta e mãos vazias, aguardando o próximo comando. O comando “Descansar” autoriza o grupamento a assumir a posição de descanso, sendo válido apenas quando o grupamento estiver anteriormente em posição de sentido. O comando “À vontade” concede maior liberdade de movimento, desde que o militar permaneça no local e mantenha postura adequada.
-
 Os comandos “Apresentar, arma” e “Descansar, arma” são utilizados, respectivamente, para iniciar e finalizar a continência do grupamento, incluindo o instrutor ou xerife.
 
-**COMANDOS BÁSICOS DE POSTURA - RESUMIDO**
+COMANDOS BÁSICOS DE POSTURA - RESUMIDO
+ATENÇÃO!
+Finalidade:
+Alertar o grupamento para o início das ordens do instrutor.
 
-**ATENÇÃO!**
-**Finalidade:**
-▪️ Alertar o grupamento para o início das ordens do instrutor.
-**Observação:**
-▪️ Prepara para o comando seguinte.
+Observação:
+Prepara para o comando seguinte.
 
-**SENTIDO!**
-**Finalidade:**
-▪️ Colocar o grupamento em postura rígida e imóvel.
-**Características:**
-▪️ Mãos vazias;
-▪️ Olhar à frente.
+SENTIDO!
+Finalidade:
+Colocar o grupamento em postura rígida e imóvel.
 
-**DESCANSAR!**
-**Finalidade:**
-▪️ Permitir postura menos rígida.
-**Observação:**
-▪️ Só pode ser dado se o grupamento estiver em sentido.
+Características:
+Mãos vazias;
+Olhar à frente.
 
-**À VONTADE!**
-**Finalidade:**
-▪️ Conceder maior liberdade de movimento.
-**Limitações:**
-▪️ Não sair do lugar;
-▪️ Manter postura adequada."""
+DESCANSAR!
+Finalidade:
+Permitir postura menos rígida.
+
+Observação:
+Só pode ser dado se o grupamento estiver em sentido.
+
+À VONTADE!
+Finalidade:
+Conceder maior liberdade de movimento.
+
+Limitações:
+Não sair do lugar;
+Manter postura adequada.""",
     },
-    {
-        "titulo": "🪖 Parte 4 — Comandos de Marcha",
+    "Parte 4 — Comandos de Marcha": {
+        "titulo": "Parte 4 — Comandos de Marcha",
         "texto": """Existem três tipos principais de marcha aplicáveis no âmbito do jogo: ordinário, acelerado e sem cadência.
-
-A marcha ordinária é a mais formal e a mais utilizada. Nela, o grupamento deve seguir o instrutor ou xerife sem correr, mantendo rigorosamente a organização da fila e a sincronia coletiva.
-
-A marcha acelerada caracteriza-se pelo deslocamento correndo, devendo o grupamento, ainda assim, tentar manter a organização da fila.
-
+A marcha ordinária é a mais formal e a mais utilizada. Nela, o grupamento deve seguir o instrutor ou xerife sem correr, mantendo rigorosamente a organização da fila e a sincronia coletiva. 
+A marcha acelerada caracteriza-se pelo deslocamento correndo, devendo o grupamento, ainda assim, tentar manter a organização da fila. 
 A marcha sem cadência é considerada informal, permitindo que o grupamento siga o instrutor sem necessidade de manter alinhamento rigoroso, sendo proibido correr.
-
 Para preparar corretamente o grupamento para marchar, os comandos devem seguir uma sequência padronizada. Para a marcha ordinária, o instrutor deve comandar, de frente para o grupamento: “Grupamento, atenção” e “Grupamento, sentido”. Em seguida, deve virar-se de costas para o grupamento e informar o destino com “Em direção ao (local)”, indicar o tipo de marcha com “Ordinário” e iniciar o deslocamento com “Marche”. Ao término da marcha, já de frente para o grupamento, deve finalizar com “Grupamento, faz alto”.
-
 O mesmo procedimento é aplicado à marcha acelerada, substituindo-se apenas o tipo de marcha pelo comando “Acelerado”, e à marcha sem cadência, utilizando-se o comando “Sem cadência”. Em todos os casos, o comando “Grupamento, faz alto” é obrigatório para encerrar a marcha, devendo o grupamento permanecer em posição de sentido após a parada.
 
-**TIPOS DE MARCHA**
+Tipos de Marcha
+ORDINÁRIO
+Marcha formal;
+Sem correr;
+Fila organizada;
+Total sincronia com o instrutor.
+ACELERADO
+Marcha rápida;
+Grupamento corre;
+Organização da fila deve ser mantida.
 
-**ORDINÁRIO**
-▪️ Marcha formal;
-▪️ Sem correr;
-▪️ Fila organizada;
-▪️ Total sincronia com o instrutor.
+SEM CADÊNCIA
+Marcha informal;
+Não exige alinhamento rígido;
+É proibido correr.
 
-**ACELERADO**
-▪️ Marcha rápida;
-▪️ Grupamento corre;
-▪️ Organização da fila deve ser mantida.
+SEQUÊNCIA PADRÃO PARA MARCHAR
+Marcha Ordinária
+De frente:
+GRUPAMENTO, ATENÇÃO!
+GRUPAMENTO, SENTIDO!
 
-**SEM CADÊNCIA**
-▪️ Marcha informal;
-▪️ Não exige alinhamento rígido;
-▪️ É proibido correr.
+De costas:
+EM DIREÇÃO AO (LOCAL)!
+ORDINÁRIO!
+MARCHE!
 
-**SEQUÊNCIA PADRÃO PARA MARCHAR**
+De frente (finalização):
+GRUPAMENTO, FAZ ALTO!
 
-**Marcha Ordinária**
-**De frente:**
-▪️ GRUPAMENTO, ATENÇÃO!
-▪️ GRUPAMENTO, SENTIDO!
-
-**De costas:**
-▪️ EM DIREÇÃO AO (LOCAL)!
-▪️ ORDINÁRIO!
-▪️ MARCHE!
-
-**De frente (finalização):**
-▪️ GRUPAMENTO, FAZ ALTO!
-
-**Marcha Acelerada**
+Marcha Acelerada
 Mesma sequência, substituindo:
 ORDINÁRIO! por ACELERADO!
 
-**Marcha Sem Cadência**
+Marcha Sem Cadência
 Mesma sequência, substituindo:
-ORDINÁRIO! por SEM CADÊNCIA!"""
+ORDINÁRIO! por SEM CADÊNCIA!""",
     },
-    {
-        "titulo": "🪖 Parte 5 — Alteração de Dispositivo",
+    "Parte 5 — Alteração de Dispositivo": {
+        "titulo": "Parte 5 — Alteração de Dispositivo",
         "texto": """O comando “Fora de forma” é exclusivo para alterações de dispositivo e jamais deve ser utilizado para deslocamento. Ele indica que o grupamento mudará sua organização, como de formação para coluna ou de coluna para formação.
-
 A coluna por um é uma forma de organização na qual os militares ficam posicionados um atrás do outro, respeitando a distância de uma pessoa entre si. Existem outras variações, como coluna por dois, três ou quatro, nas quais se deve observar rigorosamente a obediência às fileiras e às linhas.
-
 Para formar uma coluna por um, o instrutor deve permanecer de frente para o grupamento e comandar: “Grupamento, atenção”, “Grupamento, sentido” e, em seguida, explicar a ação com “Devem formar uma coluna por um em minha retaguarda”. Após isso, utiliza-se o comando “Fora de forma” e, logo depois, “Marche”. Após o comando “Marche”, o instrutor deve deslocar-se até o local desejado para que o grupamento se organize corretamente em coluna. Ao concluir a alteração de dispositivo, o grupamento assume posição de descanso, não sendo utilizado o comando “Grupamento, faz alto”, pois não se trata de uma marcha.
-
 A formação, por sua vez, ocorre quando o grupamento se organiza em linha, ombro a ombro. Fileira é a disposição dos militares lado a lado, voltados para a mesma frente. Linha caracteriza-se por possuir maior frente do que profundidade, ou seja, mais militares lado a lado do que em profundidade.
-
 Para entrar em formação, o instrutor deve comandar, de frente para o grupamento: “Grupamento, atenção”, “Grupamento, sentido” e, em seguida, explicar a ação com “Devem ir até a formação ao meu lado e formar um ombro a ombro ao meu comando”. Após isso, utiliza-se o comando “Fora de forma” e, posteriormente, “Marche”. Assim que o grupamento concluir a formação, deve assumir posição de descanso, sem o uso do comando “Grupamento, faz alto”.
 
-**ALTERAÇÃO DE DISPOSITIVO**
+ALTERAÇÃO DE DISPOSITIVO
+FORA DE FORMA
+Finalidade:
+Alterar o formato do grupamento.
 
-**FORA DE FORMA**
-**Finalidade:**
-▪️ Alterar o formato do grupamento.
-**Proibições:**
-▪️ Nunca usar para deslocamento.
-**Exemplos de alteração:**
-▪️ Formação para coluna;
-▪️ Coluna para formação.
+Proibições:
+Nunca usar para deslocamento.
 
-**COLUNA**
-**Conceito — Coluna por um:**
-▪️ Militares posicionados um atrás do outro;
-▪️ Distância de uma pessoa entre cada militar.
-**Existem:**
-▪️ Coluna por dois, três, quatro, etc.
+Exemplos de alteração:
+Formação para coluna;
+Coluna para formação.
+COLUNA
+Conceito
+Coluna por um:
+Militares posicionados um atrás do outro;
+Distância de uma pessoa entre cada militar.
 
-**Comandos para Formar Coluna**
-**De frente:**
-▪️ GRUPAMENTO, ATENÇÃO!
-▪️ GRUPAMENTO, SENTIDO!
-▪️ DEVEM FORMAR UMA COLUNA POR UM EM MINHA RETAGUARDA!
-▪️ FORA DE FORMA!
-▪️ MARCHE!
-**Observação:**
-▪️ Após “MARCHE!”, o instrutor deve ir ao local desejado;
-▪️ Não utilize “GRUPAMENTO, FAZ ALTO”.
+Existem:
+Coluna por dois, três, quatro, etc.
 
-**FORMAÇÃO**
-**Conceitos Fundamentais**
-**Fileira:**
-▪️ Militares lado a lado, mesma linha e mesma frente.
-**Linha:**
-▪️ Formação com frente maior que a profundidade.
+Comandos para Formar Coluna
+De frente:
+GRUPAMENTO, ATENÇÃO!
+GRUPAMENTO, SENTIDO!
+DEVEM FORMAR UMA COLUNA POR UM EM MINHA RETAGUARDA!
+FORA DE FORMA!
+MARCHE!
+Observação:
+Após “MARCHE!”, o instrutor deve ir ao local desejado;
+Não utilize “GRUPAMENTO, FAZ ALTO”.
+FORMAÇÃO
+Conceitos Fundamentais
+Fileira:
+Militares lado a lado, mesma linha e mesma frente.
 
-**Comandos para Formar**
-**De frente:**
-▪️ GRUPAMENTO, ATENÇÃO!
-▪️ GRUPAMENTO, SENTIDO!
-▪️ DEVEM IR ATÉ A FORMAÇÃO AO MEU LADO E FORMAR UM OMBRO A OMBRO AO MEU COMANDO!
-▪️ FORA DE FORMA!
-▪️ MARCHE!
-**Observação:**
-▪️ Após a formação, o grupamento entra em descanso;
-▪️ Não usar “FAZ ALTO”."""
+Linha:
+Formação com frente maior que a profundidade.
+
+Comandos para Formar
+De frente:
+GRUPAMENTO, ATENÇÃO!
+GRUPAMENTO, SENTIDO!
+DEVEM IR ATÉ A FORMAÇÃO AO MEU LADO E FORMAR UM OMBRO A OMBRO AO MEU COMANDO!
+FORA DE FORMA!
+MARCHE!
+
+Observação:
+Após a formação, o grupamento entra em descanso;
+Não usar “FAZ ALTO”.""",
     },
-    {
-        "titulo": "🪖 Parte 6 — Comandos de Apresentação",
+    "Parte 6 — Comandos de Apresentação": {
+        "titulo": "Parte 6 — Comandos de Apresentação",
         "texto": """A apresentação é um ato formal que demonstra disciplina, organização e respeito à hierarquia. O militar responsável deve apresentar-se informando seu posto ou graduação seguido do nome de guerra. Para apresentar o grupamento a um superior, o grupamento deve estar previamente organizado e em posição de sentido.
-
 O xerife ou instrutor posiciona-se à frente do grupamento, comanda “Grupamento, atenção” e “Grupamento, sentido”, vira-se para o superior, presta continência e se apresenta. Em seguida, informa se o grupamento está com ou sem faltas e com ou sem alterações. Após o superior declarar que o grupamento está apresentado, o xerife retorna-se ao grupamento, comanda “Grupamento, descansar” e reassume sua posição.
-
 Considera-se falta a ausência de um integrante que não compareceu à instrução. Considera-se alteração quando algum integrante se retira antes do término da atividade. A inexistência de faltas e alterações indica que todos os integrantes participaram integralmente da instrução.
 
-**APRESENTAÇÃO DO GRUPAMENTO**
-**Finalidade:**
-▪️ Demonstrar disciplina e organização.
-**Procedimento:**
-▪️ Grupamento em sentido;
-▪️ Xerife à frente;
-▪️ Continência obrigatória do xerife;
-▪️ Informar: com ou sem faltas e com ou sem alterações.
-**Definições:**
-▪️ Falta: ausência no início da instrução;
-▪️ Alteração: saída antes do término.
+APRESENTAÇÃO DO GRUPAMENTO
+Finalidade:
+Demonstrar disciplina e organização.
 
-**SEQUÊNCIA DE COMANDOS**
+Procedimento:
+Grupamento em sentido;
+Xerife à frente;
+Continência obrigatória do xerife;
+Informar:
+Com ou sem faltas;
+Com ou sem alterações.
 
-**Preparação do Grupamento**
+Definições:
+Falta: ausência no início da instrução;
+Alteração: saída antes do término.
+
+Sequência de Comandos
+Preparação do Grupamento
 De frente para o grupamento, o xerife comanda:
-▪️ GRUPAMENTO, ATENÇÃO!
-▪️ GRUPAMENTO, SENTIDO!
+GRUPAMENTO, ATENÇÃO!
+GRUPAMENTO, SENTIDO!
 
-**Apresentação ao Superior**
+Apresentação ao Superior
 O xerife:
-▪️ Vira-se em direção ao superior;
-▪️ Presta continência obrigatoriamente;
-▪️ Realiza a apresentação verbal, dizendo:
+Vira-se em direção ao superior;
+Presta continência obrigatoriamente;
+Realiza a apresentação verbal, dizendo:
 (POSTO/GRADUAÇÃO DO XERIFE) (NOME DE GUERRA), XERIFE DO CURSO!
 Exemplo: SUBTENENTE AT, XERIFE DO CURSO!
 Em seguida, ainda em continência, informa:
 APRESENTO GRUPAMENTO PRONTO, COM/SEM FALTAS E COM/SEM ALTERAÇÕES!
+
 Em seguida o superior deverá responder algo semelhante à:
 ESTÁ APRESENTADO.
 
-**Finalização da Apresentação**
+Finalização da Apresentação
 Após a resposta do superior, o xerife:
-▪️ Cessa a continência;
-▪️ Vira-se novamente para o grupamento;
-▪️ Comanda: GRUPAMENTO, DESCANSAR!
+Cessa a continência;
+Vira-se novamente para o grupamento;
+Comanda:
+GRUPAMENTO, DESCANSAR!
 
-**Retorno à Posição**
+Retorno à Posição
 O xerife:
-▪️ Retorna ao seu local;
-▪️ Assume posição de descanso junto ao grupamento."""
+Retorna ao seu local;
+Assume posição de descanso junto ao grupamento.""",
     },
-    {
-        "titulo": "🪖 Parte 7 — Observações Gerais",
-        "texto": """▪️ Todos os comandos devem ser executados com o militar em posição de sentido, salvo quando o comando determinar outra postura.
-▪️ A execução de comandos fora da posição correta caracteriza erro de procedimento.
-▪️ O comando “GRUPAMENTO, FAZ ALTO” deve ser utilizado exclusivamente para finalizar as marchas.
-▪️ O comando “FAZ ALTO” nunca deve ser empregado em alterações de dispositivo, como formação ou coluna.
-▪️ O comando “FORA DE FORMA” é restrito à mudança do formato do grupamento, não devendo ser utilizado para deslocamento.
-▪️ Durante marchas, o grupamento deve manter atenção constante ao instrutor/xerife.
-▪️ Em marchas ordinárias, a sincronia e a organização da fila são obrigatórias.
-▪️ Em marchas aceleradas, apesar do deslocamento em corrida, deve-se manter o máximo de organização possível.
-▪️ Na marcha sem cadência, não é permitido correr.
-▪️ Durante a apresentação do grupamento, a continência do xerife ou instrutor é obrigatória.
-▪️ O superior apresentado não é obrigado a prestar continência.
-▪️ O grupamento deve permanecer imóvel e em silêncio durante apresentações e comunicações formais.
-▪️ Todos os comandos devem ser emitidos de forma clara, firme e audível a todo o grupamento.
-▪️ É responsabilidade do instrutor/xerife garantir que o grupamento compreenda o comando antes da execução."""
+    "Parte 7 — Observações Gerais": {
+        "titulo": "Parte 7 — Observações Gerais",
+        "texto": """OBSERVAÇÕES GERAIS
+Todos os comandos devem ser executados com o militar em posição de sentido, salvo quando o comando determinar outra postura.
+A execução de comandos fora da posição correta caracteriza erro de procedimento.
+O comando “GRUPAMENTO, FAZ ALTO” deve ser utilizado exclusivamente para finalizar as marchas.
+O comando “FAZ ALTO” nunca deve ser empregado em alterações de dispositivo, como formação ou coluna.
+O comando “FORA DE FORMA” é restrito à mudança do formato do grupamento, não devendo ser utilizado para deslocamento.
+Durante marchas, o grupamento deve manter atenção constante ao instrutor/xerife.
+Em marchas ordinárias, a sincronia e a organização da fila são obrigatórias.
+Em marchas aceleradas, apesar do deslocamento em corrida, deve-se manter o máximo de organização possível.
+Na marcha sem cadência, não é permitido correr.
+Durante a apresentação do grupamento, a continência do xerife ou instrutor é obrigatória.
+O superior apresentado não é obrigado a prestar continência.
+O grupamento deve permanecer imóvel e em silêncio durante apresentações e comunicações formais.
+Todos os comandos devem ser emitidos de forma:
+Clara;
+Firme;
+Audível a todo o grupamento.
+
+É responsabilidade do instrutor/xerife garantir que o grupamento compreenda o comando antes da execução.""",
     },
-    {
-        "titulo": "🪖 Parte 8 — Perguntas Frequentes (FAQ)",
-        "texto": """**1. O que é Ordem Unida?**
-É o conjunto de comandos e movimentos que padroniza a apresentação, o deslocamento e a organização do grupamento, promovendo disciplina e coesão.
-
-**2. Qual é o principal objetivo da Ordem Unida?**
-Desenvolver disciplina, obediência, coordenação coletiva e postura militar.
-
-**3. Quem pode comandar a Ordem Unida?**
-Militares designados como instrutores, xerifes ou responsáveis pelo grupamento.
-
-**4. O que é voz de advertência?**
-É o comando usado apenas para alertar o grupamento de que uma ordem será executada.
-
-**5. A voz de advertência pode ser repetida?**
-Não. Ela deve ser dita apenas uma vez.
-
-**6. O que é meio comando?**
-É o comando que prepara o grupamento para uma movimentação específica.
-
-**7. Todo comando possui meio comando?**
-Não. Apenas comandos que envolvem movimento, como marchas e volvers.
-
-**8. O que significa “Sentido”?**
-Indica postura rígida, imóvel e atenta, aguardando o próximo comando.
-
-**9. Quando posso usar o comando “Descansar”?**
-Somente quando o grupamento estiver em posição de sentido.
-
-**10. Qual a diferença entre “Descansar” e “À vontade”?**
-“Descansar” mantém postura controlada; “À vontade” permite mais liberdade sem sair do lugar.
-
-**11. Quais são os tipos de marcha?**
-Ordinário, Acelerado e Sem Cadência.
-
-**12. Qual é a marcha mais formal?**
-A marcha Ordinária.
-
-**13. Em qual marcha é permitido correr?**
-Apenas na marcha Acelerada.
-
-**14. O que é “Sem cadência”?**
-Uma marcha informal, sem necessidade de alinhamento rigoroso e sem correr.
-
-**15. Quando devo usar “Grupamento, faz alto”?**
-Exclusivamente para finalizar uma marcha.
-
-**16. Posso usar “Faz alto” em formação ou coluna?**
-Não. Ele é proibido em alterações de dispositivo.
-
-**17. O que é “Fora de forma”?**
-Comando utilizado para alterar o formato do grupamento.
-
-**18. “Fora de forma” serve para marchar?**
-Não. Serve apenas para mudança de dispositivo.
-
-**19. O que é coluna por um?**
-Formação em que os militares ficam um atrás do outro, respeitando a distância.
-
-**20. O que é formação em linha?**
-Quando os militares ficam lado a lado, com a frente maior que a profundidade.
-
-**21. O que é fileira?**
-Disposição dos militares lado a lado, voltados para a mesma frente.
-
-**22. Quem deve prestar continência na apresentação?**
-O xerife ou instrutor é obrigado; o superior não.
-
-**23. O que são faltas na apresentação?**
-Ausência de integrante no início da instrução.
-
-**24. O que são alterações na apresentação?**
-Saída de integrante antes do término da instrução.
-
-**25. O grupamento deve se mover durante a apresentação?**
-Não. Deve permanecer imóvel em posição de sentido."""
-    }
-]
+    "Parte 8 — Perguntas Frequentes (FAQ)": {
+        "titulo": "Parte 8 — Perguntas Frequentes (FAQ)",
+        "texto": """1. O que é Ordem Unida?
+ É o conjunto de comandos e movimentos que padroniza a apresentação, o deslocamento e a organização do grupamento, promovendo disciplina e coesão.
+2. Qual é o principal objetivo da Ordem Unida?
+ Desenvolver disciplina, obediência, coordenação coletiva e postura militar.
+3. Quem pode comandar a Ordem Unida?
+ Militares designados como instrutores, xerifes ou responsáveis pelo grupamento.
+4. O que é voz de advertência?
+ É o comando usado apenas para alertar o grupamento de que uma ordem será executada.
+5. A voz de advertência pode ser repetida?
+ Não. Essa voz deve ser dita apenas uma vez.
+6. O que é meio comando?
+ É o comando que prepara o grupamento para uma movimentação específica.
+7. Todo comando possui meio comando?
+ Não. Apenas comandos que envolvem movimento, como marchas e volvers.
+8. O que significa “Sentido”?
+ Indica postura rígida, imóvel e atenta, aguardando o próximo comando.
+9. Quando posso usar o comando “Descansar”?
+ Somente quando o grupamento estiver em posição de sentido.
+10. Qual a diferença entre “Descansar” e “À vontade”?
+ “Descansar” mantém postura controlada; “À vontade” permite mais liberdade sem sair do lugar.
+11. Quais são os tipos de marcha?
+ Ordinário, Acelerado e Sem Cadência.
+12. Qual é a marcha mais formal?
+ A marcha Ordinária.
+13. Em qual marcha é permitido correr?
+ Apenas na marcha Acelerada.
+14. O que é “Sem cadência”?
+ Uma marcha informal, sem necessidade de alinhamento rigoroso e sem correr.
+15. Quando devo usar “Grupamento, faz alto”?
+ Exclusivamente para finalizar uma marcha.
+16. Posso usar “Faz alto” em formação ou coluna?
+ Não. Ele é proibido em alterações de dispositivo.
+17. O que é “Fora de forma”?
+ Comando utilizado para alterar o formato do grupamento.
+18. “Fora de forma” serve para marchar?
+ Não. Serve apenas para mudança de dispositivo.
+19. O que é coluna por um?
+ Formação em que os militares ficam um atrás do outro, respeitando a distância.
+20. O que é formação em linha?
+ Quando os militares ficam lado a lado, com a frente maior que a profundidade.
+21. O que é fileira?
+ Disposição dos militares lado a lado, voltados para a mesma frente.
+22. Quem deve prestar continência na apresentação?
+ O xerife ou instrutor é obrigado; o superior não.
+23. O que são faltas na apresentação?
+ Ausência de integrante no início da instrução.
+24. O que são alterações na apresentação?
+ Saída de integrante antes do término da instrução.
+25. O grupamento deve se mover durante a apresentação?
+ Não. Deve permanecer imóvel em posição de sentido.""",
+    },
+}
 
 
 # ==============================
@@ -663,6 +641,61 @@ async def percurso(interaction: discord.Interaction):
 
     view = PercursoView()
     await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+
+# ==============================
+# 🪖 COMANDO /ordem unida (SISTEMA DE DROPDOWNS - IDÊNTICO AO /percurso)
+# ==============================
+class OrdemUnidaSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="🪖", description="Ler esta parte do manual")
+            for nome in ORDEM_UNIDA.keys()
+        ]
+        super().__init__(placeholder="Escolha uma parte do manual...", min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        parte_escolhida = self.values[0]
+        info = ORDEM_UNIDA[parte_escolhida]
+
+        embed = discord.Embed(
+            title=f"🪖 {parte_escolhida}",
+            description=info["texto"],
+            color=discord.Color.dark_red(),
+            timestamp=datetime.datetime.utcnow()
+        )
+        embed.set_footer(text=f"Consultado por {interaction.user.display_name}")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class OrdemUnidaView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=180)
+        self.add_item(OrdemUnidaSelect())
+
+
+ordem = app_commands.Group(name="ordem", description="Consultas da Ordem Rubra")
+
+
+@ordem.command(name="unida", description="Consulta o Manual de Ordem Unida por partes")
+async def ordem_unida(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="🪖 Manual de Ordem Unida",
+        description=(
+            "Escolha uma parte no menu abaixo para ler o conteúdo completo.\n\n"
+            "**Partes disponíveis:**\n"
+            + "\n".join(f"🪖 {nome}" for nome in ORDEM_UNIDA.keys())
+        ),
+        color=discord.Color.dark_red(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    embed.set_footer(text="O menu fica ativo por 3 minutos.")
+
+    view = OrdemUnidaView()
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+
+bot.tree.add_command(ordem)
 
 
 # ==============================
@@ -777,30 +810,6 @@ async def lema(interaction: discord.Interaction):
         timestamp=datetime.datetime.utcnow()
     )
     await interaction.response.send_message(embed=embed)
-
-
-# ==============================
-# 🪖 COMANDO /ordem unida (ENVIA TODOS OS EMBEDS SEPARADOS)
-# ==============================
-ordem = app_commands.Group(name="ordem", description="Consultas da Ordem Rubra")
-
-
-@ordem.command(name="unida", description="Envia todos os trechos do Manual de Ordem Unida em embeds separados")
-async def ordem_unida(interaction: discord.Interaction):
-    await interaction.response.defer()  # Evita erro de tempo limite do Discord ao enviar múltiplos embeds
-
-    for item in LISTA_ORDEM_UNIDA:
-        embed = discord.Embed(
-            title=item["titulo"],
-            description=item["texto"],
-            color=discord.Color.dark_red(),
-            timestamp=datetime.datetime.utcnow()
-        )
-        embed.set_footer(text=f"Manual de Ordem Unida • {interaction.user.display_name}")
-        await interaction.followup.send(embed=embed)
-
-
-bot.tree.add_command(ordem)
 
 
 # ==============================
