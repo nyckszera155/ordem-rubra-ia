@@ -1145,24 +1145,203 @@ async def clearwarnings(interaction: discord.Interaction, membro: discord.Member
         await interaction.response.send_message(f"✅ {membro.mention} já não tinha advertências.")
 
 
-@bot.tree.command(name="clear", description="Apaga uma quantidade de mensagens do canal")
+# ==============================
+# 🧹 SISTEMA DE LIMPEZA DE MENSAGENS
+# ==============================
+@bot.tree.command(name="clear", description="Apaga uma quantidade específica de mensagens do canal")
 @is_staff()
-@app_commands.describe(quantidade="Quantas mensagens apagar (1-100)")
+@app_commands.describe(quantidade="Quantidade de mensagens a apagar (1-100)")
 async def clear(interaction: discord.Interaction, quantidade: int):
     if quantidade < 1 or quantidade > 100:
-        await interaction.response.send_message("❌ Use um valor entre 1 e 100.")
+        await interaction.response.send_message("❌ Use um valor entre **1** e **100**.", ephemeral=True)
         return
-    await interaction.response.defer()
-    deletadas = await interaction.channel.purge(limit=quantidade)
-    await interaction.followup.send(f"🧹 **{len(deletadas)}** mensagens apagadas.")
+    await interaction.response.defer(ephemeral=True)
+    try:
+        deletadas = await interaction.channel.purge(limit=quantidade)
+        embed = discord.Embed(
+            title="🧹 Limpeza Executada",
+            description=(
+                f"**Canal:** {interaction.channel.mention}\n"
+                f"**Mensagens apagadas:** {len(deletadas)}\n"
+                f"**Moderador:** {interaction.user.mention}"
+            ),
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    except discord.Forbidden:
+        await interaction.followup.send("❌ Não tenho permissão para apagar mensagens neste canal.", ephemeral=True)
+    except Exception as e:
+        await interaction.followup.send(f"❌ Erro ao limpar: {e}", ephemeral=True)
 
 
+@bot.tree.command(name="clearuser", description="Apaga mensagens de um usuário específico no canal")
+@is_staff()
+@app_commands.describe(membro="Membro cujas mensagens serão apagadas", quantidade="Quantidade (1-100)")
+async def clearuser(interaction: discord.Interaction, membro: discord.Member, quantidade: int = 100):
+    if quantidade < 1 or quantidade > 100:
+        await interaction.response.send_message("❌ Use um valor entre **1** e **100**.", ephemeral=True)
+        return
+    await interaction.response.defer(ephemeral=True)
+    try:
+        def check(msg):
+            return msg.author.id == membro.id
+        deletadas = await interaction.channel.purge(limit=quantidade, check=check)
+        embed = discord.Embed(
+            title="🧹 Limpeza por Usuário",
+            description=(
+                f"**Canal:** {interaction.channel.mention}\n"
+                f"**Usuário:** {membro.mention}\n"
+                f"**Mensagens apagadas:** {len(deletadas)}\n"
+                f"**Moderador:** {interaction.user.mention}"
+            ),
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    except discord.Forbidden:
+        await interaction.followup.send("❌ Não tenho permissão para apagar mensagens neste canal.", ephemeral=True)
+    except Exception as e:
+        await interaction.followup.send(f"❌ Erro ao limpar: {e}", ephemeral=True)
+
+
+@bot.tree.command(name="clearbot", description="Apaga mensagens de bots no canal")
+@is_staff()
+@app_commands.describe(quantidade="Quantidade (1-100)")
+async def clearbot(interaction: discord.Interaction, quantidade: int = 100):
+    if quantidade < 1 or quantidade > 100:
+        await interaction.response.send_message("❌ Use um valor entre **1** e **100**.", ephemeral=True)
+        return
+    await interaction.response.defer(ephemeral=True)
+    try:
+        def check(msg):
+            return msg.author.bot
+        deletadas = await interaction.channel.purge(limit=quantidade, check=check)
+        embed = discord.Embed(
+            title="🧹 Limpeza de Bots",
+            description=(
+                f"**Canal:** {interaction.channel.mention}\n"
+                f"**Mensagens apagadas:** {len(deletadas)}\n"
+                f"**Moderador:** {interaction.user.mention}"
+            ),
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    except discord.Forbidden:
+        await interaction.followup.send("❌ Não tenho permissão para apagar mensagens neste canal.", ephemeral=True)
+    except Exception as e:
+        await interaction.followup.send(f"❌ Erro ao limpar: {e}", ephemeral=True)
+
+
+# ==============================
+# 💥 SISTEMA DE DUPE (CLONAR CANAL)
+# ==============================
+class DupeConfirmView(discord.ui.View):
+    def __init__(self, autor_id: int, canal_original: discord.TextChannel):
+        super().__init__(timeout=60)
+        self.autor_id = autor_id
+        self.canal_original = canal_original
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        if interaction.user.id != self.autor_id:
+            await interaction.response.send_message(
+                "❌ Apenas quem executou o comando pode confirmar.",
+                ephemeral=True,
+            )
+            return False
+        return True
+
+    @discord.ui.button(label="💥 Confirmar Dupe", style=discord.ButtonStyle.danger)
+    async def confirmar(self, interaction: discord.Interaction, button: discord.ui.Button):
+        for item in self.children:
+            item.disabled = True
+
+        await interaction.response.edit_message(
+            content="💥 **Dupe autorizado.** Clonando canal e apagando o antigo...",
+            view=self,
+        )
+
+        canal_antigo = self.canal_original
+        try:
+            canal_novo = await canal_antigo.clone(
+                reason=f"Dupe executado por {interaction.user} ({interaction.user.id})"
+            )
+            await canal_novo.edit(position=canal_antigo.position)
+            await canal_antigo.delete(
+                reason=f"Dupe executado por {interaction.user} ({interaction.user.id})"
+            )
+
+            embed = discord.Embed(
+                title="💥 Canal Duplicado",
+                description=(
+                    f"Este canal foi **recriado** para limpar todas as mensagens antigas.\n\n"
+                    f"**Executor:** {interaction.user.mention}\n"
+                    f"**Canal original:** `#{canal_antigo.name}`"
+                ),
+                color=COR_SANGUE,
+                timestamp=datetime.datetime.utcnow(),
+            )
+            embed.set_footer(text=FOOTER)
+            await canal_novo.send(embed=embed)
+
+        except discord.Forbidden:
+            await interaction.followup.send(
+                "❌ Não tenho permissão para **Gerenciar Canais** neste servidor.",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.followup.send(f"❌ Erro ao executar dupe: {e}", ephemeral=True)
+
+    @discord.ui.button(label="❌ Cancelar", style=discord.ButtonStyle.secondary)
+    async def cancelar(self, interaction: discord.Interaction, button: discord.ui.Button):
+        for item in self.children:
+            item.disabled = True
+        await interaction.response.edit_message(
+            content="❌ **Dupe cancelado.**",
+            view=self,
+        )
+
+
+@bot.tree.command(name="dupe", description="Clona o canal e apaga o antigo (limpa TODAS as mensagens, até antigas)")
+@is_staff()
+async def dupe(interaction: discord.Interaction):
+    if not isinstance(interaction.channel, discord.TextChannel):
+        await interaction.response.send_message(
+            "❌ Este comando só funciona em canais de texto.",
+            ephemeral=True,
+        )
+        return
+
+    embed = discord.Embed(
+        title="💥 Confirmação de Dupe",
+        description=(
+            f"Você está prestes a **clonar** {interaction.channel.mention} e **apagar o canal original**.\n\n"
+            "⚠️ **Isso vai remover TODAS as mensagens**, inclusive as com mais de 14 dias.\n"
+            "⚠️ **Permissões, tópico, posição e categoria serão mantidos** no canal novo.\n\n"
+            "Tem certeza?"
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
+    )
+    embed.set_footer(text=FOOTER)
+
+    view = DupeConfirmView(interaction.user.id, interaction.channel)
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+
+# ==============================
+# 🐢 CANAL / TRAVA
+# ==============================
 @bot.tree.command(name="slowmode", description="Define o modo lento do canal em segundos")
 @is_staff()
 @app_commands.describe(segundos="Segundos entre mensagens (0 desativa)")
 async def slowmode(interaction: discord.Interaction, segundos: int):
     if segundos < 0 or segundos > 21600:
-        await interaction.response.send_message("❌ Use entre 0 e 21600 segundos (6 horas).")
+        await interaction.response.send_message("❌ Use entre 0 e 21600 segundos (6 horas).", ephemeral=True)
         return
     await interaction.channel.edit(slowmode_delay=segundos)
     if segundos == 0:
@@ -1241,14 +1420,14 @@ async def avatar(interaction: discord.Interaction, membro: discord.Member = None
 async def on_app_command_error(interaction: discord.Interaction, error):
     if isinstance(error, app_commands.CheckFailure):
         try:
-            await interaction.response.send_message("❌ Você não tem permissão para usar este comando.")
+            await interaction.response.send_message("❌ Você não tem permissão para usar este comando.", ephemeral=True)
         except discord.InteractionResponded:
-            await interaction.followup.send("❌ Você não tem permissão para usar este comando.")
+            await interaction.followup.send("❌ Você não tem permissão para usar este comando.", ephemeral=True)
     else:
         try:
-            await interaction.response.send_message(f"❌ Erro: {error}")
+            await interaction.response.send_message(f"❌ Erro: {error}", ephemeral=True)
         except discord.InteractionResponded:
-            await interaction.followup.send(f"❌ Erro: {error}")
+            await interaction.followup.send(f"❌ Erro: {error}", ephemeral=True)
 
 
 # ==============================
