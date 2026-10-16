@@ -914,9 +914,9 @@ async def nota(interaction: discord.Interaction, cargo: app_commands.Choice[str]
 
 
 # ==============================
-# 📅 /cp
+# 📅 /cdp
 # ==============================
-@bot.tree.command(name="cp", description="Mostra a capacitação de patente de cada patente")
+@bot.tree.command(name="cdp", description="Mostra a capacitação de patente de cada patente")
 async def cp(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📅 Capacitação de Patente",
