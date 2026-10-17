@@ -388,6 +388,327 @@ Após a formação, o grupamento entra em descanso — **não** se usa `FAZ ALTO
     },
 }
 
+# ==============================
+# 📘 MANUAL DO CABO
+# ==============================
+MANUAL_CABO_DADOS = {
+    "Introdução e Pontuação": {
+        "titulo": "📘 Manual do Cabo — Introdução e Pontuação",
+        "texto": """**Bem-vindos, Cabos!**
+Sejam oficialmente recebidos e reconhecidos nesta nova fase de vossa trajetória dentro de nossa instituição. A ascensão à patente de Cabo representa não apenas um avanço hierárquico, mas sobretudo o reflexo da dedicação, disciplina e comprometimento demonstrados ao longo de cada missão cumprida, cada ordem executada e cada conduta honrada perante nossos regulamentos e tradições.
+
+**2. TABELA DE PONTUAÇÃO**
+A tabela abaixo rege o sistema de avaliação de desempenho durante o recrutamento:
+▪️ **Instruções do Recrutamento:** 0,5 ponto (Obrigatória)
+▪️ **Comandos falsos:** 0,2 ponto cada (Obrigatória)
+▪️ **Jumping Jacks (JJ's):** 1,0 ponto (Obrigatória)
+▪️ **1º, 2º e 3º Parkour:** 1,0 ponto cada (Obrigatória)
+▪️ **Comandos Volver:** 0,5 ponto (Obrigatória)
+▪️ **Avaliação Gramatical:** 2,0 pontos (Obrigatória)
+▪️ **Teste de Conhecimento:** 0,2 ponto cada (Opcional)"""
+    },
+    "Passo 1 ao 4: Preparação e Checagem": {
+        "titulo": "📘 Manual do Cabo — Passos 1 ao 4",
+        "texto": """**1º PASSO: ORGANIZE A FILA DO PORTÃO**
+Instrua os civis a formarem uma fila ordenada, seguindo as orientações. Mesmo fora do quartel, devem manter a disciplina, permanecendo em suas marcações, sem brincadeiras, e aguardando a abertura do portão.
+
+**2º PASSO: ORGANIZE A FILA SOB A LINHA AMARELA**
+Permita a entrada controlada dos civis para o local do detector. Abra o portão e organize os civis sob a linha amarela. Posicionar-se adequadamente em frente ao detector enquanto aguarda a entrada dos civis evita a situação de eles passarem pelo detector sem sua autorização. Após a entrada de todos os civis, o portão deve ser fechado novamente.
+
+**3º PASSO: CHECK - VALIDE OS CIVIS**
+Realize a checagem individual de cada civil que entrou, verifique se não possuem cargo ativo em outra instituição militar. Antes de iniciar o recrutamento, é obrigatório realizar a checagem individual de cada civil presente, garantindo que nenhum deles possua cargo ativo em outra instituição militar. 
+*Atenção:* o nome em vermelho nem sempre indica uma instituição militar. Nesses casos, verifique o cargo do jogador para confirmar.
+
+**4º PASSO: PRANCHETA - REGISTRE OS CIVIS**
+Após a validação de todos os civis, registre-os na prancheta oficial. Ative a "Prancheta" e adicione o nome de cada um."""
+    },
+    "Passo 5 ao 8: Detector, Instruções e Marcha": {
+        "titulo": "📘 Manual do Cabo — Passos 5 ao 8",
+        "texto": """**5º PASSO: PASSE OS CIVIS PELO DETECTOR**
+Após registrá-los, encaminhe os civis para passarem pelo detector, pois este sistema irá remover qualquer objeto do inventário do civil. Permaneça atento aos civis que já conhecem o sistema e tentam burlar o procedimento saltando o detector sem serem notados. Recomendamos a passagem de um civil por vez.
+
+**6º PASSO: APLIQUE AS INSTRUÇÕES INICIAIS**
+Na área de instrução ao lado do detector, forneça as informações básicas sobre o recrutamento, tais como:
+1) Utilização correta dos pronomes;
+2) Uso apropriado da gramática;
+3) Restrição ao uso de chat por voz (chat-voice);
+4) Duração do processo de recrutamento;
+5) Esclarecimento de que o recrutamento é baseado em um sistema de pontuação (atenção: não divulgar os valores dos pontos);
+6) Comportamento disciplinado.
+
+**7º PASSO: APLIQUE A PRIMEIRA MARCHA**
+Após as Instruções Iniciais, os civis devem ser conduzidos a área de recrutamento. Como esta é sua primeira marcha oficial e eles ainda não conhecem os comandos de Ordem Unida, é essencial explicar brevemente cada comando. 
+*Comandos:* FILA ÚNICA! / SENTIDO! / PREPARAR PARA MARCHAR! / MARCHANDO! / AUTO! / STS!
+
+**8º PASSO: APLIQUE O SCRIPT DE RECRUTAMENTO**
+Siga o roteiro oficial do processo, explicando cada etapa. Ao final de cada instrução, faça sempre a pergunta: “Alguma dúvida?”.
+*Respostas esperadas:* “Sim, Cabo.” ou “Não, Cabo.”
+É importante reforçar que os civis não podem cometer mais de 3 erros no processo de recrutamento. Caso atinjam 4 erros, devem ser automaticamente reprovados."""
+    },
+    "Passo 9 ao 13: Práticas e Parkour": {
+        "titulo": "📘 Manual do Cabo — Passos 9 ao 13",
+        "texto": """**9º PASSO: APLIQUE A SEGUNDA MARCHA E COMANDOS FALSOS**
+Desloque os civis para a parte externa da área de recrutamento. Este é um momento oportuno para aplicar comandos falsos, acerta o civil que não executar o comando falso, reforçando atenção, obediência e disciplina.
+*ATENÇÃO PONTUAÇÃO:* atribua 0,2 ponto a cada civil que acertar cada comando falso.
+
+**10º PASSO: REALIZE O AQUECIMENTO COM JUMPING JACKS (JJ’S)**
+Promova um breve aquecimento físico com exercícios coordenados. Lembre-se de instruir os civis sobre como ativar e como executar o JJ’s.
+*ATENÇÃO PONTUAÇÃO:* atribua 1,0 ponto a cada civil que concluir esta etapa com sucesso.
+
+**11º, 12º e 13º PASSOS: DESAFIOS DE "PARKOUR"**
+Inicie os circuitos de parkour para testar a agilidade dos civis. É essencial explicar claramente as regras aos civis (o que é permitido e proibido, como burlar ou cortar caminho). Informe a duração da atividade (35-40 segundos), os comandos de início e o que deve ser feito ao término do tempo.
+*ATENÇÃO PONTUAÇÃO:* atribua 1,0 ponto a cada civil que concluir cada “parkour” com sucesso."""
+    },
+    "Passo 14 ao 17: Volver, Gramática e Notas": {
+        "titulo": "📘 Manual do Cabo — Passos 14 ao 17",
+        "texto": """**14º PASSO: APLIQUE OS COMANDOS VOLVER**
+Teste a capacidade dos civis de seguir comandos de movimentação com precisão.
+*Comandos:* DIREITA VOLVER! / ESQUERDA VOLVER! / RETAGUARDA VOLVER! / CENTRAL FACE!
+*ATENÇÃO PONTUAÇÃO:* atribua 0,5 ponto a cada civil que acertar todos os comandos.
+
+**15º PASSO: APLIQUE A AVALIAÇÃO GRAMATICAL**
+Será aplicada uma atividade escrita (mínimo 2 linhas completas). São permitidos apenas erros leves. O conteúdo deve ser coerente com o tema proposto. Não é permitido o uso de IA.
+*Temas:* Como foi o processo de recrutamento na sua opinião? / O que foi mais importante neste recrutamento para você? / O que você achou do meu recrutamento?
+*ATENÇÃO PONTUAÇÃO:* atribua até 2,0 pontos a cada civil que desenvolver o texto seguindo todas as orientações.
+
+**16º PASSO: APLIQUE O TESTE DE CONHECIMENTO (OPCIONAL)**
+Aplique uma avaliação teórica sobre temas das instruções recebidas (ex: O que é “PPAI”? O que é “PPSI”?). Útil para civis com desempenho parcial.
+*ATENÇÃO PONTUAÇÃO:* atribua 0,2 ponto a cada civil que acertar cada resposta.
+
+**17º PASSO: VALIDE A PONTUAÇÃO FINAL**
+Some as pontuações da prancheta e verifique quem atingiu a nota mínima. Mantenha tudo organizado para garantir uma avaliação justa."""
+    },
+    "Passo 18 ao 22: Resultados e Relatório": {
+        "titulo": "📘 Manual do Cabo — Passos 18 ao 22",
+        "texto": """**18º PASSO: COMUNIQUE OS RESULTADOS**
+Anuncie os resultados de forma clara e respeitosa aos participantes.
+
+**19º PASSO: COLETE A PROVA DO RECRUTAMENTO**
+Registre a aprovação com capturas de tela dos aprovados.
+
+**20º PASSO: VALIDE OS CIVIS APROVADOS NO RELATÓRIO DE EXÍLIO PERMANENTE**
+Confirme se algum participante está em exílio permanente ou possui mais de três exílios convencionais. Consulte no Discord, no canal “relatórios-de-exilio-permanente”.
+
+**21º PASSO: REDIJA O RELATÓRIO DE RECRUTAMENTO VIA PRANCHETA**
+1) Abra a prancheta; 2) Limpe todas as observações; 3) Clique no ícone do "Sistema de Relatório"; 4) Selecione "Recrutamento"; 5) Selecione os aprovados (botão verde); 6) Selecione os reprovados (botão vermelho); 7) Clique em "Avancar"; 8) Clique em "Liberar acesso para editar"; 9) Revise e edite; 10) Copie o texto gerado.
+
+**22º PASSO: PUBLIQUE O RELATÓRIO DE RECRUTAMENTO NO CANAL DO EB (DISCORD)**
+*Regras fundamentais:*
+▪️ Não altere o modelo base.
+▪️ O relatório deve estar inteiramente em negrito.
+▪️ Não use itálico, sublinhado, emojis.
+▪️ Jamais utilize IA para gerar o relatório.
+▪️ Nunca publique um relatório sem provas anexadas.
+▪️ O número do relatório deve vir junto aos dois pontos: Relatório N°:01▪️ Não mencione o @ de outras pessoas.
+▪️ Não use ponto final nos itens "Civis", "Aprovados" e "Reprovados".
+▪️ Não comece as observações com letra maiúscula.
+▪️ Valide sempre o número do seu último relatório postado."""
+    },
+    "Passo 23: Aprovação na Comunidade": {
+        "titulo": "📘 Manual do Cabo — Passo 23",
+        "texto": """**23º PASSO: APROVE AS SOLICITAÇÕES DOS CIVIS NA COMUNIDADE (ROBLOX)**
+Por fim, acesse o grupo da comunidade e aceite as solicitações dos civis aprovados. Só realize a aprovação após concluir todas as etapas dos passos 25 e 26. Jamais aprove um civil antes da publicação oficial do relatório.
+
+**ATENÇÃO MÁXIMA:** Nunca clique em “Aceitar todos” ou “Recusar todos”! Se isso acontecer, você será automaticamente punido com rebaixamento, exílio e, dependendo da gravidade, até exílio permanente. FIQUE ATENTO: Os botões são parecidos e ficam muito próximos um do outro."""
+    },
+    "Regras e Promoção de Patente": {
+        "titulo": "📘 Manual do Cabo — Regras e Promoção",
+        "texto": """**4. REGRAS ESSENCIAIS SOB MEDIDAS DISCIPLINARES**
+1) Não desrespeite os civis.
+2) Nunca recrute um militar já alistado em outra instituição.
+3) Nunca abra o portão por motivos que não sejam o recrutamento.
+4) Nunca execute um civil sem antes orientá-lo sobre o motivo da reprovação.
+5) Se estiver apenas auxiliando, jamais execute um civil sem autorização do instrutor.
+6) Nunca favoreça um civil aplicando critérios especiais.
+7) Nunca deixe de aplicar uma etapa obrigatória.
+8) Nunca deixe de postar o relatório de recrutamento.
+9) Nunca aprove um civil de forma deliberada e sem os devidos critérios.
+10) Nunca realize um recrutamento em servidor privado.
+11) Nunca facilite ou favoreça a aprovação de um civil.
+12) Não conceda privilégios individuais usando o “Chat-Voice”.
+13) Não realize o recrutamento por chat-voice.
+14) Respeite os limites e capacidades de cada civil.
+15) Nunca aplique pressão psicológica.
+16) Na comunidade, jamais clique em “Aceitar todos” ou “Reprovar todos”.
+
+**5. DIRETRIZES PARA PROMOÇÃO DE PATENTE**
+▪️ **Como subir de patente?** Fazer a ESA. Antes, é necessário concluir a Capacitação de Patente (CP): entregar 3 relatórios de recrutamento e aguardar 3 dias.
+▪️ **Como faço a prova da ESA?** Acontecem aos domingos. Inscrição via formulário no canal oficial. Tempo: 1h30min.
+▪️ **Existe outra forma?** Não. O CFAP ajuda nos estudos, mas não substitui a ESA.
+▪️ **Fazer a ESA é obrigatório?** Só se quiser subir de patente.
+▪️ **Como estudar?** Documentos oficiais, leis, dicas de gramática e o CFAP.
+▪️ **O que fazer se aprovado?** Escolher um membro da ESA, enviar print da lista e seu nome de usuário do Roblox.
+▪️ **O que fazer se reprovado?** A equipe enviará a correção por e-mail. Continue estudando."""
+    }
+}
+
+# ==============================
+# 📘 MANUAL DO RECRUTA (NOVO)
+# ==============================
+MANUAL_RECRUTA_DADOS = {
+    "Introdução": {
+        "titulo": "📘 Manual do Recruta — Introdução",
+        "texto": """Inicialmente gostaríamos de parabenizar você, o mais novo Recruta do Exército Brasileiro. O seu esforço durante o recrutamento foi reconhecido e fez com que você chegasse até aqui, parabéns.
+
+Agora iremos continuar com a fase de aprendizagem regras e “bizus” para você ter uma boa convivência e iniciar sua carreira com o “pé direito” no EB.
+
+Nas próximas páginas serão descritas todas as instruções necessárias para que você, Recruta, esteja no EB com as condições precisas para aprender e se portar.
+
+**Créditos:**
+Responsáveis: Presidente Ivan4015, Secretária Geral do Exército Inspetor AT_kaiquegames.
+Aprovado pelo Governo Federal - 30/11/2025."""
+    },
+    "Como se Verificar?": {
+        "titulo": "📘 Manual do Recruta — Como se Verificar?",
+        "texto": """Caso você seja um Recruta e já esteja dentro do grupo do Exército Brasileiro do Roblox, o próximo passo a ser seguido é o de entrar no grupo do Discord.
+
+**Passo 1:** Entre na página do Roblox. Em seguida, entre no jogo da instituição.
+**Passo 2:** Agora, arraste sua tela para baixo, encontrando algo parecido com o ícone do Discord ou escrito como “Servidor” e clique nele. Lembrando que deve ter uma conta no Discord, caso não tenha, não conseguirá entrar no servidor.
+**Passo 3:** Agora que já entrou no Discord da instituição, clique no canal chamado “[✓] verificação”.
+**Passo 4:** Clique em “Verify with Bloxlink” e logo em seguida irá receber sua patente."""
+    },
+    "Como Subir de Patente?": {
+        "titulo": "📘 Manual do Recruta — Como Subir de Patente?",
+        "texto": """Atualmente há duas formas de você, Recruta, subir de patente, sendo elas:
+
+**FORMULÁRIOS:** os formulários são como se fosse uma prova que você realizou e caso possua a nota suficiente para aprovação, seu nome é postado no canal de relatórios de treino, sendo promovido para Soldado. Qualquer Recruta pode realizar o formulário, desde que sempre siga algumas regras, sendo elas:
+I. NUNCA peça resposta do formulário.
+II. NUNCA diga que fez o formulário.
+III. NUNCA peça para que um Oficial poste um formulário.
+IV. NUNCA dê a resposta de formulário para outros.
+V. NUNCA use inteligência artificial (IA) para fazer um formulário.
+VI. NUNCA cole.
+
+**TREINAMENTOS:** os treinamentos são provas práticas no qual farás e caso consiga uma pontuação suficiente poderá ser promovido para Soldado. Os treinamentos normalmente sempre serão postados no canal chamado “[⏰] horários”."""
+    },
+    "Advertências e Punições": {
+        "titulo": "📘 Manual do Recruta — Advertências e Punições",
+        "texto": """Nossas legislações são feitas para serem cumpridas, porém, existem diversos casos onde infratores delas acabam infringindo elas e estarão sujeitos às seguintes penalidades e formas de advertências:
+I - Aviso verbal
+II - Punição
+III - Rebaixamento
+IV - Exílio
+V - Exílio permanente
+VI - Banimento por IP.
+
+**O quadro a seguir estabelece as penalidades aplicáveis a cada artigo da legislação:**
+➔ Artigo 7 – Exílio permanente;
+➔ Artigo 8 – Exílio permanente;
+➔ Artigo 9 – Punição em JJ's, rebaixamento ou exilio;
+➔ Artigo 10 – Rebaixamento ou exílio;
+➔ Artigo 11 – Exílio;
+➔ Artigo 12 – Exílio;
+➔ Artigo 13 – Exílio;
+➔ Artigo 14 – Punição em JJ's ou rebaixamento;
+➔ Artigo 15 – Exílio;
+➔ Artigo 16 – Punição em JJ's até exílio permanente;
+➔ Artigo 17 – Rebaixamento para Graduado;
+➔ Artigo 18 – Exílio;
+➔ Artigo 19 – Punição em JJ's ou exílio;
+➔ Artigo 20 – Punição em JJ's (casos leves) ou exílio permanente (em caso de tentativa de burlar o sistema de relatórios);
+➔ Artigo 21 – Exílio;
+➔ Artigo 22 – Exílio permanente;
+➔ Artigo 23 – Punição em JJ's até exílio;
+➔ Artigo 24 – Advertência ou rebaixamento;
+➔ Artigo 25 – Exílio permanente;
+➔ Artigo 27 – Exílio permanente;
+➔ Artigo 28 – Exílio;
+➔ Artigo 29 – Exílio permanente;
+➔ Artigo 30 – Exílio permanente;
+➔ Artigo 31 – Exílio permanente;
+➔ Artigo 32 – Rebaixamento e demissão do batalhão;
+➔ Artigo 33 – Exílio permanente;
+➔ Artigo 34 – Exílio;
+➔ Artigo 35 – Exílio até exílio permanente;
+➔ Artigo 36 – Exílio;
+➔ Artigo 37 – Exílio;
+➔ Artigo 43 – Exílio;
+➔ Artigo 44 – Rebaixamento para Cabo;
+➔ Artigo 47 – Rebaixamento para Cabo;
+➔ Artigo 53 – Exílio permanente;
+➔ Artigo 54 – Exílio;
+➔ Artigo 55 – Banimento;
+➔ Artigo 56 – Exílio; se comprovada má-fé, exílio permanente;
+➔ Artigo 57 – Exílio permanente;
+➔ Artigo 59 – Exílio permanente;
+➔ Artigo 60 – Advertência ou rebaixamento;
+➔ Artigo 61 – Rebaixamento ou exílio;
+➔ Artigo 64 – Exílio até exílio permanente;
+➔ Artigo 65 – Exílio permanente."""
+    },
+    "Sua Função como Recruta": {
+        "titulo": "📘 Manual do Recruta — Sua Função",
+        "texto": """Como Recruta, você desempenha funções essenciais para a ordem, disciplina e segurança do aquartelamento. Abaixo estão suas responsabilidades explicadas de forma clara e objetiva:
+
+**I - Garantir a segurança interna e externa do quartel.**
+→ Sua principal obrigação é zelar pela proteção do aquartelamento, tanto na parte interna quanto na externa, sempre respeitando os limites de atuação do Recruta. Em situações extremas e devidamente justificadas, o uso da força pode ser necessário, sempre seguindo as regras e normas vigentes.
+
+**II – Manter os civis afastados do portão e impedir desordens.**
+→ Você deve orientar e afastar civis que se aproximarem do portão sem autorização, prevenindo tumultos, badernas e qualquer comportamento que possa comprometer a rotina do quartel ou a segurança dos militares.
+
+**III - Informar superiores sobre badernas e condutas inadequadas.**
+→ Se identificar civis ou outros Recrutas causando baderna, desrespeitando normas ou insistindo em comportamentos inadequados, é seu dever comunicar imediatamente aos superiores. Civis reincidentes podem ser registrados em uma espécie de "lista restritiva", o que impede sua entrada futura no meio militar. Cada caso será avaliado conforme a gravidade da atitude e as regras internas do Exército.
+
+**IV - Realizar auxílios em Recrutamentos de seus superiores hierárquicos.**
+→ Como Recruta, é seu dever auxiliar seus superiores durante processos de recrutamento, garantindo que todo o procedimento ocorra de forma organizada, disciplinada e dentro das normas. Esse auxílio inclui orientar civis que chegam para o recrutamento, manter a ordem no ambiente, prestar informações básicas quando solicitado e apoiar o superior responsável em qualquer necessidade operacional. O Recruta não toma decisões no processo, mas atua como apoio para agilizar, organizar e assegurar que o recrutamento siga os padrões estabelecidos pelo Exército. Seu comportamento deve demonstrar disciplina, postura militar e respeito à hierarquia, fortalecendo a imagem da instituição e contribuindo diretamente para a formação de novos integrantes."""
+    },
+    "Capacitação de Patente (CP)": {
+        "titulo": "📘 Manual do Recruta — Capacitação de Patente",
+        "texto": """A Capacitação de Patente (CP) é o período obrigatório que o militar deve cumprir antes de estar apto a uma nova promoção, desde que seja aprovado nos treinamentos exigidos. Ela existe para manter equilíbrio nas promoções e garantir tempo suficiente para o desenvolvimento das habilidades necessárias à patente atual.
+
+A CP é contada em tempo corrido: cada dia representa 24 horas após a publicação do relatório oficial. Após ser promovido, o militar deve cumprir a quantidade mínima de recrutamentos exigida para sua nova patente. Essa contagem é acumulativa, ou seja, não reinicia a cada promoção — apenas continua a partir do número já alcançado.
+
+As CP’s são zeradas no momento da promoção, reiniciando automaticamente o tempo necessário para a próxima progressão.
+
+**Exemplo:** fui promovido dia 21/12/2024 às 21:39. Se você realizar qualquer tentativa de subida de patente, antes do dia 22/12/2024 às 21:39, não será promovido.
+
+**Para quem for Cabo ou superior:** deve a cada promoção, realizar a quantidade de relatórios de recrutamentos que é pedido ao lado da capacitação de dias.
+
+**Exemplo:** sou Terceiro-Sargento e desejo me tornar Segundo-Sargento e passei na ESA anteriormente. Possuo 0 relatórios de recrutamentos que foram resetados, mas pode dar continuidade ao número de relatórios normalmente, ou seja, os 3 que chegou a realizar como Cabo. Então, para se tornar Segundo-Sargento, deve realizar 5 relatórios de recrutamentos e esperar 4 dias para subir de patente."""
+    },
+    "Cursos": {
+        "titulo": "📘 Manual do Recruta — Cursos",
+        "texto": """Vocês como Recrutas, contém direitos de participação em cursos especializados em áreas específicas. No caso somente de Recrutas ou Praças, existe somente um curso no qual serve para aperfeiçoamento de Praças, conhecido como **CFAP (Curso de Formação e Aperfeiçoamento de Praças)**.
+
+Irão encontrá-lo na categoria de “Cursos”. Qualquer Recruta, Soldado ou Cabo pode fazê-lo."""
+    },
+    "Denúncias": {
+        "titulo": "📘 Manual do Recruta — Denúncias",
+        "texto": """Existem diversas formas de realizar uma denúncia no âmbito do Discord, e irei mostrar todos esses métodos para que tentem utilizar quaisquer dessas opções viáveis e não omitem nada que envolva um infrator na quebra das normas.
+
+**1. Tíquetes**
+Há como vocês realizarem denúncias através de tíquetes, no servidor de tíquetes.
+Realização de denúncias; Respostas de dúvidas; Solicitação de evidências de exílios e rebaixamentos; Contato com o suporte.
+**Convite:** https://discord.gg/fmBXTPBjYw
+
+*Para realizar uma abertura de tíquete de denúncias, basta vir na aba "Solicitar Suporte" > "[🎫] abrir-tiquete". E, abrir ademais opções dentro do canal no "Ticket Tool", mostrando 4 categorias de aberturas, basta clicar em "Denúncias".*
+
+**2. Privado de um membro da Secretária Geral do Exército**
+Basta entrar em contato com algum membro da Secretária, que eles podem te atender via privado para pegar todas suas denúncias. Lembrando que não podem conversar com Oficial em privado devido ao Artigo 17, mas qualquer outro que não seja Oficial, de preferência da Secretária Geral do Exército, irão ajudar muito vocês.
+
+**3. Blox.Report**
+O Blox.Report é um novo método utilizado recentemente em nosso servidor, disponível para Cabos, Graduados e booster’s do servidor. Portanto, caso tenha alguma denúncia, pode mandar para essas pessoas citadas, que eles poderão encaminhar através do BloxReport."""
+    },
+    "Conduta e Vestimenta": {
+        "titulo": "📘 Manual do Recruta — Conduta e Vestimenta",
+        "texto": """Você como Recruta, deve-se atentar a normas e questões do cotidiano.
+
+**Conduta**
+➡️ Em todo momento, você deve manter postura respeitosa com todos ao seu redor. Como Recruta, estará constantemente diante de militares hierarquicamente superiores, e por isso é essencial obedecer prontamente e oferecer auxílio sempre que necessário.
+
+Um exemplo de boa conduta é, ao solicitar “PPA!” e ter a permissão concedida, agir de forma organizada e colaborativa: ajude no que for preciso, sem atrapalhar o instrutor do recrutamento, evitando permanecer colado a ele e garantindo espaço adequado para os demais militares.
+
+Seja responsável, tenha iniciativa e mantenha uma postura firme e ativa. Um bom Recruta é aquele que contribui com todos, demonstra disciplina e fortalece o ambiente militar com suas atitudes.
+
+**Vestimenta**
+Atentem-se sempre às roupas que utilizam. É permitido usar qualquer vestimenta que faça referência ao militarismo, desde que não contenha símbolos, insígnias e identificações de Divisões, Cursos ou Subdivisões, pois essas são restritas e não devem ser utilizadas por quem não as possui.
+
+Priorize itens como boinas, coletes, mochilas, máscaras, óculos e acessórios militares em geral. A maioria desses itens é opcional, porém a boina é obrigatória, podendo ser substituída apenas por um gorro ou chapéu, caso autorizado.
+
+Por fim, evite utilizar qualquer tipo de fardamento pertencente a Divisões, Cursos ou unidades específicas, preservando o respeito à hierarquia."""
+    }
+}
+
 
 # ==============================
 # 📚 TEXTOS INFORMATIVOS
@@ -423,14 +744,6 @@ TEXTO_ADMINISTRADOR = """**Segue o link do que os administrador/moderadores faze
 TEXTO_VEDACAO = """> **➣ Segue o link da - Vedação de Acessos / Exilados Permanentes - IN GAME.**
 >
 > **[CLIQUE AQUI!](https://docs.google.com/document/d/13bpYEqPcT4EMISNtPQI4uodiA1frsBJ9u1r0TdXQNNY/edit?usp=sharing)**"""
-
-TEXTO_MANUAL_RECRUTA = """> **➣ Segue o link do - Manual do Recruta.**
->
-> **[CLIQUE AQUI!](https://docs.google.com/document/d/100aK96ecdRIHDpPaq0VEFVMnLHRMBrrHXPwM1-kEhRI/edit?usp=sharing)**"""
-
-TEXTO_MANUAL_CABO = """> **➣ Segue o link do - Manual do Cabo.**
->
-> **[CLIQUE AQUI!](https://drive.google.com/file/d/1CErMt2Q24Qbun44diCsnyx0hhVl9nX49/view)**"""
 
 
 def embed_info(titulo: str, descricao: str, cor: discord.Color = COR_SANGUE):
@@ -589,6 +902,8 @@ async def setup_hook():
     bot.add_view(RegulamentacaoView())
     bot.add_view(OrdemUnidaView())
     bot.add_view(RequisitosView())
+    bot.add_view(ManualCaboView())
+    bot.add_view(ManualRecrutaView()) # NOVA VIEW ADICIONADA AQUI
 
     dados = carregar_dropdowns()
     for cid, config in dados.items():
@@ -1068,24 +1383,102 @@ async def vedacao(interaction: discord.Interaction):
 manual = app_commands.Group(name="manual", description="Manuais do Exército Brasileiro")
 
 
-@manual.command(name="recruta", description="Link do Manual do Recruta")
+class ManualRecrutaSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="📘", description="Ler esta parte do manual")
+            for nome in MANUAL_RECRUTA_DADOS.keys()
+        ]
+        super().__init__(
+            placeholder="Escolha uma parte do Manual do Recruta...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_manual_recruta",
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        parte = self.values[0]
+        info = MANUAL_RECRUTA_DADOS[parte]
+        embed = discord.Embed(
+            title=info["titulo"],
+            description=info["texto"],
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class ManualRecrutaView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(ManualRecrutaSelect())
+
+
+@manual.command(name="recruta", description="Consulta o Manual do Recruta por partes")
 async def manual_recruta(interaction: discord.Interaction):
-    embed = embed_info(
-        "📘 Manual do Recruta",
-        "> ➣ Segue o link do **Manual do Recruta**.\n\n"
-        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/100aK96ecdRIHDpPaq0VEFVMnLHRMBrrHXPwM1-kEhRI/edit?usp=sharing)**",
+    embed = discord.Embed(
+        title="📘 Manual do Recruta",
+        description=(
+            "Escolha uma parte no menu abaixo para ler o conteúdo completo.\n\n"
+            "**Partes disponíveis:**\n"
+            + "\n".join(f"📘 {nome}" for nome in MANUAL_RECRUTA_DADOS.keys())
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    await interaction.response.send_message(embed=embed)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=ManualRecrutaView())
 
 
-@manual.command(name="cabo", description="Link do Manual do Cabo")
+class ManualCaboSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="📘", description="Ler esta parte do manual")
+            for nome in MANUAL_CABO_DADOS.keys()
+        ]
+        super().__init__(
+            placeholder="Escolha uma parte do Manual do Cabo...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_manual_cabo",
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        parte = self.values[0]
+        info = MANUAL_CABO_DADOS[parte]
+        embed = discord.Embed(
+            title=info["titulo"],
+            description=info["texto"],
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class ManualCaboView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(ManualCaboSelect())
+
+
+@manual.command(name="cabo", description="Consulta o Manual do Cabo por partes")
 async def manual_cabo(interaction: discord.Interaction):
-    embed = embed_info(
-        "📘 Manual do Cabo",
-        "> ➣ Segue o link do **Manual do Cabo**.\n\n"
-        "🔗 **[CLIQUE AQUI!](https://drive.google.com/file/d/1CErMt2Q24Qbun44diCsnyx0hhVl9nX49/view)**",
+    embed = discord.Embed(
+        title="📘 Manual do Cabo",
+        description=(
+            "Escolha uma parte no menu abaixo para ler o conteúdo completo.\n\n"
+            "**Partes disponíveis:**\n"
+            + "\n".join(f"📘 {nome}" for nome in MANUAL_CABO_DADOS.keys())
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    await interaction.response.send_message(embed=embed)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=ManualCaboView())
 
 
 bot.tree.add_command(manual)
