@@ -543,7 +543,7 @@ Por fim, acesse o grupo da comunidade e aceite as solicitações dos civis aprov
 }
 
 # ==============================
-# 📘 MANUAL DO RECRUTA (NOVO)
+# 📘 MANUAL DO RECRUTA
 # ==============================
 MANUAL_RECRUTA_DADOS = {
     "Introdução": {
@@ -552,11 +552,7 @@ MANUAL_RECRUTA_DADOS = {
 
 Agora iremos continuar com a fase de aprendizagem regras e “bizus” para você ter uma boa convivência e iniciar sua carreira com o “pé direito” no EB.
 
-Nas próximas páginas serão descritas todas as instruções necessárias para que você, Recruta, esteja no EB com as condições precisas para aprender e se portar.
-
-**Créditos:**
-Responsáveis: Presidente Ivan4015, Secretária Geral do Exército Inspetor AT_kaiquegames.
-Aprovado pelo Governo Federal - 30/11/2025."""
+Nas próximas páginas serão descritas todas as instruções necessárias para que você, Recruta, esteja no EB com as condições precisas para aprender e se portar."""
     },
     "Como se Verificar?": {
         "titulo": "📘 Manual do Recruta — Como se Verificar?",
@@ -709,13 +705,468 @@ Por fim, evite utilizar qualquer tipo de fardamento pertencente a Divisões, Cur
     }
 }
 
+# ==============================
+# 🗳️ HISTÓRICO PRESIDENCIAL
+# ==============================
+HISTORICO_PRESIDENCIAL_DADOS = {
+    "Lista Completa": {
+        "titulo": "🗳️ Histórico Presidencial — Lista Completa",
+        "texto": """**PRIMEIRA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** xPlayDarkOFCx
+▪️ **Vice-Presidente:** XTheGeovaManX
+*Eleitos no dia 26/03/2023*
+
+**SEGUNDA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** xPlayDarkOFCx
+▪️ **Vice-Presidente:** 64x99s
+*Eleitos no dia 26/11/2023*
+
+**TERCEIRA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** IFelipe_GT3I
+▪️ **Vice-Presidente:** Naremató
+*Eleitos no dia 26/07/2024*
+
+**QUARTA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** ProGamers2k23
+▪️ **Vice-Presidente:** GiihRamos
+*Eleitos no dia 26/03/2025*
+
+**QUINTA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** ivan4015
+▪️ **Vice-Presidente:** Mary091314
+*Eleitos no dia 26/11/2025*
+
+**SEXTA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** vZeddy
+▪️ **Vice-Presidente:** xPlayDarkOFCx
+*Eleitos no dia 26/07/2026*"""
+    },
+    "Últimas Eleições": {
+        "titulo": "🗳️ Histórico Presidencial — Últimas Eleições",
+        "texto": """**QUARTA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** ProGamers2k23
+▪️ **Vice-Presidente:** GiihRamos
+*Eleitos no dia 26/03/2025*
+
+**QUINTA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** ivan4015
+▪️ **Vice-Presidente:** Mary091314
+*Eleitos no dia 26/11/2025*
+
+**SEXTA ELEIÇÃO PRESIDENCIAL**
+▪️ **Presidente:** vZeddy
+▪️ **Vice-Presidente:** xPlayDarkOFCx
+*Eleitos no dia 26/07/2026*"""
+    }
+}
+
+# ==============================
+# 🏷️ PRONOMES
+# ==============================
+PRONOMES_DADOS = {
+    "Geral e Hierarquia": {
+        "titulo": "🏷️ Pronomes — Geral e Hierarquia",
+        "texto": """**NO CONTEXTO MILITAR, “PATENTE”, “POSTO” E “GRADUAÇÃO” SÃO TERMOS RELACIONADOS À HIERARQUIA, MAS CADA UM POSSUI SIGNIFICADO ESPECÍFICO.**
+
+**1. Patente:**
+É o termo abrangente que designa o título ou distinção conferida a um militar, englobando **Oficiais** e **Praças**. A patente representa oficialmente a posição hierárquica dentro da instituição.
+
+**2. Posto:**
+Aplica-se exclusivamente aos **Oficiais** (por exemplo: Tenente, Capitão, Major). O posto indica uma posição elevada na hierarquia e está associado a funções de comando.
+
+**3. Graduação:**
+Refere-se especificamente à posição hierárquica dos **Graduados** (como Sargentos e Subtenentes).
+
+- Postos são destinados aos **Oficiais**.
+- Graduações aplicam-se aos **Graduados**.
+- Patente é o conceito amplo que engloba ambos.
+
+**Art. 14 – Da Utilização dos Pronomes**
+*Art. 14 — Fica estabelecida a obrigatoriedade da utilização de pronomes e formas de tratamento apropriadas em todas as comunicações dirigidas aos militares do Exército Brasileiro, sejam elas verbais ou escritas, assegurando o respeito à hierarquia, à disciplina e às tradições militares.*
+Essa obrigatoriedade inclui a aplicação adequada do pronome “Senhor”, quando pertinente, bem como o endereçamento correto conforme posto ou graduação, conforme descrito nas diretrizes abaixo."""
+    },
+    "Autoridades e Oficiais Generais": {
+        "titulo": "🏷️ Pronomes — Autoridades e Oficiais Generais",
+        "texto": """**1. Autoridades Superiores e Governo Federal**
+❖ **Desenvolvedores**
+➔ *Apex_Hard* - Embora não tenha sido informado qualquer pronome de referência, deve-se manter o devido respeito ao dirigir-se a ele.
+➔ *Manager* - Senhor(a) Manager
+
+❖ **Supremo Tribunal Federal**
+➔ *[STF]* - Vossa Excelência
+
+❖ **Tribunal Superior Eleitoral**
+➔ *[TSE]* - Vossa Excelência
+
+❖ **Governo Federal**
+➔ *Presidente da República* - Presidente ou Vossa Excelência
+➔ *Vice-Presidente da República* - Vice-Presidente ou Vossa Excelência
+
+**2. Alto Comando do Exército**
+*Modelo:* Senhor + Posto + Nome de Guerra
+*Exemplos:*
+Senhor(a) Comandante (Nome de Guerra) | Comandante (Nome de Guerra)
+Senhor(a) Subcomandante (Nome de Guerra) | Subcomandante (Nome de Guerra)
+
+**3. Oficiais Generais**
+*Modelo:* Senhor + Posto + Nome de Guerra
+*Exemplos:*
+Senhor(a) General-de-Exército (Nome de Guerra) ou Senhor(a) General (Nome de Guerra)
+Senhor(a) General-de-Divisão (Nome de Guerra) ou Senhor(a) General (Nome de Guerra)
+Senhor(a) General-de-Brigada (Nome de Guerra) ou Senhor(a) General (Nome de Guerra)"""
+    },
+    "Oficiais e Praças": {
+        "titulo": "🏷️ Pronomes — Oficiais e Praças",
+        "texto": """**4. Oficiais Superiores**
+*Modelo:* Senhor + Posto + Nome de Guerra
+*Exemplos:*
+Senhor(a) Coronel (Nome de Guerra) ou Coronel (Nome de Guerra)
+Senhor(a) Tenente-Coronel (Nome de Guerra) ou Tenente-Coronel (Nome de Guerra)
+Senhor(a) Major (Nome de Guerra) ou Major (Nome de Guerra)
+
+**5. Oficiais Intermediários**
+*Modelo:* Senhor + Posto + Nome de Guerra
+*Exemplos:*
+Senhor(a) Capitão ou Capitão (Nome de Guerra)
+Senhor(a) Capitão ou Capitão (Nome de Guerra)
+
+**6. Oficiais Subalternos**
+*Modelo:* Senhor + Posto + Nome de Guerra
+*Exemplos:*
+Senhor Primeiro-Tenente ou Tenente (Nome de Guerra)
+Senhor Segundo-Tenente ou Tenente (Nome de Guerra)
+Senhor Aspirante-a-Oficial ou Tenente (Nome de Guerra)
+
+**7. Graduados**
+O uso de “Senhor” permanece obrigatório em comunicações formais — conforme o Art. 14
+*Modelos:* Senhor + Graduação + Nome de Guerra (formal) | Graduação + Nome de Guerra (no cotidiano)
+*Exemplos:*
+Senhor Subtenente (Nome de Guerra) | Subtenente (Nome de Guerra)
+Senhor Primeiro-Sargento (Nome de Guerra) | Sargento (Nome de Guerra)
+Senhor Segundo-Sargento (Nome de Guerra) | Sargento (Nome de Guerra)
+Senhor Terceiro-Sargento (Nome de Guerra) | Sargento (Nome de Guerra)
+
+**8. Praças**
+*Modelos:* Senhor + Patente + Nome de Guerra (formal) | Patente + Nome de Guerra (uso cotidiano)
+*Exemplos:*
+Senhor Cabo (Nome de Guerra) | Cabo (Nome de Guerra)
+Senhor Soldado (Nome de Guerra) | Soldado (Nome de Guerra)
+Recruta (Nome de Guerra)"""
+    },
+    "Divisões/Unidades Administrativas": {
+        "titulo": "🏷️ Pronomes — Divisões/Unidades Administrativas",
+        "texto": """**Centro de Inteligência do Exército (CIE)**
+❖ **Alto Comando**
+➔ [Cmt-CIE] - Senhor(a) Comandante
+➔ [Dir-CIE] - Senhor(a) Diretor(a)
+❖ **Alto Escalão**
+➔ [Coms-Intlg-CIE] - Senhor(a) Comissário(a) de Inteligência
+➔ [Insp-CIE] - Senhor(a) Inspetor(a)
+➔ [Pto-Crim-CIE] - Senhor(a) Perito(a) Criminal
+➔ [Prom-Exec-CIE] - Senhor(a) Promotor(a) Executivo
+❖ **Agentes Superiores**
+➔ [Ag-Esp-CIE] - Senhor(a) Agente Especial
+➔ [Sup-Inv-CIE] - Senhor(a) Superintendente Investigativo
+➔ [Ch-Gab-CIE] - Senhor(a) Chefe de Gabinete
+➔ [Sup-CIE] - Senhor(a) Supervisor(a)
+➔ [Del-CIE] - Senhor(a) Delegado(a)
+❖ **Agentes**
+➔ [Ag-CIE] ou [Ag-Jr-CIE] - Agente
+❖ **Estagiários**
+➔ [Est-CIE] - Estagiário"""
+    },
+    "Divisões Operacionais": {
+        "titulo": "🏷️ Pronomes — Divisões Operacionais",
+        "texto": """**Batalhão de Polícia do Exército (BPE)**
+❖ **Alto Comando/Oficiais**
+➔ [Ten-PE] ou Superior - Senhor(a) Policial
+❖ **Graduados e Praças**
+➔ [Sd-PE] ou Superior - Policial
+❖ **Candidatos**
+➔ [C-PE] - Candidato
+
+**Batalhão de Forças Especiais (BFEsp)**
+❖ **Alto Comando/Oficiais**
+➔ [FE-Ten] ou Superior - Senhor(a) Fantasma
+❖ **Graduados e Praças**
+➔ [FE-Sd] ou Superior - Fantasma
+❖ **Candidatos**
+➔ [FE-C] - Candidato
+
+**Batalhão de Ações de Comandos (BAC)**
+❖ **Alto Comando**
+➔ [BAC-S Cmt] ou Superior - Senhor(a) Comandos
+❖ **Graduados, Praças e Oficiais**
+➔ [BAC-Sd] ou Superior - Comandos
+❖ **Candidatos**
+➔ [BAC-A] - Aluno ou Caveira
+
+**Comando de Operações Especiais (COpEsp)**
+❖ **Alto Comando/Oficiais**
+➔ [COpEsp] Oficial de Operações ou Superior - Senhor(a) Espectro
+❖ **Graduados/Praças**
+➔ [COpEsp] Operador de Campo ou Superior - Espectro"""
+    },
+    "Subdivisões": {
+        "titulo": "🏷️ Pronomes — Subdivisões",
+        "texto": """**Superior Tribunal Militar (STM)**
+➔ Magistrado/Juiz - Meritíssimo(a) ou Vossa Excelência
+➔ Escrevente - Senhor(a) Escrevente
+➔ Promotor - Senhor(a) Promotor(a)
+➔ Advogado - Doutor(a)
+➔ Analista - Senhor(a) Analista(a)
+➔ Consultor - Senhor(a) Consultor(a)
+
+**Secretaria Geral do Exército (SGEx)**
+❖ **Alto Comando**
+➔ Secretário(a)-Geral - Vossa Excelência
+➔ Secretário Adjunto - senhor(a) Adjunto
+➔ Secretário de Departamento - senhor(a) Secretário(a)
+❖ **Administradores**
+➔ Diretor - Diretor(a)
+➔ Inspetor - Inspetor(a)
+➔ Coordenador - Coordenador(a)
+➔ Supervisor - Secretário(a)
+❖ **Nível de Ingresso**
+➔ Auxiliar-Superior - Auxiliar-Superior
+➔ Analista - Analista
+➔ Aprendiz - Aprendiz"""
+    },
+    "Cursos": {
+        "titulo": "🏷️ Pronomes — Cursos",
+        "texto": """**Escola de Sargentos das Armas (ESA)**
+❖ **Alto Comando**
+➔ Diretor-Geral - Senhor(a) Diretor(a)-Geral
+➔ Diretor - Senhor(a) Diretor(a)
+❖ **Alto Escalão**
+➔ Instrutor-Chefe - Senhor(a) Instrutor-Chefe
+➔ Adjunto de Diretoria - Senhor(a) Adjunto de Diretoria
+❖ **Administração**
+➔ Adjunto de Comando - Senhor(a) Adjunto de Comando
+➔ Coordenador - Senhor(a) Coordenador
+❖ **Coordenação**
+➔ Supervisor ou Supervisor em Treinamento - Senhor(a) Supervisor(a)
+❖ **Equipe de Instrução**
+➔ Instrutor ou Instrutor em Treinamento - Senhor(a) Instrutor(a)
+➔ Monitor - Senhor(a) Monitor(a)
+
+**Curso de Formação e Aperfeiçoamento de Praças (CFAP)**
+❖ **Diretoria**
+➔ Diretor-Geral - Senhor(a) Diretor(a)-Geral
+➔ Diretor - Senhor(a) Diretor(a)
+➔ Diretor-Adjunto - Senhor(a) Adjunto(a)
+❖ **Coordenação**
+➔ Adjunto de Comando - Senhor(a) Adjunto de Comando
+➔ Coordenador - Senhor(a) Coordenador(a)
+➔ Supervisor ou Supervisor em Treinamento - Senhor(a) Supervisor(a)
+❖ **Equipe de Instrução**
+➔ Instrutor-Chefe - Senhor(a) Instrutor-Chefe
+➔ Instrutor ou Instrutor em Treinamento - Senhor(a) Instrutor(a)
+➔ Auxiliar - Auxiliar
+
+**Escola de Reabilitação de Punitividades (ERP)**
+❖ **Direção**
+➔ Diretor - Senhor(a) Diretor(a)
+➔ Vice-Diretor - Senhor(a) Diretor(a)
+➔ Adjunto - Senhor(a) Adjunto(a)
+❖ **Gerência**
+➔ Gerente - Senhor(a) Gerente
+➔ Contador - Contador(a)
+❖ **Organização**
+➔ Coordenador - Coordenador(a)
+➔ Analista - Analista
+❖ **Instrução**
+➔ Promotor - Promotor(a)
+➔ Procurador - Procurador(a)
+
+**Curso de Liderança e Estratégia Avançada (CLEA)**
+❖ **Diretoria**
+➔ Diretor-Geral - Senhor(a) Diretor(a)-Geral
+➔ Diretor Administrativo - Senhor(a) Diretor(a) Administrativo(a)
+➔ Diretor Adjunto Gerencial - Senhor(a) Diretor(a) Adjunto Gerencial
+❖ **Coordenação**
+➔ Chefe Administrativo - Senhor(a) Chefe Administrativo(a)
+➔ Coordenador Administrativo - Senhor(a) Coordenador(a) Administrativo(a)
+➔ Supervisor Operacional - Senhor(a) Supervisor(a) Operacional
+➔ Supervisor Estratégico - Senhor(a) Supervisor(a) Estratégico(a)
+❖ **Equipe de Instrução**
+➔ Instrutor Estratégico - Senhor(a) Instrutor(a) Estratégico(a)
+➔ Instrutor Operacional - Senhor(a) Instrutor(a) Operacional
+➔ Auxiliar Estratégico - Senhor(a) Auxiliar Estratégico(a)
+➔ Auxiliar Operacional - Senhor(a) Auxiliar Operacional
+
+**Centro de Instrução de Operações Urbanas (CIOU)**
+❖ **Alto Comando**
+➔ Diretor-Geral - Senhor(a) Diretor(a)-Geral
+➔ Diretor - Senhor(a) Diretor(a)
+❖ **Alto Escalão**
+➔ Instrutor-Chefe - Senhor(a) Instrutor-Chefe
+➔ Adjunto de Diretoria - Senhor(a) Adjunto de Diretoria
+❖ **Coordenação**
+➔ Supervisor ou Supervisor em Treinamento - Senhor(a) Supervisor(a)
+❖ **Equipe de Instrução**
+➔ Instrutor ou Instrutor em Treinamento - Senhor(a) Instrutor(a)
+➔ Monitor - Senhor(a) Monitor(a)
+
+**Escola Preparatória de Cadetes do Exército (EsPCEx)**
+❖ **Direção**
+➔ Diretor - Senhor(a) Diretor(a)
+❖ **Equipe de Instrução**
+➔ Instrutor - Senhor(a) Instrutor(a)
+❖ **Formados**
+➔ Patente do Oficial - Senhor(a) + Posto + Nome de Guerra
+❖ **Aluno**
+➔ Aluno - Cadete ou Aluno"""
+    },
+    "Setores": {
+        "titulo": "🏷️ Pronomes — Setores",
+        "texto": """**Setor de Comunicação Institucional (SCI)**
+❖ **Gabinete Superior**
+➔ Diretora do Jornal - Senhor(a) Diretor(a)
+➔ Vice-Diretor - Senhor(a) Vice-Diretor(a)
+❖ **Comando Editorial**
+➔ Coordenador de Edições - Senhor(a) Coordenador(a)
+➔ Editor-Chefe - Editor(a)-Chefe
+❖ **Setor de Comunicação Institucional**
+➔ Redator - Senhor(a) Redator(a)
+➔ Jornalista - Jornalista
+➔ Repórter - Repórter
+
+**Investidores**
+➔ Diretor de Eventos - Senhor(a) Diretor(a)
+➔ Vice Diretor de Eventos - Senhor(a) Vice-Diretor(a)
+➔ Coordenador de Eventos - Senhor(a) Coordenador(a)
+➔ Gerente de Eventos - Senhor(a) Gerente
+➔ Supervisor de Eventos - Senhor(a) Supervisor(a)
+➔ Investidor - Investidor(a)
+➔ Investidor em Treinamento - Investidor(a)"""
+    }
+}
+
+# ==============================
+# 🗂️ NORMAS E PROCEDIMENTOS
+# ==============================
+NORMAS_DADOS = {
+    "Introdução": {
+        "titulo": "🗂️ Normas e Procedimentos — Introdução",
+        "texto": """A Secretaria-Geral do Exército (SGEx) é o órgão responsável pela análise, autorização e arquivamento de diversas solicitações administrativas realizadas pelos militares da instituição. Para assegurar organização, transparência e controle institucional, todas as solicitações descritas neste documento devem ser formalizadas exclusivamente por meio de tíquete no STM-SGEx. 
+
+Link de convite: https://discord.com/invite/fsc24A6X5a"""
+    },
+    "Artigo 37 (Relacionamentos)": {
+        "titulo": "🗂️ Normas — Artigo 37 (Relacionamentos)",
+        "texto": """**O que é:**
+O registro previsto no Artigo 37 consiste na formalização oficial de relacionamentos entre militares, a fim de garantir controle institucional, evitar conflitos de interesse e assegurar o cumprimento de restrições hierárquicas e funcionais.
+
+**Política Atualizada:**
+O Artigo 37 passa a focar exclusivamente na prevenção de conflitos de interesse e na manutenção da conduta profissional. Relacionamentos são permitidos dentro da instituição, desde que não interfiram nas atividades funcionais, não gerem favorecimento e não comprometam a disciplina. A antiga obrigatoriedade de comunicar relacionamentos à Secretária Geral do Exército e ao Alto Comando do Exército está revogada, adotando-se agora uma política menos invasiva e mais adequada ao respeito individual.
+
+**Privacidade e Conduta:**
+Apesar de permitido o vínculo afetivo, qualquer forma de demonstração de afeto (atitudes românticas ou similares) permanece estritamente proibida em todos os ambientes institucionais. A privacidade é preservada, desde que condutas pessoais não ultrapassem o âmbito privado nem afetem a imagem, a ordem e a neutralidade da instituição.
+
+**Orientações Finais:**
+Caso um relacionamento gere conflito funcional comprovado, a instituição poderá realizar realocação, restrição de atuação conjunta ou, em último caso, remoção de função, garantindo imparcialidade e disciplina."""
+    },
+    "Mudança de Nome (Roblox)": {
+        "titulo": "🗂️ Normas — Mudança de Nome (Roblox)",
+        "texto": """**O que é:**
+A mudança de nome é destinada aos militares que desejam alterar seu nickname no Roblox por motivos diversos, tais como adequação institucional, correção de nomenclatura, evitar nomes impróprios ou alinhar sua identificação com padrões internos.
+
+**Por que abrir tíquete / O processo envolve:**
+- Verificação da disponibilidade de recursos (Robux);
+- Avaliação dos motivos apresentados;
+- Autorização do Alto Comando do Exército (ACE) ou do Governo Federal;
+- Registro oficial da alteração para preservação da consistência documental.
+
+**Como solicitar:**
+O militar deve criar um tíquete informando seu motivo e o novo nome desejado. A SGEx analisará, solicitará autorização e, quando aprovado, registrará o arquivamento."""
+    },
+    "Troca de Conta (Discord)": {
+        "titulo": "🗂️ Normas — Troca de Conta (Discord)",
+        "texto": """**O que é:**
+A troca de conta do Discord é destinada aos militares que necessitam migrar para outra conta por questões de segurança, perda de acesso ou ajustes pessoais.
+
+**Por que abrir tíquete:**
+A solicitação via tíquete assegura:
+- Verificação da autenticidade das contas envolvidas;
+- Análise do motivo da troca;
+- Autorização institucional;
+- Registro correto para evitar inconsistências em históricos, relatórios e documentos.
+
+**Como solicitar:**
+O solicitante deve abrir um tíquete, apresentar as informações da conta antiga e da nova, e aguardar a deliberação da SGEx e do ACE."""
+    },
+    "Troca de Conta (Roblox)": {
+        "titulo": "🗂️ Normas — Troca de Conta (Roblox)",
+        "texto": """**O que é:**
+Este requerimento permite que o militar registre oficialmente a troca de sua conta Roblox utilizada na instituição.
+
+**Por que abrir tíquete:**
+A troca deve ser registrada formalmente porque:
+- Patentes não são transferíveis automaticamente entre contas;
+- Pode haver sanções, advertências ou relatórios vinculados à conta anterior;
+- A nova conta não pode ser vinculada à instituição sem autorização prévia;
+- É necessário arquivar todas as informações para manter a coerência administrativa.
+
+**Como solicitar:**
+O militar abre o tíquete informando a conta antiga, a nova e o motivo da troca. Após análise e autorização, o registro é realizado."""
+    },
+    "Afastamento Militar": {
+        "titulo": "🗂️ Normas — Afastamento Militar",
+        "texto": """**O que é:**
+O afastamento consiste na licença temporária concedida a militares que necessitam de um período sem atividades por motivos pessoais, acadêmicos, profissionais ou imprevistos.
+
+**Por que abrir tíquete:**
+A solicitação deve ser formalizada porque:
+- A licença precisa de análise e autorização;
+- O afastamento suspende direitos e deveres durante o período;
+- É necessário registrar a duração, justificativa e restrições;
+- Tempo mínimo de 15 dias e tempo máximo de 60 dias;
+- Somente é liberado mais de 61 dias ou superior, em que o STF, ACE ou GOV, aprovem;
+- Garante transparência e controle do militar ativo/inativo.
+
+**Como solicitar:**
+O militar (Graduado ou Superior) deve abrir o tíquete informando motivo e duração. Após aprovação, o afastamento é arquivado e comunicado ao requerente."""
+    },
+    "Requerimento de Influenciador": {
+        "titulo": "🗂️ Normas — Requerimento de Influenciador",
+        "texto": """**O que é:**
+O cargo de Influenciador é destinado a militares que produzem conteúdo em plataformas como YouTube ou Twitch e desejam representar oficialmente a instituição.
+
+**Por que abrir tíquete:**
+A análise via tíquete é obrigatória, pois o cargo exige:
+- Verificação de requisitos (inscritos, tempo de instituição, conduta, ausência de conteúdo ofensivo, afins);
+- Avaliação da regularidade e frequência de conteúdo;
+- Aprovação do ACE ou do Governo Federal;
+- Registro oficial para controle institucional.
+
+**Como solicitar:**
+O militar deve abrir um tíquete apresentando seu canal, frequência de vídeos e comprovações solicitadas. Após aprovação, o arquivamento é realizado e o documento de diretrizes é enviado ao solicitante."""
+    },
+    "Transparência e Disposições Finais": {
+        "titulo": "🗂️ Normas — Transparência e Disposições Finais",
+        "texto": """**TRANSPARÊNCIA DO PROCESSO DE ANÁLISE E DELIBERAÇÃO**
+Todas as solicitações registradas via tíquete no STM-SGEx são submetidas a análise criteriosa realizada por:
+- Secretaria-Geral do Exército;
+- Secretário-Geral;
+- Oficialato;
+- Estado-Maior do Exército (EME);
+- Alto Comando do Exército (ACE);
+- Governo Federal.
+
+Será solicitado somente quando necessário. A aprovação ou indeferimento sempre é comunicada de forma clara e transparente ao solicitante.
+
+**DISPOSIÇÕES FINAIS**
+- Os procedimentos descritos representam os meios formais e legais para solicitações administrativas dentro da instituição.
+- Cada caso será avaliado individualmente, podendo haver exceções conforme a situação apresentada.
+- Para esclarecimentos adicionais, dúvidas ou sugestões, o militar poderá contatar diretamente a Secretaria-Geral ou o responsável pela elaboração deste documento."""
+    }
+}
+
 
 # ==============================
 # 📚 TEXTOS INFORMATIVOS
 # ==============================
-TEXTO_HISTORICO_PRESIDENCIAL = """**Neste documento estará listado todos os Presidentes e Vice-Presidentes da República eleitos oficialmente de forma democrática:**
-https://docs.google.com/document/d/1lCagVTXlaxZX7lal80h0y7rjfCVOe4g-E6B_xi-fZs4/edit?usp=sharing"""
-
 TEXTO_PROCESSOS = """**➣ 1.1 - Processos Seletivos do Exército Brasileiro & Suas Designações**
 -# Designações - Processos Seletivos:
 > ⤷  **Cursos:** EsPCEx, ESA, ERP, CIOU e CFAP.
@@ -726,17 +1177,6 @@ TEXTO_PROCESSOS = """**➣ 1.1 - Processos Seletivos do Exército Brasileiro & S
 > ⤷  **Setores:** Investidores e SCI.
 
 -# Legislação vigente: cada militar poderá participar de apenas dois cursos e prestar no máximo quatro funções dentro da instituição: (divisão, subdivisão, curso e oficialato)"""
-
-TEXTO_PRONOMES = """**Segue o link de pronomes do EB do Apex**
-
-```II - PRONOMES.```
-> **➣ Aqui ao lado os - Pronomes Vigentes do Exército Brasileiro.**
->
->  **[CLIQUE AQUI!](https://docs.google.com/document/d/1hdTXemfHoTXCG8i1xZcXFo06ntZCnSrtvpm6nsqaC8A/edit?usp=sharing)**"""
-
-TEXTO_NORMAS = """> **➣ Segue as - Normas e Procedimentos de Arquivamentos Administrativos.**
->
->  **[CLIQUE AQUI!](https://docs.google.com/document/d/1H0QCw8CjO22AXeTrfsU__P1TngkmJ7x40gOBlxTxs4w/edit?usp=sharing)**"""
 
 TEXTO_ADMINISTRADOR = """**Segue o link do que os administrador/moderadores fazem no EB Do Apex**
 **[CLIQUE AQUI!](https://docs.google.com/document/d/1Od0rpORegpcvtwATTwaSYbvERpjib5pA4V_xyaDV5EE/edit?usp=sharing)**"""
@@ -903,7 +1343,10 @@ async def setup_hook():
     bot.add_view(OrdemUnidaView())
     bot.add_view(RequisitosView())
     bot.add_view(ManualCaboView())
-    bot.add_view(ManualRecrutaView()) # NOVA VIEW ADICIONADA AQUI
+    bot.add_view(ManualRecrutaView())
+    bot.add_view(HistoricoPresidencialView())
+    bot.add_view(PronomesView())
+    bot.add_view(NormasView()) # NOVA VIEW ADICIONADA AQUI
 
     dados = carregar_dropdowns()
     for cid, config in dados.items():
@@ -1291,14 +1734,53 @@ async def hierarquia(interaction: discord.Interaction):
 historico = app_commands.Group(name="historico", description="Consultas do histórico do Exército")
 
 
+class HistoricoPresidencialSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="🗳️", description="Ler esta parte do histórico")
+            for nome in HISTORICO_PRESIDENCIAL_DADOS.keys()
+        ]
+        super().__init__(
+            placeholder="Escolha uma opção...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_historico_presidencial",
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        parte = self.values[0]
+        info = HISTORICO_PRESIDENCIAL_DADOS[parte]
+        embed = discord.Embed(
+            title=info["titulo"],
+            description=info["texto"],
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class HistoricoPresidencialView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(HistoricoPresidencialSelect())
+
+
 @historico.command(name="presidencial", description="Histórico de Presidentes e Vice-Presidentes eleitos")
 async def historico_presidencial(interaction: discord.Interaction):
-    embed = embed_info(
-        "🗳️ Histórico Presidencial",
-        "**Neste documento estará listado todos os Presidentes e Vice-Presidentes da República eleitos oficialmente de forma democrática:**\n\n"
-        "🔗 **[CLIQUE AQUI PARA ABRIR O DOCUMENTO](https://docs.google.com/document/d/1lCagVTXlaxZX7lal80h0y7rjfCVOe4g-E6B_xi-fZs4/edit?usp=sharing)**",
+    embed = discord.Embed(
+        title="🗳️ Histórico Presidencial",
+        description=(
+            "Escolha uma opção no menu abaixo para ler o conteúdo completo.\n\n"
+            "**Opções disponíveis:**\n"
+            + "\n".join(f"🗳️ {nome}" for nome in HISTORICO_PRESIDENCIAL_DADOS.keys())
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    await interaction.response.send_message(embed=embed)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=HistoricoPresidencialView())
 
 
 bot.tree.add_command(historico)
@@ -1327,28 +1809,105 @@ async def processos(interaction: discord.Interaction):
 # ==============================
 # 🏷️ /pronomes
 # ==============================
-@bot.tree.command(name="pronomes", description="Link dos pronomes vigentes do Exército Brasileiro")
+class PronomesSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="🏷️", description="Ler esta parte dos pronomes")
+            for nome in PRONOMES_DADOS.keys()
+        ]
+        super().__init__(
+            placeholder="Escolha uma categoria de pronomes...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_pronomes",
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        parte = self.values[0]
+        info = PRONOMES_DADOS[parte]
+        embed = discord.Embed(
+            title=info["titulo"],
+            description=info["texto"],
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class PronomesView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(PronomesSelect())
+
+
+@bot.tree.command(name="pronomes", description="Consulta os pronomes vigentes do Exército por categoria")
 async def pronomes(interaction: discord.Interaction):
-    embed = embed_info(
-        "🏷️ Pronomes Vigentes — EB do Apex",
-        "**II - PRONOMES**\n"
-        "> ➣ Aqui ao lado os **Pronomes Vigentes do Exército Brasileiro**.\n\n"
-        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/1hdTXemfHoTXCG8i1xZcXFo06ntZCnSrtvpm6nsqaC8A/edit?usp=sharing)**",
+    embed = discord.Embed(
+        title="🏷️ Pronomes Vigentes — EB do Apex",
+        description=(
+            "Escolha uma categoria no menu abaixo para ler o conteúdo completo.\n\n"
+            "**Categorias disponíveis:**\n"
+            + "\n".join(f"🏷️ {nome}" for nome in PRONOMES_DADOS.keys())
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    await interaction.response.send_message(embed=embed)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=PronomesView())
 
 
 # ==============================
-# 🗂️ /normas
+# 🗂️ /normas (ATUALIZADO)
 # ==============================
-@bot.tree.command(name="normas", description="Normas e procedimentos de arquivamentos administrativos")
+class NormasSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="🗂️", description="Ler esta parte das normas")
+            for nome in NORMAS_DADOS.keys()
+        ]
+        super().__init__(
+            placeholder="Escolha uma categoria de normas...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_normas",
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        parte = self.values[0]
+        info = NORMAS_DADOS[parte]
+        embed = discord.Embed(
+            title=info["titulo"],
+            description=info["texto"],
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class NormasView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(NormasSelect())
+
+
+@bot.tree.command(name="normas", description="Consulta as Normas e Procedimentos de Arquivamentos Administrativos")
 async def normas(interaction: discord.Interaction):
-    embed = embed_info(
-        "🗂️ Normas e Procedimentos",
-        "> ➣ Segue as **Normas e Procedimentos de Arquivamentos Administrativos**.\n\n"
-        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/1H0QCw8CjO22AXeTrfsU__P1TngkmJ7x40gOBlxTxs4w/edit?usp=sharing)**",
+    embed = discord.Embed(
+        title="🗂️ Normas e Procedimentos",
+        description=(
+            "Escolha uma categoria no menu abaixo para ler o conteúdo completo.\n\n"
+            "**Categorias disponíveis:**\n"
+            + "\n".join(f"🗂️ {nome}" for nome in NORMAS_DADOS.keys())
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    await interaction.response.send_message(embed=embed)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=NormasView())
 
 
 # ==============================
