@@ -1163,6 +1163,81 @@ Será solicitado somente quando necessário. A aprovação ou indeferimento semp
     }
 }
 
+# ==============================
+# 📋 TAREFAS E EXPLICAÇÕES
+# ==============================
+TAREFAS_DADOS = {
+    "Divisões Administrativas": {
+        "titulo": "📋 Tarefas — Divisões Administrativas",
+        "texto": """**CIE - Centro de Inteligência do Exército**
+O Centro de Inteligência do Exército é a unidade responsável por manter a segurança cibernética do Exército Brasileiro; mantendo a ordem e a disciplina na parte administrativa do Exército.
+
+**BPE - Batalhão de Polícia do Exército**
+O Batalhão de Polícia do Exército é encarregado de vigia instalações, mantém a disciplina entre os militares, faz a segurança de autoridades e de localidades, tem um grande papel de manter a ordem dentro do quartel, e, se preciso, combate como infantaria. Atuando também, na parte administrativa quando solicitado."""
+    },
+    "Divisões Operacionais": {
+        "titulo": "📋 Tarefas — Divisões Operacionais",
+        "texto": """**BFE - Batalhão de Forças Especiais**
+O Batalhão de Forças Especiais é responsável por manter a paz no âmbito do Exército Brasileiro, juntamente com o Batalhão de Ações de Comandos. Sendo indicados para cumprir missões de alto risco.
+
+**BAC - Batalhão de Ações de Comandos**
+O Batalhão de Ações de Comandos é responsável por manter a paz no âmbito do Exército Brasileiro, juntamente com o Batalhão de Forças Especiais. Sendo indicados para cumprir missões de alto risco."""
+    },
+    "Especialização": {
+        "titulo": "📋 Tarefas — Especialização",
+        "texto": """**COpEsp - Comando de Operações Especiais**
+O Comando de Operações Especiais é uma especialização de elite do Exército Brasileiro, especializada em missões de alto risco e operações que exigem habilidades específicas e treinamento avançado. Seu foco principal é atuar em cenários de combate complexos, como resgates, infiltrações, sabotagens e ações em áreas de difícil acesso. O COpEsp é composto pelas duas elites operacionais do exército, sendo elas: o Batalhão de Forças Especiais e o Batalhão de Ações de Comandos, militares altamente treinados e capacitados para operar de forma independente ou em conjunto com outras forças armadas e de segurança."""
+    },
+    "Subdivisões": {
+        "titulo": "📋 Tarefas — Subdivisões",
+        "texto": """**STM - Superior Tribunal Militar**
+O Superior Tribunal Militar é responsável por processar e julgar originariamente os casos que envolvam violações às normas militares, crimes castrenses e questões judiciais relacionadas às Forças Armadas, assegurando o devido processo legal e a ampla defesa aos acusados.
+
+**SGEx - Secretaria Geral do Exército**
+A Secretaria Geral do Exército (SGEx) é um órgão de administração do Exército Brasileiro. Suas responsabilidades incluem assessorar em questões administrativas gerais, garantindo a implementação eficaz das diretrizes estabelecidas pelo Alto Comando. Além disso, a SGEx trabalha na resolução de tíquetes no servidor da nossa instituição e arquiva questões legais, como licenças de afastamento e o artigo 22."""
+    },
+    "Cursos": {
+        "titulo": "📋 Tarefas — Cursos",
+        "texto": """**ESA - Escola de Sargentos das Armas**
+A Escola de Sargentos das Armas é responsável por formar Cabos em Sargentos, preparando-os para iniciar sua nova fase na carreira como Graduado com responsabilidade e ética. O curso combina teoria e prática, abordando não apenas capacidades especializadas, mas também o desenvolvimento de disciplina, valores fundamentais para a carreira militar. O companheirismo é uma parte essencial dessa formação, incentivando a união, confiança e trabalho em equipe. Esses laços fortalecem os futuros Sargentos, que aprendem a superar desafios juntos, promovendo a solidariedade, o comprometimento e a resiliência. Além disso, a ESA valoriza a capacidade de tomar decisões rápidas e assertivas em situações de alta pressão. Ao final do curso, os formandos são profissionais capacitados, preparados para atuar com excelência, liderar suas tropas e servir à corporação com dedicação e competência. Seu lema é: Lealdade, Integridade e Honestidade.
+
+**CFAP - Curso de Formação e Aperfeiçoamento de Praças**
+O Curso de Formação e Aperfeiçoamento de Praças capacita Praças para futuras oportunidades, oferecendo formação equilibrada entre teoria e prática, desenvolvendo habilidades técnicas e interpessoais essenciais para funções militares. Também é um meio alternativo dos Praças conseguirem subir de patente dentro do Exército, sendo de grande ajuda para aqueles que não conseguem entrar em treinamentos de patente.
+
+**ERP - Escola de Reabilitação de Punitividades**
+A Escola de Reabilitação de Punitividades visa reabilitar militares que cometeram transgressões, oferecendo uma oportunidade de reintegração ao Exército. Focada no desenvolvimento ético e profissional, a escola valoriza o arrependimento, o compromisso com os valores institucionais e a transformação dos militares para uma nova perspectiva dentro da corporação.
+
+**CIOU - Centro de Instrução de Operações Urbanas**
+O Centro de Instrução de Operações Urbanas (CIOU) é um curso especializado que visa aprimorar habilidades militares como disciplina, visão estratégica, combate em ambientes diversos, comando de tropas, desenvolvimento tático, ética, coordenação, senso crítico e trabalho em equipe.
+
+**EsPCEx - Escola Preparatória de Cadetes do Exército**
+A Escola Preparatória de Cadetes do Exército tem como missão preparar futuros oficiais. Sua principal função é formar Subtenentes e Cadetes, proporcionando o treinamento necessário para capacitá-los a desempenharem com excelência suas futuras funções no Exército Brasileiro."""
+    },
+    "Funções": {
+        "titulo": "📋 Tarefas — Funções",
+        "texto": """**Investidores**
+A Equipe Investidores é responsável por organizar diversos eventos no Exército Brasileiro, como esconde-esconde, parkour 1v1, torre 2v2 e combate entre militares. Essas atividades têm como objetivo promover a interação, o desenvolvimento físico e o espírito de equipe entre os participantes.
+
+**SCI - Setor de Comunicação Institucional**
+O Setor de Comunicação Institucional é um jornal criado para compartilhar notícias e conteúdos informativos de maneira renovada. Seu objetivo é manter o Exército Brasileiro bem informado, promovendo a união e o crescimento da instituição por meio da disseminação de informações relevantes para toda a comunidade."""
+    },
+    "Instâncias": {
+        "titulo": "📋 Tarefas — Instâncias",
+        "texto": """**EME - Estado-Maior do Exército**
+O Estado-Maior do Exército é um sub-órgão temporário criado para auxiliar na análise e resolução de casos importantes, oferecendo opiniões diversificadas e maior contextualização antes de decisões finais, sempre com autorização do General-de-Exército.
+
+**Informe sobre as Instâncias:**
+**1ª Instância:** Superior Tribunal Militar
+Julga casos de exílio e exílio permanente. Outra alternativa será a Escola de Reabilitação de Punitividades.
+
+**2ª Instância:** Alto Comando do Exército e Estado-Maior do Exército
+Responsável por julgar casos de exílio permanente para indivíduos com, no mínimo, dois meses de alistamento.
+
+**3ª Instância:** Governo Federal, Supremo Tribunal Federal, Developer e Founder
+Julga casos de exílio permanente para indivíduos que tenham pertencido ao Oficialato ou a uma divisão por pelo menos três meses."""
+    }
+}
+
 
 # ==============================
 # 📚 TEXTOS INFORMATIVOS
@@ -1346,7 +1421,8 @@ async def setup_hook():
     bot.add_view(ManualRecrutaView())
     bot.add_view(HistoricoPresidencialView())
     bot.add_view(PronomesView())
-    bot.add_view(NormasView()) # NOVA VIEW ADICIONADA AQUI
+    bot.add_view(NormasView())
+    bot.add_view(TarefasView()) # NOVA VIEW ADICIONADA AQUI
 
     dados = carregar_dropdowns()
     for cid, config in dados.items():
@@ -1563,16 +1639,55 @@ async def regulamentacao(interaction: discord.Interaction):
 
 
 # ==============================
-# 📋 /tarefas
+# 📋 /tarefas (ATUALIZADO)
 # ==============================
-@bot.tree.command(name="tarefas", description="Exibe o link das Tarefas, Funções e Explicações")
+class TarefasSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="📋", description="Ler esta parte das tarefas")
+            for nome in TAREFAS_DADOS.keys()
+        ]
+        super().__init__(
+            placeholder="Escolha uma categoria de tarefas...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_tarefas",
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        parte = self.values[0]
+        info = TAREFAS_DADOS[parte]
+        embed = discord.Embed(
+            title=info["titulo"],
+            description=info["texto"],
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+class TarefasView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(TarefasSelect())
+
+
+@bot.tree.command(name="tarefas", description="Consulta as Tarefas, Funções e Explicações")
 async def tarefas(interaction: discord.Interaction):
-    embed = embed_info(
-        "➣ 5.2 - Tarefas, Funções e Explicações",
-        "Acesse o documento completo contendo as tarefas, funções e explicações de cada Divisão, Subdivisão, Instância e Grupo de Tarefa.\n\n"
-        "🔗 **[CLIQUE AQUI PARA ABRIR O DOCUMENTO](https://docs.google.com/document/d/1mMtO0yBMCptw9jW4A7OucT737izGAL73A5oo3_jmf0I/edit?usp=sharing)**",
+    embed = discord.Embed(
+        title="📋 Tarefas, Funções e Explicações",
+        description=(
+            "Escolha uma categoria no menu abaixo para ler o conteúdo completo.\n\n"
+            "**Categorias disponíveis:**\n"
+            + "\n".join(f"📋 {nome}" for nome in TAREFAS_DADOS.keys())
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    await interaction.response.send_message(embed=embed)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=TarefasView())
 
 
 # ==============================
@@ -1859,7 +1974,7 @@ async def pronomes(interaction: discord.Interaction):
 
 
 # ==============================
-# 🗂️ /normas (ATUALIZADO)
+# 🗂️ /normas
 # ==============================
 class NormasSelect(discord.ui.Select):
     def __init__(self):
@@ -1924,16 +2039,129 @@ async def administrador(interaction: discord.Interaction):
 
 
 # ==============================
-# 🚫 /vedacao
+# 🚫 /vedacao (MANUAL DE VEDAÇÃO)
 # ==============================
-@bot.tree.command(name="vedacao", description="Vedação de acessos e exilados permanentes (in game)")
+VEDACAO_DADOS = {
+    "Introdução e Créditos": {
+        "titulo": "🚫 Vedação — Introdução e Créditos",
+        "texto": """**VEDAÇÃO DE ACESSO E CRITÉRIOS DE BANIMENTO**
+O presente documento tem por finalidade estabelecer, de forma clara e padronizada, as normas referentes à vedação de acesso, banimentos, exílios permanentes e critérios disciplinares aplicáveis no âmbito do Exército Brasileiro, tanto em suas instalações virtuais quanto em seus servidores oficiais[span_1](start_span)[span_1](end_span). Seu objetivo central é garantir a integridade institucional, preservar a ordem e assegurar um ambiente seguro, disciplinado e respeitoso[span_2](start_span)[span_2](end_span).
+
+**Créditos:**
+Documento feito por: Governo Federal, Presidente Ivan4015, Secretária Geral do Exército, Inspetor AT_kaiquegames[span_3](start_span)[span_3](end_span).
+Aprovado pelo Governo Federal em 01/12/2025[span_4](start_span)[span_4](end_span)."""
+    },
+    "Capítulo I — Disposições Gerais": {
+        "titulo": "🚫 Vedação — Capítulo I (Disposições Gerais)",
+        "texto": """**1. Vedação de Acesso**
+1.1. Todo Exilado Permanente está proibido de ingressar em qualquer Servidor do Discord ou dependências do Exército Brasileiro das quais tenha sido banido[span_5](start_span)[span_5](end_span).
+1.2. Tentativas de acesso acarretarão medidas de segurança e procedimentos legais[span_6](start_span)[span_6](end_span).
+
+**2. Exceções Divisórias**
+2.1. STM, SGEX, ACE e Governo Federal podem analisar exceções individualmente[span_7](start_span)[span_7](end_span).
+2.2. Avaliam grau de exílio e justificativa para retorno (reformas comportamentais, arrependimento)[span_8](start_span)[span_8](end_span).
+
+**3. Procedimento de Revisão**
+3.1. Todo Exilado Permanente pode solicitar revisão[span_9](start_span)[span_9](end_span).
+3.3. As decisões de STM, SGEx e ACE são definitivas, revistas apenas por instâncias superiores[span_10](start_span)[span_10](end_span).
+
+**4. Casos que Geram Banimento Imediato**
+Corrupção, Vazamento de dados, Enviar servidores externos, Assédio, homofobia, racismo, Injúria, calúnia, difamação, Links maliciosos, Terrorismo, Perseguição[span_11](start_span)[span_11](end_span).
+
+**5. Casos que Geram Exclusivamente Exílio Permanente**
+Accept All (prejuízo à instituição), Desrespeito extremo, Contas alternativas, Teor adulto, Pedir respostas de formulário[span_12](start_span)[span_12](end_span).
+
+**6. Parágrafos Complementares**
+▪️ O infrator possui 48 horas para apresentar defesa antes do banimento do Discord, salvo casos gravíssimos (racismo, homofobia, etc.)[span_13](start_span)[span_13](end_span)."""
+    },
+    "Capítulo II — Critérios Disciplinares": {
+        "titulo": "🚫 Vedação — Capítulo II (Critérios Disciplinares)",
+        "texto": """**1. Critérios Gerais**
+Estabelece parâmetros de penalidade aplicáveis a civis e militares, garantindo proporcionalidade e previsibilidade[span_14](start_span)[span_14](end_span).
+
+**2. Tipificação das Infrações**
+Descreve infrações passíveis de banimento temporário ou permanente, incluindo: Atrapalhar atividades, abuso de rádio/comandos/moto, terrorismo, conotação sexual, perturbação de alta importância, abuso de acessórios, contas alternativas, grupos terroristas, assédio, relatórios de exílio, aplicativos externos, ideologias extremistas, preconceito e perseguição[span_15](start_span)[span_15](end_span).
+
+**3. Progressão das Penalidades**
+▪️ Advertência[span_16](start_span)[span_16](end_span)
+▪️ Banimento temporário[span_17](start_span)[span_17](end_span)
+▪️ Exílio permanente[span_18](start_span)[span_18](end_span)
+▪️ Banimento permanente[span_19](start_span)[span_19](end_span)"""
+    },
+    "Capítulo III — Procedimentos": {
+        "titulo": "🚫 Vedação — Capítulo III (Procedimentos)",
+        "texto": """**1. Abertura e Análise de Ocorrências**
+Infrações devem ser registradas por Administradores, Moderadores ou Oficiais via ocorrência interna de forma objetiva e imparcial[span_20](start_span)[span_20](end_span).
+
+**2. Registro de Evidências**
+Exige coletas de prints, vídeos, IDs, descrição objetiva e identificação sem cortes do infrator[span_21](start_span)[span_21](end_span).
+
+**3. Comunicação Interna**
+▪️ Leves e moderadas → SGEx ou Oficialato[span_22](start_span)[span_22](end_span).
+▪️ Graves → SGEx ou Oficialato[span_23](start_span)[span_23](end_span).
+▪️ Gravíssimas / Exílio Permanente → SGEx, Oficialato, ACE ou GOV[span_24](start_span)[span_24](end_span)."""
+    },
+    "Capítulo IV — Direitos e Sanções": {
+        "titulo": "🚫 Vedação — Capítulo IV (Direitos e Revisão)",
+        "texto": """**1. Classificação Geral**
+Leves (baixo impacto), Graves (afetam andamento/ordem) e Gravíssimas (atentam contra segurança e honra)[span_25](start_span)[span_25](end_span).
+
+**2. Agravantes & 3. Atenuantes**
+Fatores como reincidência, dolo e afronta elevam a pena[span_26](start_span)[span_26](end_span), enquanto histórico exemplar ou ausência de antecedentes podem atenuá-la (exceto em condutas gravíssimas como racismo e terrorismo)[span_27](start_span)[span_27](end_span).
+
+**4. Tempo de Banimento & 5. Não Graduáveis**
+Racismo, xenofobia, homofobia, assédio explícito, terrorismo, exploits e vazamento de documentos geram **banimento permanente automático sem gradação**[span_28](start_span)[span_28](end_span).
+
+**7. Uniformidade e Impessoalidade**
+Proibido privilegiar ou punir de maneira desigual por afinidade ou rixa pessoal[span_29](start_span)[span_29](end_span)."""
+    }
+}
+
+class VedacaoSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label=nome, emoji="🚫", description="Ler esta parte do manual de vedação")
+            for nome in VEDACAO_DADOS.keys()
+        ]
+        super().__init__(
+            placeholder="Escolha uma parte da Vedação de Acessos...",
+            min_values=1,
+            max_values=1,
+            options=options,
+            custom_id="menu_vedacao",
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        parte = self.values[0]
+        info = VEDACAO_DADOS[parte]
+        embed = discord.Embed(
+            title=info["titulo"],
+            description=info["texto"],
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.utcnow(),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+class VedacaoView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(VedacaoSelect())
+
+@bot.tree.command(name="vedacao", description="Consulta o manual de Vedação de Acessos e Exilados Permanentes")
 async def vedacao(interaction: discord.Interaction):
-    embed = embed_info(
-        "🚫 Vedação de Acessos",
-        "> ➣ Segue o link da **Vedação de Acessos / Exilados Permanentes - IN GAME**.\n\n"
-        "🔗 **[CLIQUE AQUI!](https://docs.google.com/document/d/13bpYEqPcT4EMISNtPQI4uodiA1frsBJ9u1r0TdXQNNY/edit?usp=sharing)**",
+    embed = discord.Embed(
+        title="🚫 Vedação de Acessos e Critérios de Banimento",
+        description=(
+            "Escolha uma parte no menu abaixo para ler o conteúdo completo.\n\n"
+            "**Partes disponíveis:**\n"
+            + "\n".join(f"🚫 {nome}" for nome in VEDACAO_DADOS.keys())
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.utcnow(),
     )
-    await interaction.response.send_message(embed=embed)
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed, view=VedacaoView())
 
 
 # ==============================
