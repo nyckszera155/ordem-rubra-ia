@@ -4,7 +4,7 @@ import json
 import asyncio
 import datetime
 import discord
-import anthropic
+from openai import AsyncOpenAI
 from discord.ext import commands
 from discord import app_commands
 from dotenv import load_dotenv
@@ -16,7 +16,7 @@ load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 STAFF_ROLE_ID = int(os.getenv("STAFF_ROLE_ID", "0"))
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 ARQUIVO_WARN = "warnings.json"
 ARQUIVO_DROPDOWNS = "dropdowns.json"
@@ -30,10 +30,10 @@ COR_SANGUE = discord.Color.from_rgb(180, 0, 0)
 
 
 # ==============================
-# 🤖 CONFIGURAÇÃO DA IA (ANTHROPIC)
+# 🤖 CONFIGURAÇÃO DA IA (OPENAI)
 # ==============================
-cliente_ia = anthropic.AsyncAnthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
-IA_MODELO = "claude-haiku-4-5-20251001"
+cliente_ia = AsyncOpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
+IA_MODELO = "gpt-4o-mini"  # barato e rápido; troque por "gpt-4o" se quiser mais qualidade
 
 # Histórico por usuário
 HISTORICO_IA: dict[int, list[dict]] = {}
@@ -1442,23 +1442,22 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 # ==============================
-# 🤖 FUNÇÕES DA IA (ANTHROPIC)
+# 🤖 FUNÇÕES DA IA (OPENAI)
 # ==============================
-async def chamar_anthropic(mensagens: list[dict]) -> str:
+async def chamar_openai(mensagens: list[dict]) -> str:
     if not cliente_ia:
-        raise RuntimeError("ANTHROPIC_API_KEY não configurada.")
-    resposta = await cliente_ia.messages.create(
+        raise RuntimeError("OPENAI_API_KEY não configurada.")
+    resposta = await cliente_ia.chat.completions.create(
         model=IA_MODELO,
+        messages=[{"role": "system", "content": SYSTEM_PROMPT}] + mensagens,
         max_tokens=800,
-        system=SYSTEM_PROMPT,
-        messages=mensagens,
     )
-    return resposta.content[0].text.strip()
+    return resposta.choices[0].message.content.strip()
 
 
 async def perguntar_ia(user_id: int, pergunta: str) -> str:
     if not cliente_ia:
-        return "❌ A IA não está configurada. Peça a um administrador para adicionar `ANTHROPIC_API_KEY` no Railway."
+        return "❌ A IA não está configurada. Peça a um administrador para adicionar `OPENAI_API_KEY` no Railway."
 
     historico = HISTORICO_IA.setdefault(user_id, [])
     historico.append({"role": "user", "content": pergunta})
@@ -1467,13 +1466,7 @@ async def perguntar_ia(user_id: int, pergunta: str) -> str:
         del historico[: len(historico) - MAX_HISTORICO]
 
     try:
-        resposta = await chamar_anthropic(historico)
-    except anthropic.AuthenticationError:
-        return "❌ Chave da Anthropic inválida. Verifique `ANTHROPIC_API_KEY`."
-    except anthropic.RateLimitError:
-        return "⏳ Limite de requisições atingido. Tente novamente em alguns segundos."
-    except anthropic.APIStatusError as e:
-        return f"⚠️ Erro na API da Anthropic: `{e.status_code}`"
+        resposta = await chamar_openai(historico)
     except Exception as e:
         print(f"❌ Erro IA: {e}")
         historico.pop()
@@ -1535,9 +1528,9 @@ async def on_ready():
     print(f"🤖 Bot online como {bot.user}")
     await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
     if cliente_ia:
-        print(f"✅ IA (Anthropic) ativa — modelo {IA_MODELO}")
+        print(f"✅ IA (OpenAI) ativa — modelo {IA_MODELO}")
     else:
-        print("⚠️ IA desativada — ANTHROPIC_API_KEY ausente")
+        print("⚠️ IA desativada — OPENAI_API_KEY ausente")
     try:
         synced = await bot.tree.sync()
         print(f"✅ {len(synced)} comandos slash sincronizados.")
@@ -1550,24 +1543,19 @@ async def on_ready():
 # ==============================
 @bot.event
 async def on_message(message: discord.Message):
-    # Ignora bots
     if message.author.bot:
         return
 
-    # Processa comandos de prefixo
     await bot.process_commands(message)
 
-    # Só responde se o bot foi mencionado
     if bot.user not in message.mentions:
         return
 
-    # Remove as menções do texto
     pergunta = message.content
     for m in message.mentions:
         pergunta = pergunta.replace(f"<@{m.id}>", "").replace(f"<@!{m.id}>", "")
     pergunta = pergunta.strip()
 
-    # Se mencionou sem escrever nada
     if not pergunta:
         await message.reply(
             "👋 Olá! Me mencione com uma pergunta para eu responder.\n"
@@ -1576,7 +1564,6 @@ async def on_message(message: discord.Message):
         )
         return
 
-    # Comando de reset via menção
     if pergunta.lower() in ("reset", "limpar", "esquecer", "esqueça"):
         HISTORICO_IA.pop(message.author.id, None)
         await message.reply(
@@ -2532,7 +2519,7 @@ async def sair(interaction: discord.Interaction, canal: discord.TextChannel):
 
 
 # ==============================
-# 🎛️ SISTEMA DE DROPDOWNS CUSTOMIZADOS (COMANDOS)
+# 🎛️ DROPDOWNS CUSTOMIZADOS (COMANDOS)
 # ==============================
 dropdown = app_commands.Group(name="dropdown", description="Gerenciar dropdowns customizados")
 
