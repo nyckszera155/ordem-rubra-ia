@@ -1491,121 +1491,18 @@ def construir_embed_dropdown(config: dict) -> discord.Embed:
         timestamp=datetime.datetime.now(datetime.timezone.utc),
     )
     embed.set_footer(text=FOOTER)
-    # Só mostra o aviso quando NÃO houver opções
-    if not config.get("opcoes"):
-        embed.add_field(
-            name="⚠️ Sem opções",
-            value="Use o botão **➕ Adicionar opção** abaixo para começar.",
-            inline=False,
-        )
+    # Nenhum aviso extra adicionado. Se não tem opções, fica apenas o texto.
     return embed
 
 
 def construir_view_dropdown(cid: str, config: dict) -> discord.ui.View:
     view = discord.ui.View(timeout=None)
+    
+    # Só adiciona o menu dropdown se existirem opções configuradas.
     if config.get("opcoes"):
-        # Já tem opções → só o dropdown, sem botão
         view.add_item(CustomDropdown(cid, config["placeholder"], config["opcoes"]))
-    else:
-        # Sem opções → só o botão de adicionar
-        view.add_item(AddOptionButton(cid))
+        
     return view
-
-
-class AddOptionModal(discord.ui.Modal):
-    def __init__(self, cid: str):
-        super().__init__(title="➕ Adicionar opção ao dropdown")
-        self.cid = cid
-        self.label_input = discord.ui.TextInput(
-            label="Label (nome que aparece na opção)",
-            placeholder="Ex: Recruta",
-            max_length=80,
-            required=True,
-        )
-        self.cargos_input = discord.ui.TextInput(
-            label="IDs dos cargos (separados por vírgula)",
-            placeholder="Ex: 123456789012345678,987654321098765432",
-            max_length=400,
-            required=True,
-            style=discord.TextStyle.paragraph,
-        )
-        self.add_item(self.label_input)
-        self.add_item(self.cargos_input)
-
-    async def on_submit(self, interaction: discord.Interaction):
-        label = self.label_input.value.strip()
-        cargos_str = self.cargos_input.value.strip()
-
-        cargos = [c.strip() for c in cargos_str.split(",") if c.strip()]
-        if not cargos:
-            await interaction.response.send_message("❌ Nenhum cargo informado.", ephemeral=True)
-            return
-        for c in cargos:
-            try:
-                int(c)
-            except ValueError:
-                await interaction.response.send_message(
-                    f"❌ ID inválido: `{c}` (precisa ser número).", ephemeral=True
-                )
-                return
-
-        dados = carregar_dropdowns()
-        config = dados.get(self.cid)
-        if not config:
-            await interaction.response.send_message(
-                "❌ Este dropdown não existe mais.", ephemeral=True
-            )
-            return
-
-        value = label.lower().replace(" ", "_")[:100]
-        if any(o["value"] == value for o in config["opcoes"]):
-            await interaction.response.send_message(
-                f"❌ Já existe uma opção com esse label (`{label}`).", ephemeral=True
-            )
-            return
-
-        config["opcoes"].append({
-            "label": label,
-            "value": value,
-            "cargos": cargos,
-        })
-        salvar_dropdowns(dados)
-
-        try:
-            canal = interaction.guild.get_channel(config["canal_id"])
-            msg = await canal.fetch_message(config["message_id"])
-            await msg.edit(
-                embed=construir_embed_dropdown(config),
-                view=construir_view_dropdown(self.cid, config),
-            )
-        except Exception as e:
-            print(f"⚠️ Não consegui atualizar a mensagem: {e}")
-
-        await interaction.response.send_message(
-            f"✅ Opção **{label}** adicionada com {len(cargos)} cargo(s).",
-            ephemeral=True,
-        )
-
-
-class AddOptionButton(discord.ui.Button):
-    def __init__(self, cid: str):
-        super().__init__(
-            label="➕ Adicionar opção",
-            style=discord.ButtonStyle.success,
-            custom_id=f"dd_add_{cid}",
-            row=1,
-        )
-        self.cid = cid
-
-    async def callback(self, interaction: discord.Interaction):
-        if not (interaction.user.guild_permissions.administrator or any(
-            r.id == STAFF_ROLE_ID for r in interaction.user.roles
-        )):
-            await interaction.response.send_message(
-                "❌ Só staff pode editar este dropdown.", ephemeral=True
-            )
-            return
-        await interaction.response.send_modal(AddOptionModal(self.cid))
 
 
 # ==============================
@@ -1639,7 +1536,9 @@ async def setup_hook():
     for cid, config in dados.items():
         try:
             view = construir_view_dropdown(cid, config)
-            bot.add_view(view)
+            # Se a view tiver itens, registra para não expirar
+            if len(view.children) > 0:
+                bot.add_view(view)
             print(f"✅ Dropdown persistente registrado: {cid}")
         except Exception as e:
             print(f"❌ Erro ao registrar dropdown {cid}: {e}")
@@ -2627,7 +2526,10 @@ async def dropdown_create(
 
     config["message_id"] = msg.id
     salvar_dropdowns(dados)
-    bot.add_view(view)
+    
+    # Salva a view apenas se ela tiver itens
+    if len(view.children) > 0:
+        bot.add_view(view)
 
     tem_opcoes = len(opcoes_parsed) > 0
     confirm = discord.Embed(
@@ -2640,7 +2542,7 @@ async def dropdown_create(
             + (
                 "_O dropdown já está funcional._"
                 if tem_opcoes
-                else "_Nenhuma opção informada. Use o botão **➕ Adicionar opção** na mensagem para adicioná-las._"
+                else "_Nenhuma opção informada. O texto foi enviado sem menus._"
             )
         ),
         color=COR_SANGUE,
