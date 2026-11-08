@@ -1491,13 +1491,8 @@ def construir_embed_dropdown(config: dict) -> discord.Embed:
         timestamp=datetime.datetime.now(datetime.timezone.utc),
     )
     embed.set_footer(text=FOOTER)
-    if config.get("opcoes"):
-        embed.add_field(
-            name="📋 Opções configuradas",
-            value="\n".join(f"▪️ **{o['label']}**" for o in config["opcoes"]),
-            inline=False,
-        )
-    else:
+    # Só mostra o aviso quando NÃO houver opções
+    if not config.get("opcoes"):
         embed.add_field(
             name="⚠️ Sem opções",
             value="Use o botão **➕ Adicionar opção** abaixo para começar.",
@@ -1509,8 +1504,11 @@ def construir_embed_dropdown(config: dict) -> discord.Embed:
 def construir_view_dropdown(cid: str, config: dict) -> discord.ui.View:
     view = discord.ui.View(timeout=None)
     if config.get("opcoes"):
+        # Já tem opções → só o dropdown, sem botão
         view.add_item(CustomDropdown(cid, config["placeholder"], config["opcoes"]))
-    view.add_item(AddOptionButton(cid))
+    else:
+        # Sem opções → só o botão de adicionar
+        view.add_item(AddOptionButton(cid))
     return view
 
 
