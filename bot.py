@@ -1537,10 +1537,11 @@ def bloquear_servidor_especifico():
 
 
 # ==============================
-# SETUP HOOK
+# SETUP HOOK (CORRIGIDO PARA SINCRONIZAR AQUI)
 # ==============================
 @bot.event
 async def setup_hook():
+    # 1. Registra os dropdowns persistentes
     dados = carregar_dropdowns()
     for cid, config in dados.items():
         try:
@@ -1551,6 +1552,29 @@ async def setup_hook():
         except Exception as e:
             print(f"❌ Erro ao registrar dropdown {cid}: {e}")
 
+    # 2. Diagnóstico: Verifica quantos comandos o bot achou
+    print(f"🔍 Comandos encontrados no código: {len(bot.tree.get_commands())}")
+
+    # 3. Sincronização dos comandos
+    try:
+        print("🔄 Sincronizando comandos globais...")
+        bot.tree.clear_commands(guild=None)
+        await bot.tree.sync()
+        print("🧹 Comandos globais limpos com sucesso.")
+
+        for guild in bot.guilds:
+            guild_obj = discord.Object(id=guild.id)
+            if guild.id in GUILDS_SEM_EXERCITO:
+                bot.tree.clear_commands(guild=guild_obj)
+                await bot.tree.sync(guild=guild_obj)
+                print(f"🚫 {guild.name} ({guild.id}) — bloqueado, sem comandos.")
+            else:
+                bot.tree.copy_global_to(guild=guild_obj)
+                synced = await bot.tree.sync(guild=guild_obj)
+                print(f"✅ {guild.name} ({guild.id}) — {len(synced)} comandos sincronizados.")
+    except Exception as e:
+        print(f"❌ ERRO FATAL AO SINCRONIZAR: {e}")
+
 
 # ==============================
 # EVENTOS
@@ -1559,23 +1583,6 @@ async def setup_hook():
 async def on_ready():
     print(f"🤖 Bot online como {bot.user}")
     await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
-    try:
-        bot.tree.clear_commands(guild=None)
-        await bot.tree.sync()
-        print("🧹 Comandos globais limpos.")
-
-        for guild in bot.guilds:
-            guild_obj = discord.Object(id=guild.id)
-            if guild.id in GUILDS_SEM_EXERCITO:
-                bot.tree.clear_commands(guild=guild_obj)
-                await bot.tree.sync(guild=guild_obj)
-                print(f"🚫 {guild.name} ({guild.id}) — sem comandos.")
-            else:
-                bot.tree.copy_global_to(guild=guild_obj)
-                synced = await bot.tree.sync(guild=guild_obj)
-                print(f"✅ {guild.name} ({guild.id}) — {len(synced)} comandos.")
-    except Exception as e:
-        print(f"❌ Erro ao sincronizar slash commands: {e}")
 
 
 # ==============================
