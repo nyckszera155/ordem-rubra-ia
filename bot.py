@@ -17,6 +17,9 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 STAFF_ROLE_ID = int(os.getenv("STAFF_ROLE_ID", "0"))
 
+# Lista de servidores bloqueados (onde os comandos do Exército não funcionam)
+GUILDS_SEM_EXERCITO = [1451549689072717916]
+
 ARQUIVO_WARN = "warnings.json"
 ARQUIVO_DROPDOWNS = "dropdowns.json"
 ARQUIVO_ENTRADA_SAIDA = "entrada_saida.json"
@@ -558,7 +561,7 @@ Nas próximas páginas serão descritas todas as instruções necessárias para 
         "titulo": "📘 Manual do Recruta — Como se Verificar?",
         "texto": """Caso você seja um Recruta e já esteja dentro do grupo do Exército Brasileiro do Roblox, o próximo passo a ser seguido é o de entrar no grupo do Discord.
 
-**Passo 1:** Entre na página do Roblox. Em seguida, entre no jogo da instituição.
+**Passo 1:** Entre na página do Roblox. En seguida, entre no jogo da instituição.
 **Passo 2:** Agora, arraste sua tela para baixo, encontrando algo parecido com o ícone do Discord ou escrito como "Servidor" e clique nele. Lembrando que deve ter uma conta no Discord, caso não tenha, não conseguirá entrar no servidor.
 **Passo 3:** Agora que já entrou no Discord da instituição, clique no canal chamado "[✓] verificação".
 **Passo 4:** Clique em "Verify with Bloxlink" e logo em seguida irá receber sua patente."""
@@ -1491,17 +1494,13 @@ def construir_embed_dropdown(config: dict) -> discord.Embed:
         timestamp=datetime.datetime.now(datetime.timezone.utc),
     )
     embed.set_footer(text=FOOTER)
-    # Nenhum aviso extra adicionado. Se não tem opções, fica apenas o texto.
     return embed
 
 
 def construir_view_dropdown(cid: str, config: dict) -> discord.ui.View:
     view = discord.ui.View(timeout=None)
-    
-    # Só adiciona o menu dropdown se existirem opções configuradas.
     if config.get("opcoes"):
         view.add_item(CustomDropdown(cid, config["placeholder"], config["opcoes"]))
-        
     return view
 
 
@@ -1516,7 +1515,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 # ==============================
-# SETUP HOOK (Sincronização corrigida)
+# SETUP HOOK
 # ==============================
 @bot.event
 async def setup_hook():
@@ -1541,7 +1540,6 @@ async def setup_hook():
         except Exception:
             pass
 
-    # Sincronização
     print(f"🔍 Comandos encontrados no código: {len(bot.tree.get_commands())}")
     try:
         print("🔄 Sincronizando comandos globais...")
@@ -1573,20 +1571,6 @@ async def on_ready():
 
 
 # ==============================
-# EVENTOS
-# ==============================
-@bot.event
-async def on_ready():
-    print(f"🤖 Bot online como {bot.user}")
-    await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
-    try:
-        synced = await bot.tree.sync()
-        print(f"✅ {len(synced)} comandos slash sincronizados.")
-    except Exception as e:
-        print(f"❌ Erro ao sincronizar slash commands: {e}")
-
-
-# ==============================
 # 🎉 ENTRADA / SAÍDA
 # ==============================
 @bot.event
@@ -1599,7 +1583,6 @@ async def on_member_join(member: discord.Member):
         return
     canal = member.guild.get_channel(canal_id)
     if not canal:
-        print(f"⚠️ Canal de entrada {canal_id} não encontrado em {guild_id}")
         return
 
     embed = discord.Embed(
@@ -1626,7 +1609,6 @@ async def on_member_remove(member: discord.Member):
         return
     canal = member.guild.get_channel(canal_id)
     if not canal:
-        print(f"⚠️ Canal de saída {canal_id} não encontrado em {guild_id}")
         return
 
     embed = discord.Embed(
@@ -1658,31 +1640,18 @@ def is_staff():
 
 
 def bloquear_servidor_especifico():
-    """Bloqueia o comando e aplica mute de 10min se usado no servidor errado."""
     async def predicate(interaction: discord.Interaction):
         if interaction.guild and interaction.guild.id in GUILDS_SEM_EXERCITO:
-            # Aplica o timeout de 10 minutos (600 segundos)
             try:
                 await interaction.user.timeout(datetime.timedelta(minutes=10), reason="Usou comando do Exército em servidor bloqueado.")
-                
-                # Avisa a pessoa (ephemeral para só ela ver)
                 await interaction.response.send_message(
                     "🚫 **Você não pode usar os comandos do Exército aqui!**\n"
                     "⚠️ Você tomou um **mute de 10 minutos** como punição.",
                     ephemeral=True
                 )
-            except discord.Forbidden:
-                # Se o bot não tiver permissão para mutar, apenas avisa
-                await interaction.response.send_message(
-                    "🚫 Comando bloqueado neste servidor. (Não tenho permissão para te mutar).",
-                    ephemeral=True
-                )
-            except Exception as e:
+            except Exception:
                 pass
-            
-            # Retorna False para barrar a execução do comando
             return False
-            
         return True
     return app_commands.check(predicate)
 
@@ -1729,6 +1698,7 @@ class PercursoView(discord.ui.View):
 
 
 @bot.tree.command(name="percurso", description="Consulta tempos e notas mínimas dos percursos")
+@bloquear_servidor_especifico()
 async def percurso(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📋 Tabela de Percursos",
@@ -1781,6 +1751,7 @@ class RegulamentacaoView(discord.ui.View):
 
 
 @bot.tree.command(name="regulamentacao", description="Consulta as regras de elegibilidade para Presidente e Vice")
+@bloquear_servidor_especifico()
 async def regulamentacao(interaction: discord.Interaction):
     embed = discord.Embed(
         title="⚖️ Regulamentação de Elegibilidade",
@@ -1833,6 +1804,7 @@ class TarefasView(discord.ui.View):
 
 
 @bot.tree.command(name="tarefas", description="Consulta as Tarefas, Funções e Explicações")
+@bloquear_servidor_especifico()
 async def tarefas(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📋 Tarefas, Funções e Explicações",
@@ -1852,6 +1824,7 @@ async def tarefas(interaction: discord.Interaction):
 # 🎓 /cfap
 # ==============================
 @bot.tree.command(name="cfap", description="Exibe os links das aulas do CFAP")
+@bloquear_servidor_especifico()
 async def cfap(interaction: discord.Interaction):
     embed = embed_info(
         "🎓 Aulas do CFAP",
@@ -1902,6 +1875,7 @@ ordem = app_commands.Group(name="ordem", description="Consultas da Ordem Rubra")
 
 
 @ordem.command(name="unida", description="Consulta o Manual de Ordem Unida por partes")
+@bloquear_servidor_especifico()
 async def ordem_unida(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🪖 Manual de Ordem Unida",
@@ -1924,6 +1898,7 @@ bot.tree.add_command(ordem)
 # 📊 /nota
 # ==============================
 @bot.tree.command(name="nota", description="Mostra a nota mínima de aprovação de um cargo")
+@bloquear_servidor_especifico()
 @app_commands.describe(cargo="Cargo para consultar a nota mínima")
 @app_commands.choices(cargo=[
     app_commands.Choice(name="Recruta", value="Recruta"),
@@ -1948,6 +1923,7 @@ async def nota(interaction: discord.Interaction, cargo: app_commands.Choice[str]
 # 📅 /cdp
 # ==============================
 @bot.tree.command(name="cdp", description="Mostra a capacitação de patente de cada patente")
+@bloquear_servidor_especifico()
 async def cp(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📅 Capacitação de Patente",
@@ -1969,6 +1945,7 @@ async def cp(interaction: discord.Interaction):
 # 🪖 /hierarquia
 # ==============================
 @bot.tree.command(name="hierarquia", description="Mostra a hierarquia completa do Exército")
+@bloquear_servidor_especifico()
 async def hierarquia(interaction: discord.Interaction):
     texto = montar_texto_hierarquia()
     blocos = []
@@ -2041,6 +2018,7 @@ class HistoricoPresidencialView(discord.ui.View):
 
 
 @historico.command(name="presidencial", description="Histórico de Presidentes e Vice-Presidentes eleitos")
+@bloquear_servidor_especifico()
 async def historico_presidencial(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🗳️ Histórico Presidencial",
@@ -2063,6 +2041,7 @@ bot.tree.add_command(historico)
 # 📑 /processos
 # ==============================
 @bot.tree.command(name="processos", description="Processos seletivos do Exército Brasileiro e suas designações")
+@bloquear_servidor_especifico()
 async def processos(interaction: discord.Interaction):
     embed = embed_info(
         "📑 Processos Seletivos & Designações",
@@ -2116,6 +2095,7 @@ class PronomesView(discord.ui.View):
 
 
 @bot.tree.command(name="pronomes", description="Consulta os pronomes vigentes do Exército por categoria")
+@bloquear_servidor_especifico()
 async def pronomes(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🏷️ Pronomes Vigentes — EB do Apex",
@@ -2168,6 +2148,7 @@ class NormasView(discord.ui.View):
 
 
 @bot.tree.command(name="normas", description="Consulta as Normas e Procedimentos de Arquivamentos Administrativos")
+@bloquear_servidor_especifico()
 async def normas(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🗂️ Normas e Procedimentos",
@@ -2187,6 +2168,7 @@ async def normas(interaction: discord.Interaction):
 # 🛠️ /administrador
 # ==============================
 @bot.tree.command(name="administrador", description="O que os administradores/moderadores fazem no EB do Apex")
+@bloquear_servidor_especifico()
 async def administrador(interaction: discord.Interaction):
     embed = embed_info(
         "🛠️ Administradores / Moderadores",
@@ -2233,6 +2215,7 @@ class VedacaoView(discord.ui.View):
 
 
 @bot.tree.command(name="vedacao", description="Consulta o manual de Vedação de Acessos e Exilados Permanentes")
+@bloquear_servidor_especifico()
 async def vedacao(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🚫 Vedação de Acessos e Critérios de Banimento",
@@ -2288,6 +2271,7 @@ class ManualRecrutaView(discord.ui.View):
 
 
 @manual.command(name="recruta", description="Consulta o Manual do Recruta por partes")
+@bloquear_servidor_especifico()
 async def manual_recruta(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📘 Manual do Recruta",
@@ -2337,6 +2321,7 @@ class ManualCaboView(discord.ui.View):
 
 
 @manual.command(name="cabo", description="Consulta o Manual do Cabo por partes")
+@bloquear_servidor_especifico()
 async def manual_cabo(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📘 Manual do Cabo",
@@ -2395,6 +2380,7 @@ class RequisitosView(discord.ui.View):
 
 
 @bot.tree.command(name="requisitos", description="Consulta a patente e os requisitos de cada órgão")
+@bloquear_servidor_especifico()
 async def requisitos(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📌 Requisitos dos Órgãos",
@@ -2414,6 +2400,7 @@ async def requisitos(interaction: discord.Interaction):
 # ☀️ /lema
 # ==============================
 @bot.tree.command(name="lema", description="Mostra o lema da Ordem Rubra")
+@bloquear_servidor_especifico()
 async def lema(interaction: discord.Interaction):
     embed = discord.Embed(
         title="☀️ Lema da Ordem Rubra",
@@ -2585,7 +2572,6 @@ async def dropdown_create(
     config["message_id"] = msg.id
     salvar_dropdowns(dados)
     
-    # Salva a view apenas se ela tiver itens
     if len(view.children) > 0:
         bot.add_view(view)
 
@@ -3079,6 +3065,7 @@ async def unlock(interaction: discord.Interaction):
 # 🔎 UTILITÁRIOS
 # ==============================
 @bot.tree.command(name="userinfo", description="Mostra informações de um usuário")
+@bloquear_servidor_especifico()
 @app_commands.describe(membro="Membro para consultar (opcional)")
 async def userinfo(interaction: discord.Interaction, membro: discord.Member = None):
     membro = membro or interaction.user
@@ -3095,6 +3082,7 @@ async def userinfo(interaction: discord.Interaction, membro: discord.Member = No
 
 
 @bot.tree.command(name="serverinfo", description="Mostra informações do servidor")
+@bloquear_servidor_especifico()
 async def serverinfo(interaction: discord.Interaction):
     g = interaction.guild
     embed = discord.Embed(title=f"🏰 {g.name}", color=COR_SANGUE)
@@ -3111,6 +3099,7 @@ async def serverinfo(interaction: discord.Interaction):
 
 
 @bot.tree.command(name="avatar", description="Mostra o avatar de um usuário")
+@bloquear_servidor_especifico()
 @app_commands.describe(membro="Membro (opcional)")
 async def avatar(interaction: discord.Interaction, membro: discord.Member = None):
     membro = membro or interaction.user
@@ -3126,7 +3115,6 @@ async def avatar(interaction: discord.Interaction, membro: discord.Member = None
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error):
     if isinstance(error, app_commands.CheckFailure):
-        # Se a interação já foi respondida pelo check (no caso do mute), não faz nada
         if interaction.response.is_done():
             return
         try:
