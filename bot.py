@@ -1548,11 +1548,10 @@ async def setup_hook():
             view = construir_view_dropdown(cid, config)
             if len(view.children) > 0:
                 bot.add_view(view)
-            print(f"✅ Dropdown persistente registrado: {cid}")
-        except Exception as e:
-            print(f"❌ Erro ao registrar dropdown {cid}: {e}")
+        except Exception:
+            pass
 
-    # 2. Diagnóstico: Verifica quantos comandos o bot achou
+    # 2. Diagnóstico
     print(f"🔍 Comandos encontrados no código: {len(bot.tree.get_commands())}")
 
     # 3. Sincronização dos comandos
@@ -1562,6 +1561,10 @@ async def setup_hook():
         await bot.tree.sync()
         print("🧹 Comandos globais limpos com sucesso.")
 
+        # Aguarda 3 segundos para garantir que o bot carregou a lista de servidores no Railway
+        await asyncio.sleep(3)
+
+        print(f"🏰 Servidores detectados: {len(bot.guilds)}")
         for guild in bot.guilds:
             guild_obj = discord.Object(id=guild.id)
             if guild.id in GUILDS_SEM_EXERCITO:
