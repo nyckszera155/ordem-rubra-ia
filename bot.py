@@ -1516,7 +1516,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 # ==============================
-# SETUP HOOK
+# SETUP HOOK (Sincronização corrigida)
 # ==============================
 @bot.event
 async def setup_hook():
@@ -1536,12 +1536,40 @@ async def setup_hook():
     for cid, config in dados.items():
         try:
             view = construir_view_dropdown(cid, config)
-            # Se a view tiver itens, registra para não expirar
             if len(view.children) > 0:
                 bot.add_view(view)
-            print(f"✅ Dropdown persistente registrado: {cid}")
-        except Exception as e:
-            print(f"❌ Erro ao registrar dropdown {cid}: {e}")
+        except Exception:
+            pass
+
+    # Sincronização
+    print(f"🔍 Comandos encontrados no código: {len(bot.tree.get_commands())}")
+    try:
+        print("🔄 Sincronizando comandos globais...")
+        bot.tree.clear_commands(guild=None)
+        await bot.tree.sync()
+        print("🧹 Comandos globais limpos com sucesso.")
+
+        print(f"🏰 Servidores detectados: {len(bot.guilds)}")
+        
+        for guild in bot.guilds:
+            guild_obj = discord.Object(id=guild.id)
+            if guild.id in GUILDS_SEM_EXERCITO:
+                bot.tree.clear_commands(guild=guild_obj)
+                await bot.tree.sync(guild=guild_obj)
+                print(f"🚫 {guild.name} ({guild.id}) — bloqueado, sem comandos.")
+            else:
+                bot.tree.copy_global_to(guild=guild_obj)
+                synced = await bot.tree.sync(guild=guild_obj)
+                print(f"✅ {guild.name} ({guild.id}) — {len(synced)} comandos sincronizados.")
+        print("🎉 Sincronização finalizada com sucesso!")
+    except Exception as e:
+        print(f"❌ ERRO AO SINCRONIZAR: {e}")
+
+
+@bot.event
+async def on_ready():
+    print(f"🤖 Bot online como {bot.user}")
+    await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
 
 
 # ==============================
