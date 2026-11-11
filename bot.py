@@ -1515,7 +1515,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 # ==============================
-# SETUP HOOK
+# SETUP HOOK (Apenas views persistentes)
 # ==============================
 @bot.event
 async def setup_hook():
@@ -1540,7 +1540,24 @@ async def setup_hook():
         except Exception:
             pass
 
+
+# ==============================
+# EVENTOS
+# ==============================
+ja_sincronizou = False
+
+@bot.event
+async def on_ready():
+    global ja_sincronizou
+    print(f"🤖 Bot online como {bot.user}")
+    await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
+
+    # Se já sincronizou, não faz de novo (evita loop se o bot reconectar)
+    if ja_sincronizou:
+        return
+
     print(f"🔍 Comandos encontrados no código: {len(bot.tree.get_commands())}")
+    
     try:
         print("🔄 Sincronizando comandos globais...")
         bot.tree.clear_commands(guild=None)
@@ -1559,15 +1576,11 @@ async def setup_hook():
                 bot.tree.copy_global_to(guild=guild_obj)
                 synced = await bot.tree.sync(guild=guild_obj)
                 print(f"✅ {guild.name} ({guild.id}) — {len(synced)} comandos sincronizados.")
+                
+        ja_sincronizou = True
         print("🎉 Sincronização finalizada com sucesso!")
     except Exception as e:
         print(f"❌ ERRO AO SINCRONIZAR: {e}")
-
-
-@bot.event
-async def on_ready():
-    print(f"🤖 Bot online como {bot.user}")
-    await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
 
 
 # ==============================
