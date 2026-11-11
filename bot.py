@@ -1629,6 +1629,36 @@ def is_staff():
     return app_commands.check(predicate)
 
 
+def bloquear_servidor_especifico():
+    """Bloqueia o comando e aplica mute de 10min se usado no servidor errado."""
+    async def predicate(interaction: discord.Interaction):
+        if interaction.guild and interaction.guild.id in GUILDS_SEM_EXERCITO:
+            # Aplica o timeout de 10 minutos (600 segundos)
+            try:
+                await interaction.user.timeout(datetime.timedelta(minutes=10), reason="Usou comando do Exército em servidor bloqueado.")
+                
+                # Avisa a pessoa (ephemeral para só ela ver)
+                await interaction.response.send_message(
+                    "🚫 **Você não pode usar os comandos do Exército aqui!**\n"
+                    "⚠️ Você tomou um **mute de 10 minutos** como punição.",
+                    ephemeral=True
+                )
+            except discord.Forbidden:
+                # Se o bot não tiver permissão para mutar, apenas avisa
+                await interaction.response.send_message(
+                    "🚫 Comando bloqueado neste servidor. (Não tenho permissão para te mutar).",
+                    ephemeral=True
+                )
+            except Exception as e:
+                pass
+            
+            # Retorna False para barrar a execução do comando
+            return False
+            
+        return True
+    return app_commands.check(predicate)
+
+
 # ==============================
 # 🏃 /percurso
 # ==============================
