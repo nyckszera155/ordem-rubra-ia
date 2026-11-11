@@ -3098,15 +3098,20 @@ async def avatar(interaction: discord.Interaction, membro: discord.Member = None
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error):
     if isinstance(error, app_commands.CheckFailure):
+        # Se a interação já foi respondida pelo check (no caso do mute), não faz nada
+        if interaction.response.is_done():
+            return
         try:
             await interaction.response.send_message("❌ Você não tem permissão para usar este comando.", ephemeral=True)
-        except discord.InteractionResponded:
-            await interaction.followup.send("❌ Você não tem permissão para usar este comando.", ephemeral=True)
+        except Exception:
+            pass
     else:
+        if interaction.response.is_done():
+            return
         try:
             await interaction.response.send_message(f"❌ Erro: {error}", ephemeral=True)
-        except discord.InteractionResponded:
-            await interaction.followup.send(f"❌ Erro: {error}", ephemeral=True)
+        except Exception:
+            pass
 
 
 # ==============================
