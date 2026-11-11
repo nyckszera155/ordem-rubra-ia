@@ -9,6 +9,9 @@ from discord.ext import commands
 from discord import app_commands
 from dotenv import load_dotenv
 
+# ==============================
+# CARREGAMENTO DE VARIÁVEIS
+# ==============================
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -20,14 +23,6 @@ ARQUIVO_ENTRADA_SAIDA = "entrada_saida.json"
 
 FOOTER = "Configurado por Baby (nyck)"
 COR_SANGUE = discord.Color.from_rgb(180, 0, 0)
-
-# ==============================
-# 🚫 SERVIDORES ONDE NADA APARECE
-# ==============================
-GUILDS_SEM_EXERCITO: set[int] = {
-    1451549689072717916,
-}
-print(f"🚫 Comandos ocultos em: {GUILDS_SEM_EXERCITO}")
 
 
 # ==============================
@@ -202,6 +197,7 @@ LEMA_TEXTO = (
     "Pois de sua luz emana o juízo, e sob seu fulgor, nenhuma injustiça permanecerá impune."
 )
 LEMA_GRITO = "VIDA LONGA ORDEM RUBRA!"
+
 
 # ==============================
 # ⚖️ REGULAMENTAÇÃO
@@ -390,6 +386,7 @@ Após a formação, o grupamento entra em descanso — **não** se usa `FAZ ALTO
     },
 }
 
+
 # ==============================
 # 📘 MANUAL DO CABO
 # ==============================
@@ -501,8 +498,7 @@ Confirme se algum participante está em exílio permanente ou possui mais de tr�
 ▪️ Não use itálico, sublinhado, emojis.
 ▪️ Jamais utilize IA para gerar o relatório.
 ▪️ Nunca publique um relatório sem provas anexadas.
-▪️ O número do relatório deve vir junto aos dois pontos: Relatório N°:01
-▪️ Não mencione o @ de outras pessoas.
+▪️ O número do relatório deve vir junto aos dois pontos: Relatório N°:01▪️ Não mencione o @ de outras pessoas.
 ▪️ Não use ponto final nos itens "Civis", "Aprovados" e "Reprovados".
 ▪️ Não comece as observações com letra maiúscula.
 ▪️ Valide sempre o número do seu último relatório postado."""
@@ -764,6 +760,7 @@ HISTORICO_PRESIDENCIAL_DADOS = {
 *Eleitos no dia 26/07/2026*"""
     }
 }
+
 
 # ==============================
 # 🏷️ PRONOMES
@@ -1358,6 +1355,7 @@ def embed_info(titulo: str, descricao: str, cor: discord.Color = COR_SANGUE):
     embed.set_footer(text=FOOTER)
     return embed
 
+
 # ==============================
 # SISTEMA DE WARNINGS
 # ==============================
@@ -1493,13 +1491,17 @@ def construir_embed_dropdown(config: dict) -> discord.Embed:
         timestamp=datetime.datetime.now(datetime.timezone.utc),
     )
     embed.set_footer(text=FOOTER)
+    # Nenhum aviso extra adicionado. Se não tem opções, fica apenas o texto.
     return embed
 
 
 def construir_view_dropdown(cid: str, config: dict) -> discord.ui.View:
     view = discord.ui.View(timeout=None)
+    
+    # Só adiciona o menu dropdown se existirem opções configuradas.
     if config.get("opcoes"):
         view.add_item(CustomDropdown(cid, config["placeholder"], config["opcoes"]))
+        
     return view
 
 
@@ -1514,111 +1516,47 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 # ==============================
-# CHECKS
-# ==============================
-def is_staff():
-    async def predicate(interaction: discord.Interaction):
-        if interaction.user.guild_permissions.administrator:
-            return True
-        role = interaction.guild.get_role(STAFF_ROLE_ID)
-        if role and role in interaction.user.roles:
-            return True
-        return False
-    return app_commands.check(predicate)
-
-
-def bloquear_servidor_especifico():
-    """Bloqueia execução nos servidores de GUILDS_SEM_EXERCITO."""
-    async def predicate(interaction: discord.Interaction):
-        if interaction.guild and interaction.guild.id in GUILDS_SEM_EXERCITO:
-            raise app_commands.CheckFailure("Este comando não está disponível neste servidor.")
-        return True
-    return app_commands.check(predicate)
-
-
-# ==============================
-# SETUP HOOK (Sincronização corrigida)
+# SETUP HOOK
 # ==============================
 @bot.event
 async def setup_hook():
-    # 1. Registra os dropdowns persistentes
+    bot.add_view(PercursoView())
+    bot.add_view(RegulamentacaoView())
+    bot.add_view(OrdemUnidaView())
+    bot.add_view(RequisitosView())
+    bot.add_view(ManualCaboView())
+    bot.add_view(ManualRecrutaView())
+    bot.add_view(HistoricoPresidencialView())
+    bot.add_view(PronomesView())
+    bot.add_view(NormasView())
+    bot.add_view(TarefasView())
+    bot.add_view(VedacaoView())
+
     dados = carregar_dropdowns()
     for cid, config in dados.items():
         try:
             view = construir_view_dropdown(cid, config)
+            # Se a view tiver itens, registra para não expirar
             if len(view.children) > 0:
                 bot.add_view(view)
-        except Exception:
-            pass
-
-    # 2. Diagnóstico
-    print(f"🔍 Comandos encontrados no código: {len(bot.tree.get_commands())}")
-
-    # 3. Sincronização
-    try:
-        print("🔄 Sincronizando comandos globais...")
-        bot.tree.clear_commands(guild=None)
-        await bot.tree.sync()
-        print("🧹 Comandos globais limpos com sucesso.")
-
-        print(f"🏰 Servidores detectados: {len(bot.guilds)}")
-        
-        for guild in bot.guilds:
-            guild_obj = discord.Object(id=guild.id)
-            if guild.id in GUILDS_SEM_EXERCITO:
-                bot.tree.clear_commands(guild=guild_obj)
-                await bot.tree.sync(guild=guild_obj)
-                print(f"🚫 {guild.name} ({guild.id}) — bloqueado, sem comandos.")
-            else:
-                bot.tree.copy_global_to(guild=guild_obj)
-                synced = await bot.tree.sync(guild=guild_obj)
-                print(f"✅ {guild.name} ({guild.id}) — {len(synced)} comandos sincronizados.")
-                
-        print("🎉 Sincronização finalizada com sucesso!")
-    except Exception as e:
-        print(f"❌ ERRO AO SINCRONIZAR: {e}")
+            print(f"✅ Dropdown persistente registrado: {cid}")
+        except Exception as e:
+            print(f"❌ Erro ao registrar dropdown {cid}: {e}")
 
 
 # ==============================
 # EVENTOS
 # ==============================
-ja_sincronizou = False
-
 @bot.event
 async def on_ready():
-    global ja_sincronizou
     print(f"🤖 Bot online como {bot.user}")
     await bot.change_presence(activity=discord.Game(name="**VIDA LONGA ORDEM RUBRA!**"))
-
-    if ja_sincronizou:
-        return
-
-    print(f"🔍 Comandos encontrados no código: {len(bot.tree.get_commands())}")
-
     try:
-        print("🔄 Sincronizando comandos globais...")
-        bot.tree.clear_commands(guild=None)
-        await bot.tree.sync()
-        print("🧹 Comandos globais limpos com sucesso.")
-
-        print(f"🏰 Servidores detectados: {len(bot.guilds)}")
-        
-        for guild in bot.guilds:
-            guild_obj = discord.Object(id=guild.id)
-            if guild.id in GUILDS_SEM_EXERCITO:
-                bot.tree.clear_commands(guild=guild_obj)
-                await bot.tree.sync(guild=guild_obj)
-                print(f"🚫 {guild.name} ({guild.id}) — bloqueado, sem comandos.")
-            else:
-                bot.tree.copy_global_to(guild=guild_obj)
-                synced = await bot.tree.sync(guild=guild_obj)
-                print(f"✅ {guild.name} ({guild.id}) — {len(synced)} comandos sincronizados.")
-        
-        ja_sincronizou = True
-        print("🎉 Sincronização finalizada com sucesso!")
-        
+        synced = await bot.tree.sync()
+        print(f"✅ {len(synced)} comandos slash sincronizados.")
     except Exception as e:
-        print(f"❌ ERRO AO SINCRONIZAR: {e}")
+        print(f"❌ Erro ao sincronizar slash commands: {e}")
+
 
 # ==============================
 # 🎉 ENTRADA / SAÍDA
@@ -1633,6 +1571,7 @@ async def on_member_join(member: discord.Member):
         return
     canal = member.guild.get_channel(canal_id)
     if not canal:
+        print(f"⚠️ Canal de entrada {canal_id} não encontrado em {guild_id}")
         return
 
     embed = discord.Embed(
@@ -1645,8 +1584,8 @@ async def on_member_join(member: discord.Member):
     embed.set_footer(text=FOOTER)
     try:
         await canal.send(embed=embed)
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"❌ Erro ao enviar boas-vindas: {e}")
 
 
 @bot.event
@@ -1659,6 +1598,7 @@ async def on_member_remove(member: discord.Member):
         return
     canal = member.guild.get_channel(canal_id)
     if not canal:
+        print(f"⚠️ Canal de saída {canal_id} não encontrado em {guild_id}")
         return
 
     embed = discord.Embed(
@@ -1671,8 +1611,22 @@ async def on_member_remove(member: discord.Member):
     embed.set_footer(text=FOOTER)
     try:
         await canal.send(embed=embed)
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"❌ Erro ao enviar despedida: {e}")
+
+
+# ==============================
+# VERIFICAÇÃO DE STAFF
+# ==============================
+def is_staff():
+    async def predicate(interaction: discord.Interaction):
+        if interaction.user.guild_permissions.administrator:
+            return True
+        role = interaction.guild.get_role(STAFF_ROLE_ID)
+        if role and role in interaction.user.roles:
+            return True
+        return False
+    return app_commands.check(predicate)
 
 
 # ==============================
@@ -1717,7 +1671,6 @@ class PercursoView(discord.ui.View):
 
 
 @bot.tree.command(name="percurso", description="Consulta tempos e notas mínimas dos percursos")
-@bloquear_servidor_especifico()
 async def percurso(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📋 Tabela de Percursos",
@@ -1770,7 +1723,6 @@ class RegulamentacaoView(discord.ui.View):
 
 
 @bot.tree.command(name="regulamentacao", description="Consulta as regras de elegibilidade para Presidente e Vice")
-@bloquear_servidor_especifico()
 async def regulamentacao(interaction: discord.Interaction):
     embed = discord.Embed(
         title="⚖️ Regulamentação de Elegibilidade",
@@ -1823,7 +1775,6 @@ class TarefasView(discord.ui.View):
 
 
 @bot.tree.command(name="tarefas", description="Consulta as Tarefas, Funções e Explicações")
-@bloquear_servidor_especifico()
 async def tarefas(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📋 Tarefas, Funções e Explicações",
@@ -1843,7 +1794,6 @@ async def tarefas(interaction: discord.Interaction):
 # 🎓 /cfap
 # ==============================
 @bot.tree.command(name="cfap", description="Exibe os links das aulas do CFAP")
-@bloquear_servidor_especifico()
 async def cfap(interaction: discord.Interaction):
     embed = embed_info(
         "🎓 Aulas do CFAP",
@@ -1894,7 +1844,6 @@ ordem = app_commands.Group(name="ordem", description="Consultas da Ordem Rubra")
 
 
 @ordem.command(name="unida", description="Consulta o Manual de Ordem Unida por partes")
-@bloquear_servidor_especifico()
 async def ordem_unida(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🪖 Manual de Ordem Unida",
@@ -1917,7 +1866,6 @@ bot.tree.add_command(ordem)
 # 📊 /nota
 # ==============================
 @bot.tree.command(name="nota", description="Mostra a nota mínima de aprovação de um cargo")
-@bloquear_servidor_especifico()
 @app_commands.describe(cargo="Cargo para consultar a nota mínima")
 @app_commands.choices(cargo=[
     app_commands.Choice(name="Recruta", value="Recruta"),
@@ -1942,7 +1890,6 @@ async def nota(interaction: discord.Interaction, cargo: app_commands.Choice[str]
 # 📅 /cdp
 # ==============================
 @bot.tree.command(name="cdp", description="Mostra a capacitação de patente de cada patente")
-@bloquear_servidor_especifico()
 async def cp(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📅 Capacitação de Patente",
@@ -1964,7 +1911,6 @@ async def cp(interaction: discord.Interaction):
 # 🪖 /hierarquia
 # ==============================
 @bot.tree.command(name="hierarquia", description="Mostra a hierarquia completa do Exército")
-@bloquear_servidor_especifico()
 async def hierarquia(interaction: discord.Interaction):
     texto = montar_texto_hierarquia()
     blocos = []
@@ -2037,7 +1983,6 @@ class HistoricoPresidencialView(discord.ui.View):
 
 
 @historico.command(name="presidencial", description="Histórico de Presidentes e Vice-Presidentes eleitos")
-@bloquear_servidor_especifico()
 async def historico_presidencial(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🗳️ Histórico Presidencial",
@@ -2060,7 +2005,6 @@ bot.tree.add_command(historico)
 # 📑 /processos
 # ==============================
 @bot.tree.command(name="processos", description="Processos seletivos do Exército Brasileiro e suas designações")
-@bloquear_servidor_especifico()
 async def processos(interaction: discord.Interaction):
     embed = embed_info(
         "📑 Processos Seletivos & Designações",
@@ -2114,7 +2058,6 @@ class PronomesView(discord.ui.View):
 
 
 @bot.tree.command(name="pronomes", description="Consulta os pronomes vigentes do Exército por categoria")
-@bloquear_servidor_especifico()
 async def pronomes(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🏷️ Pronomes Vigentes — EB do Apex",
@@ -2167,7 +2110,6 @@ class NormasView(discord.ui.View):
 
 
 @bot.tree.command(name="normas", description="Consulta as Normas e Procedimentos de Arquivamentos Administrativos")
-@bloquear_servidor_especifico()
 async def normas(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🗂️ Normas e Procedimentos",
@@ -2187,7 +2129,6 @@ async def normas(interaction: discord.Interaction):
 # 🛠️ /administrador
 # ==============================
 @bot.tree.command(name="administrador", description="O que os administradores/moderadores fazem no EB do Apex")
-@bloquear_servidor_especifico()
 async def administrador(interaction: discord.Interaction):
     embed = embed_info(
         "🛠️ Administradores / Moderadores",
@@ -2234,7 +2175,6 @@ class VedacaoView(discord.ui.View):
 
 
 @bot.tree.command(name="vedacao", description="Consulta o manual de Vedação de Acessos e Exilados Permanentes")
-@bloquear_servidor_especifico()
 async def vedacao(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🚫 Vedação de Acessos e Critérios de Banimento",
@@ -2251,7 +2191,7 @@ async def vedacao(interaction: discord.Interaction):
 
 
 # ==============================
-# 📘 /manual
+# 📘 /manual recruta e cabo
 # ==============================
 manual = app_commands.Group(name="manual", description="Manuais do Exército Brasileiro")
 
@@ -2290,7 +2230,6 @@ class ManualRecrutaView(discord.ui.View):
 
 
 @manual.command(name="recruta", description="Consulta o Manual do Recruta por partes")
-@bloquear_servidor_especifico()
 async def manual_recruta(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📘 Manual do Recruta",
@@ -2340,7 +2279,6 @@ class ManualCaboView(discord.ui.View):
 
 
 @manual.command(name="cabo", description="Consulta o Manual do Cabo por partes")
-@bloquear_servidor_especifico()
 async def manual_cabo(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📘 Manual do Cabo",
@@ -2399,7 +2337,6 @@ class RequisitosView(discord.ui.View):
 
 
 @bot.tree.command(name="requisitos", description="Consulta a patente e os requisitos de cada órgão")
-@bloquear_servidor_especifico()
 async def requisitos(interaction: discord.Interaction):
     embed = discord.Embed(
         title="📌 Requisitos dos Órgãos",
@@ -2419,7 +2356,6 @@ async def requisitos(interaction: discord.Interaction):
 # ☀️ /lema
 # ==============================
 @bot.tree.command(name="lema", description="Mostra o lema da Ordem Rubra")
-@bloquear_servidor_especifico()
 async def lema(interaction: discord.Interaction):
     embed = discord.Embed(
         title="☀️ Lema da Ordem Rubra",
@@ -2432,7 +2368,7 @@ async def lema(interaction: discord.Interaction):
 
 
 # ==============================
-# 🚪 ENTRADA / SAÍDA (LIVRES)
+# 🚪 CONFIGURAÇÃO DE ENTRADA / SAÍDA
 # ==============================
 @bot.tree.command(name="entrar", description="Define o canal de boas-vindas automático")
 @is_staff()
@@ -2444,10 +2380,19 @@ async def entrar(interaction: discord.Interaction, canal: discord.TextChannel):
     dados[guild_id]["canal_entrada"] = canal.id
     salvar_entrada_saida(dados)
     await interaction.response.send_message(
-        f"✅ **Sucesso!** Canal de entrada definido como {canal.mention}.",
+        f"✅ **Sucesso!** Canal de entrada definido como {canal.mention}.\n"
+        f"_(esta mensagem será apagada em 30 segundos)_",
         ephemeral=True,
-        delete_after=30,
     )
+
+    async def apagar_depois():
+        await asyncio.sleep(30)
+        try:
+            await interaction.delete_original_response()
+        except Exception:
+            pass
+
+    asyncio.create_task(apagar_depois())
 
 
 @bot.tree.command(name="sair", description="Define o canal de despedida automático")
@@ -2460,14 +2405,23 @@ async def sair(interaction: discord.Interaction, canal: discord.TextChannel):
     dados[guild_id]["canal_saida"] = canal.id
     salvar_entrada_saida(dados)
     await interaction.response.send_message(
-        f"✅ **Sucesso!** Canal de saída definido como {canal.mention}.",
+        f"✅ **Sucesso!** Canal de saída definido como {canal.mention}.\n"
+        f"_(esta mensagem será apagada em 30 segundos)_",
         ephemeral=True,
-        delete_after=30,
     )
+
+    async def apagar_depois():
+        await asyncio.sleep(30)
+        try:
+            await interaction.delete_original_response()
+        except Exception:
+            pass
+
+    asyncio.create_task(apagar_depois())
 
 
 # ==============================
-# 🎛️ DROPDOWNS (LIVRES)
+# 🎛️ DROPDOWNS CUSTOMIZADOS
 # ==============================
 dropdown = app_commands.Group(name="dropdown", description="Gerenciar dropdowns customizados")
 
@@ -2559,20 +2513,43 @@ async def dropdown_create(
 
     try:
         msg = await canal.send(embed=embed, view=view)
+    except discord.Forbidden:
+        await interaction.response.send_message(
+            f"❌ Não tenho permissão para enviar mensagens em {canal.mention}.", ephemeral=True
+        )
+        return
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro ao enviar: {e}", ephemeral=True)
+        await interaction.response.send_message(
+            f"❌ Erro ao enviar dropdown: {e}", ephemeral=True
+        )
         return
 
     config["message_id"] = msg.id
     salvar_dropdowns(dados)
-
+    
+    # Salva a view apenas se ela tiver itens
     if len(view.children) > 0:
         bot.add_view(view)
 
-    await interaction.response.send_message(
-        f"✅ Dropdown `{cid}` enviado em {canal.mention}.",
-        ephemeral=True,
+    tem_opcoes = len(opcoes_parsed) > 0
+    confirm = discord.Embed(
+        title="✅ Dropdown criado e enviado",
+        description=(
+            f"**ID:** `{cid}`\n"
+            f"**Canal:** {canal.mention}\n"
+            f"**Mensagem:** [clique aqui]({msg.jump_url})\n"
+            f"**Opções:** {len(opcoes_parsed)}\n\n"
+            + (
+                "_O dropdown já está funcional._"
+                if tem_opcoes
+                else "_Nenhuma opção informada. O texto foi enviado sem menus._"
+            )
+        ),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.now(datetime.timezone.utc),
     )
+    confirm.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=confirm, ephemeral=True)
 
 
 @dropdown.command(name="list", description="Lista todos os dropdowns criados")
@@ -2580,23 +2557,30 @@ async def dropdown_create(
 async def dropdown_list(interaction: discord.Interaction):
     dados = carregar_dropdowns()
     if not dados:
-        await interaction.response.send_message("📭 Nenhum dropdown criado.", ephemeral=True)
+        await interaction.response.send_message("📭 Nenhum dropdown criado ainda.", ephemeral=True)
         return
+
     linhas = []
     for cid, cfg in dados.items():
-        linhas.append(f"**`{cid}`** — {cfg['titulo']} ({len(cfg['opcoes'])} opções)")
+        canal = interaction.guild.get_channel(cfg["canal_id"])
+        linhas.append(
+            f"**`{cid}`** — {cfg['titulo']} "
+            f"(#{canal.name if canal else '?'}) — {len(cfg['opcoes'])} opções"
+        )
+
     embed = discord.Embed(
         title="🎛️ Dropdowns criados",
         description="\n".join(linhas)[:4000],
         color=COR_SANGUE,
+        timestamp=datetime.datetime.now(datetime.timezone.utc),
     )
     embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
-@dropdown.command(name="delete", description="Deleta um dropdown do banco")
+@dropdown.command(name="delete", description="Deleta um dropdown do banco (não apaga a mensagem já enviada)")
 @is_staff()
-@app_commands.describe(id_dropdown="ID do dropdown")
+@app_commands.describe(id_dropdown="ID do dropdown (veja em /dropdown list)")
 async def dropdown_delete(interaction: discord.Interaction, id_dropdown: str):
     dados = carregar_dropdowns()
     if id_dropdown not in dados:
@@ -2604,182 +2588,308 @@ async def dropdown_delete(interaction: discord.Interaction, id_dropdown: str):
         return
     del dados[id_dropdown]
     salvar_dropdowns(dados)
-    await interaction.response.send_message(f"🗑️ Dropdown `{id_dropdown}` removido.", ephemeral=True)
+    await interaction.response.send_message(
+        f"🗑️ Dropdown `{id_dropdown}` removido do banco.\n"
+        f"_A mensagem antiga continuará aparecendo, mas os botões não darão cargo._",
+        ephemeral=True,
+    )
 
 
 bot.tree.add_command(dropdown)
 
 
 # ==============================
-# 🛡️ MODERAÇÃO (LIVRES)
+# 🛡️ MODERAÇÃO
 # ==============================
-@bot.tree.command(name="ban", description="Bane um membro")
+@bot.tree.command(name="ban", description="Bane um membro do servidor")
 @is_staff()
-@app_commands.describe(membro="Membro a ser banido", motivo="Motivo")
+@app_commands.describe(membro="Membro a ser banido", motivo="Motivo do banimento")
 async def ban(interaction: discord.Interaction, membro: discord.Member, motivo: str = "Não especificado"):
     if membro.top_role >= interaction.guild.me.top_role:
-        await interaction.response.send_message("❌ Hierarquia insuficiente.", ephemeral=True)
+        await interaction.response.send_message("❌ Não posso banir este membro (cargo maior ou igual ao meu).")
         return
     try:
         await membro.ban(reason=f"{interaction.user} | {motivo}")
-        await interaction.response.send_message(f"🔴 {membro.mention} banido. Motivo: {motivo}")
+        embed = discord.Embed(
+            title="🔴 Banimento Executado",
+            description=f"**Membro:** {membro.mention}\n**Motivo:** {motivo}\n**Moderador:** {interaction.user.mention}",
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.now(datetime.timezone.utc),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro ao banir: {e}")
 
 
-@bot.tree.command(name="kick", description="Expulsa um membro")
+@bot.tree.command(name="kick", description="Expulsa um membro do servidor")
 @is_staff()
+@app_commands.describe(membro="Membro a ser expulso", motivo="Motivo da expulsão")
 async def kick(interaction: discord.Interaction, membro: discord.Member, motivo: str = "Não especificado"):
     if membro.top_role >= interaction.guild.me.top_role:
-        await interaction.response.send_message("❌ Hierarquia insuficiente.", ephemeral=True)
+        await interaction.response.send_message("❌ Não posso expulsar este membro.")
         return
     try:
         await membro.kick(reason=f"{interaction.user} | {motivo}")
-        await interaction.response.send_message(f"🟠 {membro.mention} expulso. Motivo: {motivo}")
+        embed = discord.Embed(
+            title="🟠 Expulsão Executada",
+            description=f"**Membro:** {membro.mention}\n**Motivo:** {motivo}\n**Moderador:** {interaction.user.mention}",
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.now(datetime.timezone.utc),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro ao expulsar: {e}")
 
 
-@bot.tree.command(name="mute", description="Silencia um membro (timeout)")
+@bot.tree.command(name="mute", description="Silencia um membro temporariamente (timeout)")
 @is_staff()
+@app_commands.describe(membro="Membro a ser silenciado", duracao="Duração (ex: 10m, 1h, 1d)", motivo="Motivo")
 async def mute(interaction: discord.Interaction, membro: discord.Member, duracao: str, motivo: str = "Não especificado"):
     padrao = re.compile(r"(\d+)([smhd])")
     matches = list(padrao.finditer(duracao.lower()))
     if not matches:
-        await interaction.response.send_message("❌ Formato: `10m`, `1h`, `2d`.", ephemeral=True)
+        await interaction.response.send_message("❌ Formato inválido. Use: `10m`, `1h`, `2d`.")
         return
+
     total = datetime.timedelta()
     for m in matches:
-        v = int(m.group(1))
-        u = m.group(2)
-        if u == 's': total += datetime.timedelta(seconds=v)
-        elif u == 'm': total += datetime.timedelta(minutes=v)
-        elif u == 'h': total += datetime.timedelta(hours=v)
-        elif u == 'd': total += datetime.timedelta(days=v)
+        valor = int(m.group(1))
+        unidade = m.group(2)
+        if unidade == 's':
+            total += datetime.timedelta(seconds=valor)
+        elif unidade == 'm':
+            total += datetime.timedelta(minutes=valor)
+        elif unidade == 'h':
+            total += datetime.timedelta(hours=valor)
+        elif unidade == 'd':
+            total += datetime.timedelta(days=valor)
+
     if total > datetime.timedelta(days=28):
-        await interaction.response.send_message("❌ Máx: 28 dias.", ephemeral=True)
+        await interaction.response.send_message("❌ Duração máxima: 28 dias.")
         return
+
     try:
         await membro.timeout(total, reason=f"{interaction.user} | {motivo}")
-        await interaction.response.send_message(f"🟡 {membro.mention} silenciado por {duracao}.")
+        embed = discord.Embed(
+            title="🟡 Membro Silenciado",
+            description=(f"**Membro:** {membro.mention}\n"
+                         f"**Duração:** {duracao}\n"
+                         f"**Motivo:** {motivo}\n"
+                         f"**Moderador:** {interaction.user.mention}"),
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.now(datetime.timezone.utc),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro ao silenciar: {e}")
 
 
-@bot.tree.command(name="unmute", description="Remove o silenciamento")
+@bot.tree.command(name="unmute", description="Remove o silenciamento de um membro")
 @is_staff()
+@app_commands.describe(membro="Membro a ser dessilenciado")
 async def unmute(interaction: discord.Interaction, membro: discord.Member):
     try:
         await membro.timeout(None, reason=f"Unmute por {interaction.user}")
-        await interaction.response.send_message(f"🔊 {membro.mention} dessilenciado.")
+        embed = discord.Embed(
+            title="🔊 Membro Dessilenciado",
+            description=f"**Membro:** {membro.mention}\n**Moderador:** {interaction.user.mention}",
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.now(datetime.timezone.utc),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro: {e}")
 
 
-@bot.tree.command(name="unban", description="Remove banimento pelo ID")
+@bot.tree.command(name="unban", description="Remove o banimento de um usuário pelo ID")
 @is_staff()
+@app_commands.describe(user_id="ID do usuário banido", motivo="Motivo do unban")
 async def unban(interaction: discord.Interaction, user_id: str, motivo: str = "Não especificado"):
     try:
         user = await bot.fetch_user(int(user_id))
         await interaction.guild.unban(user, reason=f"{interaction.user} | {motivo}")
-        await interaction.response.send_message(f"🟢 {user.mention} desbanido.")
+        embed = discord.Embed(
+            title="🟢 Banimento Removido",
+            description=f"**Usuário:** {user.mention} (`{user.id}`)\n**Motivo:** {motivo}\n**Moderador:** {interaction.user.mention}",
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.now(datetime.timezone.utc),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.response.send_message(embed=embed)
     except discord.NotFound:
-        await interaction.response.send_message("❌ Usuário não encontrado.", ephemeral=True)
+        await interaction.response.send_message("❌ Usuário não encontrado ou não está banido.")
     except Exception as e:
-        await interaction.response.send_message(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.response.send_message(f"❌ Erro: {e}")
 
 
-@bot.tree.command(name="warning", description="Aplica advertência")
+@bot.tree.command(name="warning", description="Aplica uma advertência a um membro")
 @is_staff()
+@app_commands.describe(membro="Membro a ser advertido", motivo="Motivo da advertência")
 async def warning(interaction: discord.Interaction, membro: discord.Member, motivo: str = "Não especificado"):
     dados = carregar_warnings()
-    gid = str(interaction.guild.id)
-    uid = str(membro.id)
-    dados.setdefault(gid, {}).setdefault(uid, [])
-    dados[gid][uid].append({
+    guild_id = str(interaction.guild.id)
+    user_id = str(membro.id)
+    dados.setdefault(guild_id, {}).setdefault(user_id, [])
+    dados[guild_id][user_id].append({
         "motivo": motivo,
         "moderador": str(interaction.user),
         "data": datetime.datetime.now(datetime.timezone.utc).isoformat()
     })
     salvar_warnings(dados)
-    total = len(dados[gid][uid])
-    await interaction.response.send_message(
-        f"⚠️ {membro.mention} advertido ({total} no total). Motivo: {motivo}"
+    total = len(dados[guild_id][user_id])
+
+    embed = discord.Embed(
+        title="⚠️ Advertência Registrada",
+        description=(f"**Membro:** {membro.mention}\n"
+                     f"**Motivo:** {motivo}\n"
+                     f"**Moderador:** {interaction.user.mention}\n"
+                     f"**Total de advertências:** {total}"),
+        color=COR_SANGUE,
+        timestamp=datetime.datetime.now(datetime.timezone.utc),
     )
+    embed.set_footer(text=FOOTER)
+    await interaction.response.send_message(embed=embed)
+    try:
+        await membro.send(f"⚠️ Você recebeu uma advertência no servidor **{interaction.guild.name}**.\n**Motivo:** {motivo}\n**Total:** {total}")
+    except discord.Forbidden:
+        pass
 
 
-@bot.tree.command(name="warnings", description="Mostra advertências de um membro")
+@bot.tree.command(name="warnings", description="Mostra as advertências de um membro")
 @is_staff()
+@app_commands.describe(membro="Membro para consultar")
 async def warnings(interaction: discord.Interaction, membro: discord.Member):
     dados = carregar_warnings()
-    lista = dados.get(str(interaction.guild.id), {}).get(str(membro.id), [])
+    guild_id = str(interaction.guild.id)
+    user_id = str(membro.id)
+    lista = dados.get(guild_id, {}).get(user_id, [])
     if not lista:
-        await interaction.response.send_message(f"✅ {membro.mention} sem advertências.", ephemeral=True)
+        await interaction.response.send_message(f"✅ {membro.mention} não tem advertências.")
         return
-    embed = discord.Embed(title=f"⚠️ Advertências de {membro.display_name}", color=COR_SANGUE)
+
+    embed = discord.Embed(
+        title=f"⚠️ Advertências de {membro.display_name}",
+        color=COR_SANGUE,
+    )
     for i, w in enumerate(lista, 1):
-        embed.add_field(name=f"#{i} — {w['data'][:10]}", value=f"{w['motivo']}\nPor: {w['moderador']}", inline=False)
+        embed.add_field(
+            name=f"#{i} — {w['data'][:10]}",
+            value=f"**Motivo:** {w['motivo']}\n**Por:** {w['moderador']}",
+            inline=False,
+        )
     embed.set_footer(text=FOOTER)
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+    await interaction.response.send_message(embed=embed)
 
 
-@bot.tree.command(name="clearwarnings", description="Limpa advertências")
+@bot.tree.command(name="clearwarnings", description="Remove todas as advertências de um membro")
 @is_staff()
+@app_commands.describe(membro="Membro para limpar advertências")
 async def clearwarnings(interaction: discord.Interaction, membro: discord.Member):
     dados = carregar_warnings()
-    gid = str(interaction.guild.id)
-    uid = str(membro.id)
-    if gid in dados and uid in dados[gid]:
-        dados[gid][uid] = []
+    guild_id = str(interaction.guild.id)
+    user_id = str(membro.id)
+    if guild_id in dados and user_id in dados[guild_id]:
+        dados[guild_id][user_id] = []
         salvar_warnings(dados)
         await interaction.response.send_message(f"🧹 Advertências de {membro.mention} limpas.")
     else:
-        await interaction.response.send_message(f"✅ {membro.mention} já estava limpo.", ephemeral=True)
+        await interaction.response.send_message(f"✅ {membro.mention} já não tinha advertências.")
 
 
 # ==============================
-# 🧹 LIMPEZA
+# 🧹 LIMPEZA DE MENSAGENS
 # ==============================
-@bot.tree.command(name="clear", description="Apaga mensagens do canal")
+@bot.tree.command(name="clear", description="Apaga uma quantidade específica de mensagens do canal")
 @is_staff()
+@app_commands.describe(quantidade="Quantidade de mensagens a apagar (1-100)")
 async def clear(interaction: discord.Interaction, quantidade: int):
     if quantidade < 1 or quantidade > 100:
-        await interaction.response.send_message("❌ Use 1-100.", ephemeral=True)
+        await interaction.response.send_message("❌ Use um valor entre **1** e **100**.", ephemeral=True)
         return
     await interaction.response.defer(ephemeral=True)
     try:
         deletadas = await interaction.channel.purge(limit=quantidade)
-        await interaction.followup.send(f"🧹 {len(deletadas)} mensagens apagadas.", ephemeral=True)
+        embed = discord.Embed(
+            title="🧹 Limpeza Executada",
+            description=(
+                f"**Canal:** {interaction.channel.mention}\n"
+                f"**Mensagens apagadas:** {len(deletadas)}\n"
+                f"**Moderador:** {interaction.user.mention}"
+            ),
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.now(datetime.timezone.utc),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    except discord.Forbidden:
+        await interaction.followup.send("❌ Não tenho permissão para apagar mensagens neste canal.", ephemeral=True)
     except Exception as e:
-        await interaction.followup.send(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.followup.send(f"❌ Erro ao limpar: {e}", ephemeral=True)
 
 
-@bot.tree.command(name="clearuser", description="Apaga mensagens de um usuário")
+@bot.tree.command(name="clearuser", description="Apaga mensagens de um usuário específico no canal")
 @is_staff()
+@app_commands.describe(membro="Membro cujas mensagens serão apagadas", quantidade="Quantidade (1-100)")
 async def clearuser(interaction: discord.Interaction, membro: discord.Member, quantidade: int = 100):
     if quantidade < 1 or quantidade > 100:
-        await interaction.response.send_message("❌ Use 1-100.", ephemeral=True)
+        await interaction.response.send_message("❌ Use um valor entre **1** e **100**.", ephemeral=True)
         return
     await interaction.response.defer(ephemeral=True)
     try:
-        deletadas = await interaction.channel.purge(limit=quantidade, check=lambda m: m.author.id == membro.id)
-        await interaction.followup.send(f"🧹 {len(deletadas)} mensagens de {membro.mention} apagadas.", ephemeral=True)
+        def check(msg):
+            return msg.author.id == membro.id
+        deletadas = await interaction.channel.purge(limit=quantidade, check=check)
+        embed = discord.Embed(
+            title="🧹 Limpeza por Usuário",
+            description=(
+                f"**Canal:** {interaction.channel.mention}\n"
+                f"**Usuário:** {membro.mention}\n"
+                f"**Mensagens apagadas:** {len(deletadas)}\n"
+                f"**Moderador:** {interaction.user.mention}"
+            ),
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.now(datetime.timezone.utc),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    except discord.Forbidden:
+        await interaction.followup.send("❌ Não tenho permissão para apagar mensagens neste canal.", ephemeral=True)
     except Exception as e:
-        await interaction.followup.send(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.followup.send(f"❌ Erro ao limpar: {e}", ephemeral=True)
 
 
-@bot.tree.command(name="clearbot", description="Apaga mensagens de bots")
+@bot.tree.command(name="clearbot", description="Apaga mensagens de bots no canal")
 @is_staff()
+@app_commands.describe(quantidade="Quantidade (1-100)")
 async def clearbot(interaction: discord.Interaction, quantidade: int = 100):
     if quantidade < 1 or quantidade > 100:
-        await interaction.response.send_message("❌ Use 1-100.", ephemeral=True)
+        await interaction.response.send_message("❌ Use um valor entre **1** e **100**.", ephemeral=True)
         return
     await interaction.response.defer(ephemeral=True)
     try:
-        deletadas = await interaction.channel.purge(limit=quantidade, check=lambda m: m.author.bot)
-        await interaction.followup.send(f"🧹 {len(deletadas)} mensagens de bots apagadas.", ephemeral=True)
+        def check(msg):
+            return msg.author.bot
+        deletadas = await interaction.channel.purge(limit=quantidade, check=check)
+        embed = discord.Embed(
+            title="🧹 Limpeza de Bots",
+            description=(
+                f"**Canal:** {interaction.channel.mention}\n"
+                f"**Mensagens apagadas:** {len(deletadas)}\n"
+                f"**Moderador:** {interaction.user.mention}"
+            ),
+            color=COR_SANGUE,
+            timestamp=datetime.datetime.now(datetime.timezone.utc),
+        )
+        embed.set_footer(text=FOOTER)
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    except discord.Forbidden:
+        await interaction.followup.send("❌ Não tenho permissão para apagar mensagens neste canal.", ephemeral=True)
     except Exception as e:
-        await interaction.followup.send(f"❌ Erro: {e}", ephemeral=True)
+        await interaction.followup.send(f"❌ Erro ao limpar: {e}", ephemeral=True)
 
 
 # ==============================
@@ -2793,7 +2903,10 @@ class DupeConfirmView(discord.ui.View):
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if interaction.user.id != self.autor_id:
-            await interaction.response.send_message("❌ Apenas quem executou o comando.", ephemeral=True)
+            await interaction.response.send_message(
+                "❌ Apenas quem executou o comando pode confirmar.",
+                ephemeral=True,
+            )
             return False
         return True
 
@@ -2801,87 +2914,129 @@ class DupeConfirmView(discord.ui.View):
     async def confirmar(self, interaction: discord.Interaction, button: discord.ui.Button):
         for item in self.children:
             item.disabled = True
-        await interaction.response.edit_message(content="💥 Clonando canal...", view=self)
+        await interaction.response.edit_message(
+            content="💥 **Dupe autorizado.** Clonando canal e apagando o antigo...",
+            view=self,
+        )
+        canal_antigo = self.canal_original
         try:
-            canal_novo = await self.canal_original.clone(reason=f"Dupe por {interaction.user}")
-            await canal_novo.edit(position=self.canal_original.position)
-            await self.canal_original.delete(reason=f"Dupe por {interaction.user}")
-            await canal_novo.send(f"💥 Canal recriado por {interaction.user.mention}")
+            canal_novo = await canal_antigo.clone(
+                reason=f"Dupe executado por {interaction.user} ({interaction.user.id})"
+            )
+            await canal_novo.edit(position=canal_antigo.position)
+            await canal_antigo.delete(
+                reason=f"Dupe executado por {interaction.user} ({interaction.user.id})"
+            )
+            embed = discord.Embed(
+                title="💥 Canal Duplicado",
+                description=(
+                    f"Este canal foi **recriado** para limpar todas as mensagens antigas.\n\n"
+                    f"**Executor:** {interaction.user.mention}\n"
+                    f"**Canal original:** `#{canal_antigo.name}`"
+                ),
+                color=COR_SANGUE,
+                timestamp=datetime.datetime.now(datetime.timezone.utc),
+            )
+            embed.set_footer(text=FOOTER)
+            await canal_novo.send(embed=embed)
+        except discord.Forbidden:
+            await interaction.followup.send(
+                "❌ Não tenho permissão para **Gerenciar Canais** neste servidor.",
+                ephemeral=True,
+            )
         except Exception as e:
-            await interaction.followup.send(f"❌ Erro: {e}", ephemeral=True)
+            await interaction.followup.send(f"❌ Erro ao executar dupe: {e}", ephemeral=True)
 
     @discord.ui.button(label="❌ Cancelar", style=discord.ButtonStyle.secondary)
     async def cancelar(self, interaction: discord.Interaction, button: discord.ui.Button):
         for item in self.children:
             item.disabled = True
-        await interaction.response.edit_message(content="❌ Cancelado.", view=self)
+        await interaction.response.edit_message(
+            content="❌ **Dupe cancelado.**",
+            view=self,
+        )
 
 
-@bot.tree.command(name="dupe", description="Clona o canal e apaga o antigo")
+@bot.tree.command(name="dupe", description="Clona o canal e apaga o antigo (limpa TODAS as mensagens, até antigas)")
 @is_staff()
 async def dupe(interaction: discord.Interaction):
     if not isinstance(interaction.channel, discord.TextChannel):
-        await interaction.response.send_message("❌ Só em canais de texto.", ephemeral=True)
+        await interaction.response.send_message(
+            "❌ Este comando só funciona em canais de texto.",
+            ephemeral=True,
+        )
         return
     embed = discord.Embed(
         title="💥 Confirmação de Dupe",
-        description=f"Clonar {interaction.channel.mention} e **apagar o original**?\n\n⚠️ **TODAS as mensagens serão perdidas.**",
+        description=(
+            f"Você está prestes a **clonar** {interaction.channel.mention} e **apagar o canal original**.\n\n"
+            "⚠️ **Isso vai remover TODAS as mensagens**, inclusive as com mais de 14 dias.\n"
+            "⚠️ **Permissões, tópico, posição e categoria serão mantidos** no canal novo.\n\n"
+            "Tem certeza?"
+        ),
         color=COR_SANGUE,
+        timestamp=datetime.datetime.now(datetime.timezone.utc),
     )
     embed.set_footer(text=FOOTER)
-    await interaction.response.send_message(embed=embed, view=DupeConfirmView(interaction.user.id, interaction.channel), ephemeral=True)
+    view = DupeConfirmView(interaction.user.id, interaction.channel)
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
 
 # ==============================
 # 🐢 SLOWMODE / LOCK
 # ==============================
-@bot.tree.command(name="slowmode", description="Define o modo lento")
+@bot.tree.command(name="slowmode", description="Define o modo lento do canal em segundos")
 @is_staff()
+@app_commands.describe(segundos="Segundos entre mensagens (0 desativa)")
 async def slowmode(interaction: discord.Interaction, segundos: int):
     if segundos < 0 or segundos > 21600:
-        await interaction.response.send_message("❌ Use 0-21600.", ephemeral=True)
+        await interaction.response.send_message("❌ Use entre 0 e 21600 segundos (6 horas).", ephemeral=True)
         return
     await interaction.channel.edit(slowmode_delay=segundos)
-    await interaction.response.send_message(f"🐢 Modo lento: {segundos}s.")
+    if segundos == 0:
+        await interaction.response.send_message("⚡ Modo lento **desativado**.")
+    else:
+        await interaction.response.send_message(f"🐢 Modo lento definido para **{segundos}s**.")
 
 
-@bot.tree.command(name="lock", description="Tranca o canal")
+@bot.tree.command(name="lock", description="Tranca o canal para @everyone")
 @is_staff()
 async def lock(interaction: discord.Interaction):
-    ow = interaction.channel.overwrites_for(interaction.guild.default_role)
-    ow.send_messages = False
-    await interaction.channel.set_permissions(interaction.guild.default_role, overwrite=ow)
+    overwrite = interaction.channel.overwrites_for(interaction.guild.default_role)
+    overwrite.send_messages = False
+    await interaction.channel.set_permissions(interaction.guild.default_role, overwrite=overwrite)
     await interaction.response.send_message("🔒 Canal trancado.")
 
 
-@bot.tree.command(name="unlock", description="Destranca o canal")
+@bot.tree.command(name="unlock", description="Destranca o canal para @everyone")
 @is_staff()
 async def unlock(interaction: discord.Interaction):
-    ow = interaction.channel.overwrites_for(interaction.guild.default_role)
-    ow.send_messages = None
-    await interaction.channel.set_permissions(interaction.guild.default_role, overwrite=ow)
+    overwrite = interaction.channel.overwrites_for(interaction.guild.default_role)
+    overwrite.send_messages = None
+    await interaction.channel.set_permissions(interaction.guild.default_role, overwrite=overwrite)
     await interaction.response.send_message("🔓 Canal destrancado.")
 
 
 # ==============================
 # 🔎 UTILITÁRIOS
 # ==============================
-@bot.tree.command(name="userinfo", description="Informações de um usuário")
+@bot.tree.command(name="userinfo", description="Mostra informações de um usuário")
+@app_commands.describe(membro="Membro para consultar (opcional)")
 async def userinfo(interaction: discord.Interaction, membro: discord.Member = None):
-    m = membro or interaction.user
-    embed = discord.Embed(title=f"👤 {m}", color=COR_SANGUE)
-    embed.set_thumbnail(url=m.display_avatar.url)
-    embed.add_field(name="ID", value=m.id, inline=True)
-    embed.add_field(name="Apelido", value=m.nick or "Nenhum", inline=True)
-    embed.add_field(name="Bot?", value="Sim" if m.bot else "Não", inline=True)
-    embed.add_field(name="Conta criada", value=m.created_at.strftime("%d/%m/%Y"), inline=True)
-    embed.add_field(name="Entrou em", value=m.joined_at.strftime("%d/%m/%Y") if m.joined_at else "?", inline=True)
-    embed.add_field(name="Cargo mais alto", value=m.top_role.mention, inline=True)
+    membro = membro or interaction.user
+    embed = discord.Embed(title=f"👤 {membro}", color=COR_SANGUE)
+    embed.set_thumbnail(url=membro.display_avatar.url)
+    embed.add_field(name="ID", value=membro.id, inline=True)
+    embed.add_field(name="Apelido", value=membro.nick or "Nenhum", inline=True)
+    embed.add_field(name="Bot?", value="Sim" if membro.bot else "Não", inline=True)
+    embed.add_field(name="Conta criada", value=membro.created_at.strftime("%d/%m/%Y"), inline=True)
+    embed.add_field(name="Entrou em", value=membro.joined_at.strftime("%d/%m/%Y") if membro.joined_at else "?", inline=True)
+    embed.add_field(name="Cargo mais alto", value=membro.top_role.mention, inline=True)
     embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
 
 
-@bot.tree.command(name="serverinfo", description="Informações do servidor")
+@bot.tree.command(name="serverinfo", description="Mostra informações do servidor")
 async def serverinfo(interaction: discord.Interaction):
     g = interaction.guild
     embed = discord.Embed(title=f"🏰 {g.name}", color=COR_SANGUE)
@@ -2898,10 +3053,11 @@ async def serverinfo(interaction: discord.Interaction):
 
 
 @bot.tree.command(name="avatar", description="Mostra o avatar de um usuário")
+@app_commands.describe(membro="Membro (opcional)")
 async def avatar(interaction: discord.Interaction, membro: discord.Member = None):
-    m = membro or interaction.user
-    embed = discord.Embed(title=f"🖼️ Avatar de {m.display_name}", color=COR_SANGUE)
-    embed.set_image(url=m.display_avatar.url)
+    membro = membro or interaction.user
+    embed = discord.Embed(title=f"🖼️ Avatar de {membro.display_name}", color=COR_SANGUE)
+    embed.set_image(url=membro.display_avatar.url)
     embed.set_footer(text=FOOTER)
     await interaction.response.send_message(embed=embed)
 
@@ -2912,24 +3068,18 @@ async def avatar(interaction: discord.Interaction, membro: discord.Member = None
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error):
     if isinstance(error, app_commands.CheckFailure):
-        msg = str(error) or "Você não tem permissão para usar este comando."
+        try:
+            await interaction.response.send_message("❌ Você não tem permissão para usar este comando.", ephemeral=True)
+        except discord.InteractionResponded:
+            await interaction.followup.send("❌ Você não tem permissão para usar este comando.", ephemeral=True)
     else:
-        msg = f"Erro: {error}"
-    try:
-        if interaction.response.is_done():
-            await interaction.followup.send(f"❌ {msg}", ephemeral=True)
-        else:
-            await interaction.response.send_message(f"❌ {msg}", ephemeral=True)
-    except Exception:
-        pass
+        try:
+            await interaction.response.send_message(f"❌ Erro: {error}", ephemeral=True)
+        except discord.InteractionResponded:
+            await interaction.followup.send(f"❌ Erro: {error}", ephemeral=True)
 
 
 # ==============================
 # INICIALIZAÇÃO
 # ==============================
-if not DISCORD_TOKEN:
-    raise RuntimeError("❌ DISCORD_TOKEN não configurado no .env")
-if not STAFF_ROLE_ID:
-    print("⚠️ Aviso: STAFF_ROLE_ID não configurado. Apenas administradores usarão comandos de staff.")
-
 bot.run(DISCORD_TOKEN)
